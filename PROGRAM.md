@@ -5,8 +5,9 @@
 A public-private partnership between the City of Knoxville, the Knoxville Police
 Department, downtown bars, and downtown coffee shops. Patrons who drove downtown
 and choose a rideshare home at the end of the night receive a **$5 Morning Perk
-voucher**, redeemable at a participating coffee shop when they return the next
-morning to retrieve their car.
+voucher** — framed as a *tip for making the safe, responsible choice* —
+redeemable at a participating coffee shop when they return the next morning to
+retrieve their car.
 
 ---
 
@@ -21,24 +22,35 @@ returns downtown in the morning. Reward the safe choice at the exact moment it's
 made (last call, at the bar) and cash it in at the exact moment it pays off
 (the morning retrieval trip). Downtown gets the customer twice.
 
+**The framing:** the voucher is a **tip**. Patrons tip service staff all night;
+Park & Perk is downtown tipping the patron back for the most valuable service of
+the evening — getting home without driving. "Tip" keeps the tone warm and
+non-preachy, makes the $5 feel like recognition rather than a coupon, and sets
+up patron-side funding mechanics ("Perk It Forward," below) where tonight's
+crowd tips tomorrow's safe riders.
+
 ## 2. How It Works (Mechanics)
 
 1. **Patron** drives downtown, parks, and goes out.
 2. At the end of the night, patron **books a rideshare/taxi home** instead of driving.
 3. Patron **shows the confirmed ride screen** to a bartender at a participating bar.
-4. Bartender **date-stamps and hands over one Morning Perk voucher** ($5).
+4. Bartender **date-stamps and hands over one Morning Perk voucher** ($5) per
+   booked ride.
 5. Patron returns in the morning, **redeems the voucher** at a participating
    coffee shop, and drives home sober.
 
 ### Voucher rules
 - $5 face value; no cash value; overage paid by customer, underage not refunded.
-- One voucher per person per night.
+- **One voucher per booked ride** — the ride is the ticket. A group sharing one
+  Uber gets one card (the booker's). Two cars' worth of people, two rides, two cards.
 - Valid **36 hours** from date stamp (covers the morning-after window; prevents hoarding).
 - Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
 ### Fraud & abuse controls
 - **Serialization:** every voucher has a unique number; books of 50 are checked
   out to bars, so issuance is traceable per venue per week.
+- **One-per-ride rule** is self-limiting: a voucher requires a distinct booked
+  ride shown at the bar, and the bartender stamps at the moment of proof.
 - **Two-touch validation:** bar stamp at issue, coffee shop log at redemption.
   Mismatched or duplicate serials are flagged in monthly reconciliation.
 - **Short expiry** kills secondary-market and stockpiling value.
@@ -60,101 +72,148 @@ lot operators are recruited as sponsors with the same terms.
 |---|---|
 | Name | **Knox Park & Perk** ("Park" = your car; "Perk" = the coffee, and the perk) |
 | Tagline | *Make it home safe. Tomorrow's coffee's on us.* |
+| Core frame | The voucher is a **tip** for making the safe, responsible choice — recognition, not a coupon |
 | Story arc | Night → Ride → Sunrise → Coffee (🌙 → 🚗 → ☕) |
 | Palette | Midnight navy `#141d33`, cream `#fff7ec`, espresso `#3a2a1d`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color), gold `#ffb95e` |
-| Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." |
+| Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "free coffee downtown," never oversell ($5 is a coffee, not breakfast). |
 | Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Perk Partner"), bartender stamp, voucher books |
 
 Coasters are the hero medium: they sit under the drink at exactly the decision
 moment, and bars go through thousands of them anyway — the program replaces a
 cost with free branded stock.
 
-## 4. Partner Value & Engagement Playbook
+## 4. Monetization & Sustainability
+
+The funding model is deliberately open — it will be locked with founding
+partners. The design constraint is fixed: **the perk is always free to the
+patron who took the safe ride.** Candidate revenue streams, roughly in order of
+long-run sustainability:
+
+### A. Merchant-funded ("coupon economics") — the self-sustaining core
+Coffee shops honor the $5 card as their own customer-acquisition cost, the way
+they'd fund any promotion. The math that makes it rational: the card brings in
+a late-night demographic they rarely see before noon, average morning tickets
+exceed $5, and a good first visit creates a repeat customer. Shops can cap
+monthly redemptions while the model proves out.
+*Pro:* zero external money needed; scales automatically with participation.
+*Con:* asks the smallest businesses to carry the direct cost; needs early
+ticket-size data to keep shops convinced.
+
+### B. Perk It Forward (patron round-up) — the tip loop
+An optional $1 line on bar tabs: tonight's patrons "tip" tomorrow's safe
+riders. This is the purest expression of the brand — the community literally
+tips people for getting home safe — and even modest uptake at busy venues
+funds a large share of vouchers.
+*Pro:* on-brand, visible, feels like Knoxville looking after Knoxville.
+*Con:* revenue varies with uptake; needs simple POS handling and transparent
+accounting (publish the pot monthly).
+
+### C. Sponsorship tiers — the accelerant
+Annual "presented by" packages for brands whose economics align with fewer
+impaired drivers and more rides: rideshare companies (the program drives
+bookings), auto insurers, hospital/trauma systems, parking operators, downtown
+property owners. Sponsor logos ride on coasters and vouchers already in every
+bar downtown — unusually good placement per dollar.
+*Pro:* covers fixed costs (printing, coordinator) that per-voucher models don't.
+*Con:* renewal risk; keep alcohol brands off patron-facing materials.
+
+### D. Bar partner dues — optional, later
+A modest monthly membership once the program has proven foot-traffic and
+goodwill value. Not recommended for the pilot: bars joining free is what makes
+the network dense enough to matter.
+
+### E. Grants & city seed — launch only
+One-time money (highway-safety grants, downtown-vitality funds, community
+foundations) for the pilot's fixed costs. Treated strictly as seed, never as
+the operating model.
+
+**Recommended architecture:** A as the base (vouchers cost the program nothing
+in cash), B as the community flywheel and story, C to cover fixed costs, E to
+get off the ground. D held in reserve. Under this structure the marginal cost
+of one more safe ride home is approximately zero to the program — which is
+what makes it durable.
+
+### Pilot fixed costs (6 months, illustrative)
+
+| Item | Estimate |
+|---|---|
+| Printing: coasters, vouchers, signage, stamps | $4,000 |
+| Part-time coordinator (reconciliation, restock, partner care) | $9,000 |
+| Launch marketing & press event | $3,000 |
+| Contingency | $2,000 |
+| **Total fixed** | **~$18,000** (voucher face value carried per model A/B above) |
+
+## 5. Partner Value & Engagement Playbook
 
 ### Downtown bars — *the distribution network*
 **Pitch:** "Free coasters and signage, a safer close to your night, reduced
 dram-shop-adjacent risk, and your name on a city-backed safety program. The ask
 is a 10-second stamp-and-hand at last call."
-- Cost to join: $0. Program supplies all materials and voucher books.
+- Cost to join: $0 at pilot. Program supplies all materials and voucher books.
 - Engagement: start with 5–8 anchor venues in the Old City and Market Square
   whose owners talk to each other; founding-partner status (logo on vouchers,
   press) creates FOMO for the second wave.
 - Staff onboarding: one laminated card behind the bar; 5-minute pre-shift brief;
   small monthly staff perk (e.g., coffee for the crew) to keep buy-in.
+- Perk It Forward: venues that opt in add the $1 round-up line and get
+  "Community Tipper" billing.
 
 ### Coffee shops — *the redemption network*
-**Pitch:** "Guaranteed reimbursed morning traffic from the late-night crowd —
-customers you don't currently get — plus your logo in every bar downtown."
-- Reimbursed **full $5 face value monthly**; average tickets exceed $5, so
-  redemptions are net-revenue-positive plus a new-customer channel.
-- Redemption workflow: take voucher, ring as program tender, log serial (paper
-  log or shared form), drop vouchers in the monthly reconciliation envelope.
+**Pitch:** "Morning traffic from the late-night crowd — customers you don't
+currently get — plus your logo in every bar downtown. You control your exposure
+with a monthly cap while we prove the ticket math together."
+- Redemption workflow: take voucher, log serial, done. Monthly data shared back
+  (redemptions, average ticket uplift) so the value is visible.
 - Recruit shops within a short walk of major garages first (Gay Street, Market
   Square, Old City).
+- Founding shops help pick the funding architecture (Section 4) — real
+  co-ownership, not a terms sheet.
 
-### City of Knoxville — *funding & parking policy*
+### City of Knoxville — *parking policy & credibility*
 **Pitch:** "A positive-incentive complement to enforcement. One prevented DUI
-crash saves more than a year of program vouchers. Plus measurable downtown
-morning foot traffic."
-- Asks: seed funding from safety/downtown-vitality budgets, overnight garage
-  amnesty, inclusion in city communications.
+crash costs the city more than this program's entire pilot. The asks are policy
+and promotion, not an open-ended budget line."
+- Asks: overnight garage amnesty, inclusion in city communications, optional
+  one-time seed for launch costs.
 - Offer: full transparency — quarterly issuance/redemption data by venue.
 
 ### Knoxville Police Department — *credibility & reach*
 **Pitch:** "You get a carrot to pair with the stick. Every voucher is a
 documented decision not to drive impaired."
 - Asks: public endorsement, program mention at DUI-awareness moments (football
-  Saturdays, New Year's), no enforcement role inside bars (keeps bar staff and
-  patrons comfortable).
+  Saturdays, New Year's), no enforcement role inside bars.
 - KPD is a *supporter*, not an operator — the program must never feel like
-  surveillance or a sobriety checkpoint.
-
-### Sponsors — *scaling the fund*
-Natural fits: rideshare companies (Uber/Lyft — the program literally drives
-bookings), auto insurers, hospital systems / UT Medical Center (trauma
-prevention), parking operators, downtown property owners, breweries'
-community funds, UT athletics-adjacent brands for game-day surges.
+  surveillance or a sobriety checkpoint. Vouchers are anonymous; no personal
+  data is ever collected.
 
 ### Outreach sequence
 1. **City + KPD first** (credibility unlocks everything else) — one-pager + this site.
-2. **3 anchor coffee shops** (redemption must exist before issuance).
+2. **3 anchor coffee shops** (redemption must exist before issuance; they
+   co-design the funding model).
 3. **5–8 anchor bars** for the pilot footprint.
-4. **Press launch** with city/KPD, tied to a high-risk weekend.
-5. **Second wave** recruitment using pilot data.
-
-## 5. Pilot Budget (6 months, illustrative)
-
-| Item | Estimate |
-|---|---|
-| Vouchers redeemed: ~400/mo × $5 × 6 mo | $12,000 |
-| Printing: coasters, vouchers, signage, stamps | $4,000 |
-| Part-time coordinator (reconciliation, restock, partner care) | $9,000 |
-| Launch marketing & press event | $3,000 |
-| Contingency (~15%) | $4,000 |
-| **Total pilot** | **~$32,000** |
-
-Key ratio: every dollar spent is split roughly 40% direct patron benefit /
-60% infrastructure at pilot scale; infrastructure share falls steeply as the
-program scales. Note redemption ≠ issuance: industry gift-voucher redemption
-rates suggest budgeting for 50–70% redemption of issued vouchers.
+4. **Sponsors** once the partner map makes the placement value concrete.
+5. **Press launch** with city/KPD, tied to a high-risk weekend.
+6. **Second wave** recruitment using pilot data.
 
 ## 6. Metrics & Success Criteria
 
 - **Primary:** vouchers issued and redeemed (by venue, by night of week).
 - **Secondary:** late-night DUI arrests / single-vehicle incidents in the
   downtown zone (with KPD, acknowledging small-sample noise in a pilot).
-- **Economic:** average redemption ticket size vs. $5; repeat-customer reports
-  from coffee shops; overnight garage stays on program nights.
+- **Economic:** average redemption ticket size vs. $5 face value (the number
+  that proves model A); repeat-customer reports from coffee shops; Perk It
+  Forward uptake rate; overnight garage stays on program nights.
 - **Qualitative:** bartender friction reports, patron surveys via QR on voucher.
 - **Pilot success gates:** ≥60% of anchor bars actively issuing by month 2;
-  ≥50% redemption rate; zero material fraud incidents; partner renewal intent.
+  ≥50% redemption rate; average redemption ticket ≥2× face value; zero material
+  fraud incidents; partner renewal intent.
 
 ## 7. Timeline
 
 | Phase | Window | Milestones |
 |---|---|---|
-| Design & city buy-in | Months 0–2 | City/KPD MOU, parking amnesty policy, fund established |
-| Partner recruitment | Months 2–3 | 3 coffee shops + 6 bars signed, materials printed |
+| Design & city buy-in | Months 0–2 | City/KPD MOU, parking amnesty policy |
+| Partner recruitment | Months 2–3 | 3 coffee shops + 6 bars signed; funding architecture locked with founding partners; materials printed |
 | Pilot launch | Month 4 | Press event on a high-visibility weekend |
 | Pilot run | Months 4–9 | Monthly reconciliation, mid-pilot tune-up |
 | Evaluate & scale | Month 10+ | Public report, second-wave recruitment, sponsor expansion |
@@ -166,9 +225,10 @@ rates suggest budgeting for 50–70% redemption of issued vouchers.
 | Bartenders skip it on busy nights | 10-second workflow, staff perks, coasters do the marketing passively |
 | Cars towed despite promise | City amnesty formalized *before* launch; garage signage; hotline on voucher |
 | Perception of promoting drinking | Framing is strictly "safe ride home"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
-| Fraud (fake ride screens, duplicates) | $5 cap, serials, expiry, bartender discretion; accept small leakage as marketing cost |
-| Coffee shops float too much cash | Monthly (or biweekly at first) reimbursement; cap per-shop monthly exposure at pilot |
-| Program conflated with enforcement | KPD as endorser only; no data on individuals is ever collected — vouchers are anonymous |
+| Fraud (fake ride screens, duplicates) | $5 cap, one-per-booked-ride, serials, expiry, bartender discretion; accept small leakage as marketing cost |
+| Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
+| Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Perk It Forward / sponsor funds can backstop face value if model A underperforms |
+| Program conflated with enforcement | KPD as endorser only; vouchers anonymous — no data on individuals is ever collected |
 
 ---
 
