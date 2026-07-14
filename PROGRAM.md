@@ -61,10 +61,14 @@ crowd tips tomorrow's safe riders.
   they can decline a voucher without confrontation ("we're out tonight").
 
 ### Overnight parking
-The program's promise collapses if the patron gets towed. The city partnership
-includes **overnight amnesty in city-owned garages** (e.g., no ticketing/towing
-for vehicles retrieved by noon), with signage in participating garages. Private
-lot operators are recruited as sponsors with the same terms.
+Leaving the car overnight has to feel free and safe, or the program falls apart.
+Fortunately Knoxville already provides this: **parking in the City's municipal
+garages is free on evenings and weekends.** The program doesn't need to
+negotiate a parking policy — it just needs to *advertise* the free-parking
+reality loudly (on coasters, cards, and signage) so patrons stop treating "but
+my car" as a reason to drive. Coordinate messaging with the City so posted
+garage hours and any move-out times are stated accurately; recruit private lot
+operators as sponsors where a garage isn't nearby.
 
 ## 3. Branding
 
@@ -169,12 +173,12 @@ with a monthly cap while we prove the ticket math together."
 - Founding shops help pick the funding architecture (Section 4) — real
   co-ownership, not a terms sheet.
 
-### City of Knoxville — *parking policy & credibility*
+### City of Knoxville — *credibility & promotion*
 **Pitch:** "A positive-incentive complement to enforcement. One prevented DUI
-crash costs the city more than this program's entire pilot. The asks are policy
-and promotion, not an open-ended budget line."
-- Asks: overnight garage amnesty, inclusion in city communications, optional
-  one-time seed for launch costs.
+crash costs the city more than this program's entire pilot. The asks are mostly
+promotion, not an open-ended budget line."
+- Asks: co-promote the already-free evening/weekend municipal garage parking,
+  inclusion in city communications, optional one-time seed for launch costs.
 - Offer: full transparency — quarterly issuance/redemption data by venue.
 
 ### Knoxville Police Department — *credibility & reach*
@@ -212,7 +216,7 @@ documented decision not to drive impaired."
 
 | Phase | Window | Milestones |
 |---|---|---|
-| Design & city buy-in | Months 0–2 | City/KPD MOU, parking amnesty policy |
+| Design & city buy-in | Months 0–2 | City/KPD MOU, free-parking co-promotion agreement |
 | Partner recruitment | Months 2–3 | 3 coffee shops + 6 bars signed; funding architecture locked with founding partners; materials printed |
 | Pilot launch | Month 4 | Press event on a high-visibility weekend |
 | Pilot run | Months 4–9 | Monthly reconciliation, mid-pilot tune-up |
@@ -223,7 +227,7 @@ documented decision not to drive impaired."
 | Risk | Mitigation |
 |---|---|
 | Bartenders skip it on busy nights | 10-second workflow, staff perks, coasters do the marketing passively |
-| Cars towed despite promise | City amnesty formalized *before* launch; garage signage; hotline on voucher |
+| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages are free evenings/weekends; confirm garage hours with the City; print them on signage; hotline on voucher |
 | Perception of promoting drinking | Framing is strictly "safe ride home"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
 | Fraud (fake ride screens, duplicates) | $5 cap, one-per-booked-ride, serials, expiry, bartender discretion; accept small leakage as marketing cost |
 | Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
