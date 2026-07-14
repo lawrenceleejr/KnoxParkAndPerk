@@ -23,7 +23,7 @@ downtown coffee shops.
 
 ## Publishing the site
 
-The site deploys automatically to
-<https://lawrenceleejr.github.io/KnoxParkAndPerk/> on every push to `main` via
-the [GitHub Pages workflow](.github/workflows/pages.yml). No build tooling
-required.
+GitHub Pages is configured to deploy from the `main` branch (Settings → Pages),
+so every push to `main` republishes
+<https://lawrenceleejr.github.io/KnoxParkAndPerk/> automatically. No build
+tooling required.

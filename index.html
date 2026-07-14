@@ -25,6 +25,7 @@
     color: var(--espresso);
     background: var(--cream);
     line-height: 1.6;
+    overflow-x: hidden;
   }
   h1, h2, h3, .sans, nav, .btn, .step-num, .badge {
     font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
@@ -32,7 +33,43 @@
   a { color: var(--sunrise-deep); }
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; }
 
-  /* Nav */
+  /* ---------- Animations ---------- */
+  @keyframes twinkle { 0%,100% { opacity:.25 } 50% { opacity:1 } }
+  @keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+  @keyframes drive {
+    0%   { transform: translateX(-12vw) scaleX(-1); }
+    100% { transform: translateX(112vw) scaleX(-1); }
+  }
+  @keyframes steam {
+    0%   { transform: translateY(0) translateX(0) scale(.7); opacity: 0; }
+    20%  { opacity: .8; }
+    100% { transform: translateY(-2.2rem) translateX(.35rem) scale(1.15); opacity: 0; }
+  }
+  @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+  @keyframes wiggle {
+    0%,100% { transform: rotate(-2deg); }
+    50%     { transform: rotate(1.5deg) scale(1.02); }
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,130,0,.5); }
+    70%     { box-shadow: 0 0 0 14px rgba(255,130,0,0); }
+  }
+  @keyframes sunup {
+    from { transform: translateY(60%); }
+    to   { transform: translateY(0); }
+  }
+  @keyframes gradientShift {
+    0%,100% { background-position: 50% 0%; }
+    50%     { background-position: 50% 100%; }
+  }
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Nav ---------- */
   nav {
     position: sticky; top: 0; z-index: 10;
     background: var(--night-deep);
@@ -40,70 +77,70 @@
   }
   nav .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: .7rem; padding-bottom: .7rem; }
   nav .logo { color: var(--cream); font-weight: 700; letter-spacing: .04em; text-decoration: none; font-size: 1.05rem; }
-  nav .logo span { color: var(--sunrise); }
+  nav .logo span { color: var(--sunrise); display: inline-block; transition: transform .3s; }
+  nav .logo:hover span { transform: rotate(360deg); }
   nav ul { display: flex; gap: 1.4rem; list-style: none; }
   nav ul a { color: var(--cream-dim); text-decoration: none; font-size: .85rem; text-transform: uppercase; letter-spacing: .08em; }
   nav ul a:hover { color: var(--gold); }
   @media (max-width: 640px) { nav ul { display: none; } }
 
-  /* Hero */
+  /* ---------- Hero ---------- */
   header {
     background: linear-gradient(175deg, var(--night-deep) 0%, var(--night) 55%, #4a3520 88%, var(--sunrise-deep) 130%);
+    background-size: 100% 160%;
+    animation: gradientShift 14s ease-in-out infinite;
     color: var(--cream);
     text-align: center;
-    padding: 5.5rem 1.5rem 6.5rem;
+    padding: 5.5rem 1.5rem 8.5rem;
     position: relative;
     overflow: hidden;
   }
-  header .mark {
-    font-size: 3.2rem; line-height: 1;
-    margin-bottom: 1.2rem;
-    letter-spacing: .15em;
+  .star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; animation: twinkle 3s ease-in-out infinite; }
+  .moon {
+    position: absolute; top: 3rem; right: 8%;
+    font-size: 3rem; animation: floaty 7s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px rgba(255,247,220,.55));
   }
-  header h1 {
-    font-size: clamp(2.4rem, 6vw, 4rem);
-    font-weight: 800;
-    letter-spacing: .01em;
-  }
+  header .mark { font-size: 3rem; line-height: 1; margin-bottom: 1.2rem; letter-spacing: .1em; }
+  header .mark span { display: inline-block; animation: floaty 3.6s ease-in-out infinite; }
+  header .mark span:nth-child(2) { animation-delay: .5s; }
+  header .mark span:nth-child(3) { animation-delay: 1s; }
+  header h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: .01em; position: relative; }
   header h1 .amp { color: var(--sunrise); font-family: Georgia, serif; font-style: italic; font-weight: 400; }
   header .tagline {
     font-size: clamp(1.15rem, 2.6vw, 1.5rem);
-    font-style: italic;
-    color: var(--gold);
-    margin: 1.1rem auto 0;
-    max-width: 34ch;
+    font-style: italic; color: var(--gold);
+    margin: 1.1rem auto 0; max-width: 34ch;
   }
-  header .sub {
-    margin: 1.6rem auto 0;
-    max-width: 52ch;
-    color: var(--cream-dim);
-    font-size: 1.02rem;
-  }
+  header .sub { margin: 1.6rem auto 0; max-width: 52ch; color: var(--cream-dim); font-size: 1.02rem; position: relative; }
   .btn {
-    display: inline-block;
-    margin: 2.2rem .5rem 0;
-    padding: .85rem 1.8rem;
-    border-radius: 999px;
-    font-weight: 700;
-    text-decoration: none;
-    letter-spacing: .03em;
+    display: inline-block; margin: 2.2rem .5rem 0;
+    padding: .85rem 1.8rem; border-radius: 999px;
+    font-weight: 700; text-decoration: none; letter-spacing: .03em;
+    transition: transform .2s ease;
   }
-  .btn-solid { background: var(--sunrise); color: var(--night-deep); }
+  .btn:hover { transform: translateY(-3px) rotate(-1deg); }
+  .btn-solid { background: var(--sunrise); color: var(--night-deep); animation: pulse 2.6s infinite; }
   .btn-solid:hover { background: var(--gold); }
   .btn-ghost { border: 2px solid var(--cream-dim); color: var(--cream); }
   .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* Skyline strip */
-  .skyline {
-    height: .6rem;
-    background: repeating-linear-gradient(90deg, var(--sunrise) 0 2.5rem, var(--night) 2.5rem 2.75rem);
+  /* road + driving car */
+  .road {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 3.4rem;
+    background: #1b2333;
+    border-top: 3px dashed rgba(255,185,94,.5);
   }
+  .car {
+    position: absolute; bottom: .55rem; left: 0;
+    font-size: 2rem;
+    animation: drive 9s linear infinite;
+    will-change: transform;
+  }
+  .skyline { height: .6rem; background: repeating-linear-gradient(90deg, var(--sunrise) 0 2.5rem, var(--night) 2.5rem 2.75rem); }
 
   section { padding: 4.5rem 0; }
-  section h2 {
-    font-size: clamp(1.7rem, 4vw, 2.3rem);
-    margin-bottom: .6rem;
-  }
+  section h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin-bottom: .6rem; }
   section .lede { font-size: 1.1rem; max-width: 60ch; color: var(--espresso-light); margin-bottom: 2.5rem; }
   .kicker {
     text-transform: uppercase; letter-spacing: .18em; font-size: .78rem;
@@ -111,25 +148,34 @@
     font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
   }
 
-  /* Steps */
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 1.2rem; counter-reset: step; }
+  /* ---------- Steps ---------- */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); gap: 1.2rem; }
   .step {
     background: #fff; border: 1px solid #eadfce; border-radius: 12px;
     padding: 1.5rem 1.3rem; position: relative;
     box-shadow: 0 2px 6px rgba(58,42,29,.06);
+    transition: transform .25s ease, box-shadow .25s ease;
   }
+  .step:hover { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 12px 24px rgba(58,42,29,.14); }
+  .step .emoji { position: absolute; top: 1.2rem; right: 1.1rem; font-size: 1.5rem; transition: transform .25s ease; }
+  .step:hover .emoji { transform: scale(1.35) rotate(10deg); }
   .step-num {
     width: 2.1rem; height: 2.1rem; border-radius: 50%;
     background: var(--night); color: var(--gold);
     display: flex; align-items: center; justify-content: center;
     font-weight: 800; margin-bottom: .9rem;
   }
+  .reveal.in .step-num { animation: popIn .45s cubic-bezier(.5,1.8,.5,1) backwards; }
+  .steps .step:nth-child(2) .step-num { animation-delay: .1s; }
+  .steps .step:nth-child(3) .step-num { animation-delay: .2s; }
+  .steps .step:nth-child(4) .step-num { animation-delay: .3s; }
+  .steps .step:nth-child(5) .step-num { animation-delay: .4s; }
   .step:last-child .step-num { background: var(--sunrise); color: var(--night-deep); }
   .step h3 { font-size: 1.02rem; margin-bottom: .4rem; }
   .step p { font-size: .92rem; color: var(--espresso-light); }
 
-  /* Voucher */
-  .voucher-band { background: var(--night); color: var(--cream); }
+  /* ---------- Voucher ---------- */
+  .voucher-band { background: var(--night); color: var(--cream); position: relative; overflow: hidden; }
   .voucher-band .kicker { color: var(--gold); }
   .voucher-band .lede { color: var(--cream-dim); }
   .voucher-flex { display: flex; gap: 3rem; align-items: center; flex-wrap: wrap; }
@@ -141,7 +187,21 @@
     border: 2px dashed var(--sunrise-deep);
     box-shadow: 0 10px 30px rgba(0,0,0,.35);
     transform: rotate(-2deg);
+    transition: transform .3s ease;
+    position: relative;
   }
+  .voucher-card:hover { animation: wiggle .5s ease-in-out; }
+  .voucher-card .cup {
+    position: absolute; top: -1.6rem; right: 1.2rem; font-size: 2.2rem;
+  }
+  .voucher-card .cup i {
+    position: absolute; left: .55rem; top: -.4rem;
+    width: .3rem; height: .8rem; border-radius: 50%;
+    background: rgba(255,255,255,.85); filter: blur(2px);
+    animation: steam 2.4s ease-out infinite;
+  }
+  .voucher-card .cup i:nth-child(2) { left: 1rem; animation-delay: .8s; }
+  .voucher-card .cup i:nth-child(3) { left: 1.45rem; animation-delay: 1.6s; }
   .voucher-card .vc-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--espresso); padding-bottom: .5rem; margin-bottom: .7rem; }
   .voucher-card .vc-head strong { font-family: 'Avenir Next', Avenir, sans-serif; letter-spacing: .05em; }
   .voucher-card .vc-amt { font-size: 1.6rem; font-weight: 800; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
@@ -153,37 +213,48 @@
   .voucher-band ul.plain li { padding: .45rem 0 .45rem 1.6rem; position: relative; }
   .voucher-band ul.plain li::before { content: "☕"; position: absolute; left: 0; }
 
-  /* Partners */
+  /* ---------- Why band ---------- */
+  .why { background: var(--cream-dim); position: relative; overflow: hidden; }
+  .why .sun {
+    position: absolute; bottom: -2.5rem; right: 6%;
+    font-size: 5.5rem; opacity: .9;
+  }
+  .why.in-view .sun { animation: sunup 1.4s cubic-bezier(.3,1.4,.5,1) backwards; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.5rem; text-align: center; }
+  .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
+  .why-grid .stat { transition: transform .25s ease; }
+  .why-grid .stat:hover { transform: scale(1.08); }
+  .why-grid .stat span { font-size: .9rem; color: var(--espresso-light); }
+  .why .fineprint { margin-top: 2rem; font-size: .8rem; color: var(--espresso-light); font-style: italic; max-width: 46ch; }
+
+  /* ---------- Partners ---------- */
   .cards3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1.2rem; }
   .pcard {
     background: #fff; border-radius: 12px; border-top: 5px solid var(--sunrise);
     padding: 1.7rem 1.5rem; box-shadow: 0 2px 6px rgba(58,42,29,.06);
+    transition: transform .25s ease, box-shadow .25s ease;
   }
+  .pcard:hover { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(58,42,29,.14); }
   .pcard h3 { margin-bottom: .7rem; }
   .pcard ul { padding-left: 1.1rem; font-size: .93rem; color: var(--espresso-light); }
   .pcard li { margin: .35rem 0; }
   .pcard .pc-cost { margin-top: 1rem; font-size: .85rem; font-weight: 700; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; text-transform: uppercase; letter-spacing: .05em; }
 
-  /* Why band */
-  .why { background: var(--cream-dim); }
-  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.5rem; text-align: center; }
-  .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
-  .why-grid .stat span { font-size: .9rem; color: var(--espresso-light); }
-  .why .fineprint { margin-top: 2rem; font-size: .8rem; color: var(--espresso-light); font-style: italic; }
-
-  /* FAQ */
+  /* ---------- FAQ ---------- */
   details {
     background: #fff; border: 1px solid #eadfce; border-radius: 10px;
     margin-bottom: .7rem; padding: 1rem 1.3rem;
+    transition: border-color .2s ease;
   }
+  details[open] { border-color: var(--sunrise); }
   details summary { cursor: pointer; font-weight: 700; font-family: 'Avenir Next', Avenir, sans-serif; }
   details p { margin-top: .7rem; color: var(--espresso-light); font-size: .95rem; }
 
-  /* CTA + footer */
+  /* ---------- CTA + footer ---------- */
   .cta { background: linear-gradient(160deg, var(--sunrise-deep), var(--sunrise)); text-align: center; color: var(--night-deep); }
   .cta h2 { color: var(--night-deep); }
   .cta .lede { color: #4a2c00; margin-left: auto; margin-right: auto; }
-  .cta .btn-solid { background: var(--night-deep); color: var(--cream); }
+  .cta .btn-solid { background: var(--night-deep); color: var(--cream); animation: none; }
   .cta .btn-solid:hover { background: var(--night); }
   footer { background: var(--night-deep); color: var(--cream-dim); padding: 2.5rem 0; font-size: .85rem; }
   footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
@@ -211,51 +282,54 @@
 </nav>
 
 <header id="top">
-  <div class="mark">🌙 → 🚗 → ☕</div>
+  <div class="moon">🌙</div>
+  <div class="mark"><span>🍺</span> <span>🚗</span> <span>☕</span></div>
   <h1>KNOX PARK <span class="amp">&amp;</span> PERK</h1>
   <p class="tagline">Make it home safe. Tomorrow's coffee's on us.</p>
-  <p class="sub">Drove downtown, then decided not to drive home? Good call. Show your bartender your booked rideshare and get a $5 voucher for a downtown coffee shop — redeemable in the morning, when you come back for your car.</p>
+  <p class="sub">Drove downtown, then decided not to drive home? Good call. Show your bartender your booked rideshare and get a $5 voucher for a downtown coffee shop — redeemable in the morning, when you come back for your car. Think of it as a tip, for making the responsible choice.</p>
   <a class="btn btn-solid" href="#how">How it works</a>
   <a class="btn btn-ghost" href="#partners">Become a partner</a>
+  <div class="road"><div class="car">🚕</div></div>
 </header>
 <div class="skyline"></div>
 
 <section id="how">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="kicker">For Patrons</span>
     <h2>Five steps. Zero DUIs. Free coffee.</h2>
     <p class="lede">You don't have to choose between leaving your car and getting stranded downtown. Park &amp; Perk turns the responsible choice into the rewarding one.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><h3>Park &amp; play</h3><p>Drive downtown, park in a garage or lot, and enjoy your night in the Old City, Market Square, or Gay Street.</p></div>
-      <div class="step"><div class="step-num">2</div><h3>Book the ride</h3><p>At the end of the night, book an Uber, Lyft, or cab home instead of driving. Your car stays put — overnight parking is fine.</p></div>
-      <div class="step"><div class="step-num">3</div><h3>Show your bartender</h3><p>Show your confirmed ride screen to staff at any participating bar before you head out.</p></div>
-      <div class="step"><div class="step-num">4</div><h3>Grab your Perk Card</h3><p>Staff stamp and hand you a $5 Morning Perk voucher, good at participating downtown coffee shops.</p></div>
-      <div class="step"><div class="step-num">5</div><h3>Coffee &amp; car</h3><p>Come back in the morning, redeem your voucher within 36 hours, and drive your car home — sober, caffeinated, and $5 richer.</p></div>
+      <div class="step"><span class="emoji">🅿️</span><div class="step-num">1</div><h3>Park &amp; play</h3><p>Drive downtown, park in a garage or lot, and enjoy your night in the Old City, Market Square, or Gay Street.</p></div>
+      <div class="step"><span class="emoji">📱</span><div class="step-num">2</div><h3>Book the ride</h3><p>At the end of the night, book an Uber, Lyft, or cab home instead of driving. Your car stays put — overnight parking is fine.</p></div>
+      <div class="step"><span class="emoji">🍻</span><div class="step-num">3</div><h3>Show your bartender</h3><p>Show your confirmed ride screen to staff at any participating bar before you head out.</p></div>
+      <div class="step"><span class="emoji">🎟️</span><div class="step-num">4</div><h3>Grab your Perk Card</h3><p>Staff stamp and hand over a $5 Morning Perk voucher — one per booked ride. Sharing an Uber with the crew? The booker gets the card.</p></div>
+      <div class="step"><span class="emoji">🌅</span><div class="step-num">5</div><h3>Coffee &amp; car</h3><p>Come back in the morning, redeem your voucher within 36 hours, and drive your car home — sober, caffeinated, and $5 richer.</p></div>
     </div>
   </div>
 </section>
 
 <section class="voucher-band" id="voucher">
-  <div class="wrap voucher-flex">
+  <div class="wrap voucher-flex reveal">
     <div>
       <span class="kicker">The Perk</span>
       <h2>The Morning Perk Card</h2>
-      <p class="lede">A serialized, coaster-sized card handed out at last call and redeemed at sunrise. Simple for bartenders, simple for baristas, hard to game.</p>
+      <p class="lede">You've been tipping your bartender all night. This is downtown tipping <em>you</em> back — a $5 thank-you for making the safe, responsible call. A serialized, coaster-sized card handed out at last call and redeemed at sunrise.</p>
       <ul class="plain">
         <li><strong>$5 value</strong> at any participating downtown coffee shop — drinks, pastries, whatever gets you moving.</li>
-        <li><strong>One per person per night</strong>, stamped with the date and the issuing bar's mark.</li>
+        <li><strong>One per booked ride</strong>, stamped with the date and the issuing bar's mark. One ride, one card — no double-dipping.</li>
         <li><strong>Valid 36 hours</strong> from issue, so it's for your morning-after trip — not a coupon stockpile.</li>
-        <li><strong>Serialized &amp; tracked</strong> so the program can reimburse coffee shops and measure impact.</li>
+        <li><strong>Serialized &amp; tracked</strong> so the program can log redemptions and measure impact.</li>
       </ul>
     </div>
     <div>
       <div class="voucher-card">
+        <div class="cup">☕<i></i><i></i><i></i></div>
         <div class="vc-head"><strong>KNOX PARK &amp; PERK</strong><span class="vc-amt">$5</span></div>
-        <p style="font-style:italic; margin-bottom:.6rem;">You made it home safe. This coffee's on us.</p>
+        <p style="font-style:italic; margin-bottom:.6rem;">You made the safe call. Consider this your tip.</p>
         <ul>
           <li>✔ Good at participating downtown coffee shops</li>
           <li>✔ Valid 36 hours from date stamp</li>
-          <li>✔ One per guest per night · No cash value</li>
+          <li>✔ One per booked ride · No cash value</li>
         </ul>
         <div class="vc-serial"><span>№ KPP-2026-004217</span><span>DATE STAMP ____ · BAR ____</span></div>
       </div>
@@ -264,12 +338,13 @@
 </section>
 
 <section class="why" id="why">
-  <div class="wrap">
+  <div class="sun">🌅</div>
+  <div class="wrap reveal">
     <span class="kicker">Why It Matters</span>
     <h2>The cheapest DUI prevention is a good reason to leave the car.</h2>
     <p class="lede">The biggest reason people drive home after drinking downtown is the car itself — nobody wants to deal with retrieving it tomorrow. Park &amp; Perk flips that: your car becomes the reason you come back downtown and spend a morning here.</p>
     <div class="why-grid">
-      <div class="stat"><b>$5</b><span>turns "ugh, my car" into "free breakfast downtown"</span></div>
+      <div class="stat"><b>$5</b><span>turns "ugh, my car" into "free coffee downtown"</span></div>
       <div class="stat"><b>~$10k+</b><span>typical all-in cost of a first DUI in Tennessee — versus a $10 ride home</span></div>
       <div class="stat"><b>2 visits</b><span>every voucher brings a customer downtown twice: night and morning</span></div>
       <div class="stat"><b>0</b><span>the number of good outcomes from driving after last call</span></div>
@@ -279,7 +354,7 @@
 </section>
 
 <section id="partners">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="kicker">Partners</span>
     <h2>Built with downtown, for downtown.</h2>
     <p class="lede">Park &amp; Perk works because every partner wins — bars close out safer nights, coffee shops open to guaranteed morning traffic, and the city gets safer streets and busier sidewalks.</p>
@@ -297,12 +372,12 @@
       <div class="pcard">
         <h3>☕ Coffee Shops</h3>
         <ul>
-          <li>Guaranteed morning foot traffic from last night's crowd — a demographic you rarely see.</li>
-          <li>Full $5 face value reimbursed monthly by the program fund; you keep any spend above $5.</li>
-          <li>Simple redemption: collect the card, log the serial, drop it in the monthly envelope.</li>
-          <li>Co-branding on every voucher in circulation.</li>
+          <li>Morning foot traffic from last night's crowd — a demographic you rarely see before noon.</li>
+          <li>Average morning tickets run well past $5, and a good first visit makes a regular.</li>
+          <li>Simple redemption: collect the card, log the serial — done.</li>
+          <li>Co-branding on every voucher and coaster in circulation downtown.</li>
         </ul>
-        <p class="pc-cost">Cost to join: $0 · reimbursed monthly</p>
+        <p class="pc-cost">Structure designed with founding partners</p>
       </div>
       <div class="pcard">
         <h3>🏛 City &amp; KPD</h3>
@@ -312,27 +387,27 @@
           <li>Clear metrics: vouchers issued and redeemed, by night and by venue.</li>
           <li>A community-goodwill story the department can stand behind.</li>
         </ul>
-        <p class="pc-cost">Role: funding, parking policy, promotion</p>
+        <p class="pc-cost">Role: parking policy, promotion, credibility</p>
       </div>
     </div>
   </div>
 </section>
 
 <section id="faq">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="kicker">Questions</span>
     <h2>FAQ</h2>
     <details><summary>What counts as "showing my ride"?</summary><p>A confirmed, in-progress or just-booked rideshare (Uber/Lyft), taxi receipt, or a designated-driver pickup at the bartender's discretion. The point is simple: you're not driving.</p></details>
     <details><summary>What about my car overnight?</summary><p>Park &amp; Perk works with the City of Knoxville to allow overnight stays in participating downtown garages without ticketing or towing, as long as the car is retrieved by late morning. Check the posted signage in each garage.</p></details>
-    <details><summary>Can I get more than one voucher?</summary><p>One per person per night. Vouchers are date-stamped, bar-marked, and serialized, and expire 36 hours after issue.</p></details>
+    <details><summary>Can I get more than one voucher?</summary><p>It's one voucher per booked ride — the ride is the ticket. Vouchers are date-stamped, bar-marked, and serialized, and expire 36 hours after issue. If your whole group piles into one Uber, that's one card (whoever booked it gets the coffee — choose your friends wisely).</p></details>
     <details><summary>What if I didn't drive downtown?</summary><p>The program is designed for people whose car is parked downtown — that's the moment the risky decision happens. But bartenders have discretion; the goal is safe rides home, not paperwork.</p></details>
-    <details><summary>Who pays for the coffee?</summary><p>A program fund built from City of Knoxville safety dollars, sponsorships (rideshare companies, insurers, hospital systems, parking operators), and community donations. Coffee shops are reimbursed the full face value every month.</p></details>
+    <details><summary>Who pays for the coffee?</summary><p>The funding model is being designed right now with founding partners, drawing on sponsorships (rideshare companies, insurers, hospitals, parking operators), partner venues, and a "Perk It Forward" option that lets tonight's patrons chip in a dollar toward tomorrow's tips. What's already fixed: the perk is always free for the person who took the safe ride home.</p></details>
     <details><summary>Is this a City of Knoxville program?</summary><p>Knox Park &amp; Perk is a proposed public-private partnership, currently in the pilot design phase, seeking partnership with the City of Knoxville, the Knoxville Police Department, and downtown businesses.</p></details>
   </div>
 </section>
 
 <section class="cta" id="join">
-  <div class="wrap">
+  <div class="wrap reveal">
     <span class="badge">Pilot launching soon</span>
     <h2>Own a bar or coffee shop downtown?</h2>
     <p class="lede">Founding partners get top billing on every coaster, card, and press mention. Joining takes one conversation and costs nothing.</p>
@@ -346,6 +421,36 @@
     <div>Contact: <a href="mailto:hello@knoxparkandperk.org">hello@knoxparkandperk.org</a> · Knoxville, TN</div>
   </div>
 </footer>
+
+<script>
+  // Twinkling stars in the hero
+  (function () {
+    var header = document.querySelector('header');
+    for (var i = 0; i < 40; i++) {
+      var s = document.createElement('div');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 55 + '%';
+      s.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+      s.style.animationDuration = (2 + Math.random() * 3).toFixed(2) + 's';
+      header.appendChild(s);
+    }
+  })();
+
+  // Scroll-reveal
+  (function () {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          if (e.target.closest('.why')) e.target.closest('.why').classList.add('in-view');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  })();
+</script>
 
 </body>
 </html>
