@@ -8,7 +8,9 @@ A proposed public-private partnership for downtown Knoxville: patrons who drove
 downtown and take a safe ride home at the end of the night — a rideshare, taxi,
 or public transit — show proof of the ride to their bartender and receive a
 **$5 Morning Perk voucher**, redeemable at a participating downtown coffee shop
-when they return the next morning to pick up their car.
+when they return the next morning to pick up their car. While valid (one day),
+the card also doubles as a free KAT transit pass — including the ride back
+downtown to the car.
 
 Partners: City of Knoxville · Knoxville Police Department · Knoxville Area
 Transit (KAT) · downtown bars · downtown coffee shops · Market Square Farmers'

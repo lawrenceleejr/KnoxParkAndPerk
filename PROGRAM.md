@@ -39,15 +39,21 @@ crowd tips tomorrow's safe riders.
    confirmed rideshare screen or an activated transit ticket.
 4. Bartender **date-stamps and hands over one Morning Perk voucher** ($5) per
    ride.
-5. Patron returns in the morning, **redeems the voucher** at a participating
+5. While the card is valid, it **doubles as a free KAT pass** — the patron can
+   ride any bus free, including the morning trip back downtown to the car.
+6. Patron returns in the morning, **redeems the voucher** at a participating
    coffee shop, and drives home sober.
 
 ### Voucher rules
 - $5 face value; no cash value; overage paid by customer, underage not refunded.
+- **Doubles as a free KAT pass while valid** — show the card to board any bus
+  free during its validity window; KAT is reimbursed by the program (see Section
+  4). This closes the loop: a free ride back downtown to retrieve the car.
 - **One voucher per ride** — the ride is the ticket. Accepted proof: a confirmed
   rideshare/taxi, or an activated KAT bus or trolley ticket. A group sharing one
   Uber gets one card (the booker's). Two rides, two cards.
-- Valid **two days** from date stamp (covers the morning-after window; prevents hoarding).
+- Valid **one day** from date stamp — the card reads "valid for one day from ____"
+  (covers the morning-after window; prevents hoarding and caps free-transit exposure).
 - Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
 ### Fraud & abuse controls
@@ -148,8 +154,14 @@ what makes it durable.
 | Printing: coasters, vouchers, signage, stamps | $4,000 |
 | Part-time coordinator (reconciliation, restock, partner care) | $9,000 |
 | Launch marketing & press event | $3,000 |
+| KAT free-ride reimbursement (pilot estimate) | $2,000 |
 | Contingency | $2,000 |
-| **Total fixed** | **~$18,000** (voucher face value carried per model A/B above) |
+| **Total fixed** | **~$20,000** (coffee voucher face value carried per model A/B above) |
+
+KAT fares are a small, capped line: a valid card is good for one day, most
+holders use one or two boardings (home and/or the morning return), and standard
+fares are low. Budget it as a flat per-card estimate or reimburse logged
+boardings monthly, whichever KAT prefers.
 
 ## 5. Partner Value & Engagement Playbook
 
@@ -194,23 +206,32 @@ documented decision not to drive impaired."
   surveillance or a sobriety checkpoint. Vouchers are anonymous; no personal
   data is ever collected.
 
-### Knoxville Area Transit (KAT) — *an accepted ride & a service partner*
-**Pitch:** "Riders already using the bus or the free downtown trolley to get
-home safely should qualify for the perk too. Being an accepted proof puts KAT
-in front of the exact crowd that needs a late ride, and drives off-peak
-ridership."
-- Asks: recognize an activated KAT bus/trolley ticket as valid proof; help
-  communicate late-night and weekend routes/hours to patrons and bar staff.
-- Offer: co-branding on materials; a reason for the bar crowd to try transit.
+### Knoxville Area Transit (KAT) — *an accepted ride & a free-ride partner*
+**Pitch:** "Riders already taking the bus home safely should qualify for the
+perk too — and a valid Perk Card should let anyone ride KAT free while it lasts,
+including the morning trip back to the car. It puts KAT in front of the exact
+crowd that needs a late ride, wins first-time riders, and drives off-peak
+ridership — and the program reimburses the fares."
+- Asks: (1) recognize an activated KAT ticket as valid ride proof; (2) accept a
+  valid Perk Card as free fare during its one-day window; help communicate
+  late-night and weekend routes/hours to patrons and bar staff.
+- Offer: full reimbursement of Perk Card rides (settled monthly on logged
+  boardings or a flat per-card estimate agreed at pilot); co-branding on
+  materials; a pipeline of new riders trying the system.
+- Cost control: the card is valid one day only and rides are anonymous-but-
+  counted (driver tally or farebox code), capping exposure and giving KAT clean
+  ridership data.
 - Longer term: coordinate service/marketing around the highest-risk nights so
   a bus home is a genuinely easy option, not just an eligible one.
+- Note: there is no longer a free downtown trolley, so the free-ride benefit is
+  what the program provides — it does not lean on a pre-existing free service.
 
 ### Outreach sequence
 1. **City + KPD first** (credibility unlocks everything else) — one-pager + this site.
 2. **3 anchor coffee shops** (redemption must exist before issuance; they
    co-design the funding model).
 3. **5–8 anchor bars** for the pilot footprint.
-4. **KAT** to confirm transit tickets as accepted proof and align late-night service messaging.
+4. **KAT** to confirm transit tickets as accepted proof, agree the free-ride-for-cardholders benefit and its reimbursement, and align late-night service messaging.
 5. **Sponsors** once the partner map makes the placement value concrete.
 6. **Press launch** with city/KPD, tied to a high-risk weekend.
 7. **Second wave** recruitment using pilot data.
