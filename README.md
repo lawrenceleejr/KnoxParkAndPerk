@@ -2,6 +2,8 @@
 
 *Make it home safe. Tomorrow's coffee's on us.*
 
+**🌐 Live site: <https://lawrenceleejr.github.io/KnoxParkAndPerk/>**
+
 A proposed public-private partnership for downtown Knoxville: patrons who drove
 downtown and book a rideshare home at the end of the night show the booked ride
 to their bartender and receive a **$5 Morning Perk voucher**, redeemable at a
@@ -21,5 +23,7 @@ downtown coffee shops.
 
 ## Publishing the site
 
-Enable GitHub Pages for this repository (Settings → Pages → deploy from the
-default branch, root directory). No build tooling required.
+The site deploys automatically to
+<https://lawrenceleejr.github.io/KnoxParkAndPerk/> on every push to `main` via
+the [GitHub Pages workflow](.github/workflows/pages.yml). No build tooling
+required.
