@@ -92,8 +92,8 @@ cost with free branded stock.
 
 ## 4. Monetization & Sustainability
 
-The funding model is deliberately open — it will be locked with founding
-partners. The design constraint is fixed: **the perk is always free to the
+The funding model is deliberately open — it will be locked with partners as
+they come on board. The design constraint is fixed: **the perk is always free to the
 patron who took the safe ride.** Candidate revenue streams, roughly in order of
 long-run sustainability:
 
