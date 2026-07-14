@@ -54,10 +54,6 @@
     0%,100% { box-shadow: 0 0 0 0 rgba(255,130,0,.5); }
     70%     { box-shadow: 0 0 0 14px rgba(255,130,0,0); }
   }
-  @keyframes sunup {
-    from { transform: translateY(60%); }
-    to   { transform: translateY(0); }
-  }
   @keyframes gradientShift {
     0%,100% { background-position: 50% 0%; }
     50%     { background-position: 50% 100%; }
@@ -215,11 +211,6 @@
 
   /* ---------- Why band ---------- */
   .why { background: var(--cream-dim); position: relative; overflow: hidden; }
-  .why .sun {
-    position: absolute; bottom: -2.5rem; right: 6%;
-    font-size: 5.5rem; opacity: .9;
-  }
-  .why.in-view .sun { animation: sunup 1.4s cubic-bezier(.3,1.4,.5,1) backwards; }
   .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.5rem; text-align: center; }
   .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
   .why-grid .stat { transition: transform .25s ease; }
@@ -337,7 +328,6 @@
 </section>
 
 <section class="why" id="why">
-  <div class="sun">🌅</div>
   <div class="wrap reveal">
     <span class="kicker">Why It Matters</span>
     <h2>The cheapest DUI prevention is a good reason to leave the car.</h2>
@@ -463,7 +453,6 @@
       entries.forEach(function (e) {
         if (e.isIntersecting) {
           e.target.classList.add('in');
-          if (e.target.closest('.why')) e.target.closest('.why').classList.add('in-view');
           io.unobserve(e.target);
         }
       });
