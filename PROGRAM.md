@@ -3,11 +3,12 @@
 **Tagline:** *Make it home safe. Tomorrow's coffee's on us.*
 
 A public-private partnership between the City of Knoxville, the Knoxville Police
-Department, downtown bars, and downtown coffee shops. Patrons who drove downtown
-and choose a rideshare home at the end of the night receive a **$5 Morning Perk
-voucher** — framed as a *tip for making the safe, responsible choice* —
-redeemable at a participating coffee shop when they return the next morning to
-retrieve their car.
+Department, Knoxville Area Transit (KAT), downtown bars, and downtown coffee
+shops. Patrons who drove downtown and choose a safe ride home at the end of the
+night — a rideshare, a taxi, or public transit — receive a **$5 Morning Perk
+voucher**, framed as a *tip for making the safe, responsible choice*, redeemable
+at a participating coffee shop when they return the next morning to retrieve
+their car.
 
 ---
 
@@ -32,17 +33,20 @@ crowd tips tomorrow's safe riders.
 ## 2. How It Works (Mechanics)
 
 1. **Patron** drives downtown, parks, and goes out.
-2. At the end of the night, patron **books a rideshare/taxi home** instead of driving.
-3. Patron **shows the confirmed ride screen** to a bartender at a participating bar.
+2. At the end of the night, patron **takes a safe ride home** instead of driving —
+   a booked rideshare/taxi, or a KAT bus or trolley.
+3. Patron **shows proof of the ride** to a bartender at a participating bar: a
+   confirmed rideshare screen or an activated transit ticket.
 4. Bartender **date-stamps and hands over one Morning Perk voucher** ($5) per
-   booked ride.
+   ride.
 5. Patron returns in the morning, **redeems the voucher** at a participating
    coffee shop, and drives home sober.
 
 ### Voucher rules
 - $5 face value; no cash value; overage paid by customer, underage not refunded.
-- **One voucher per booked ride** — the ride is the ticket. A group sharing one
-  Uber gets one card (the booker's). Two cars' worth of people, two rides, two cards.
+- **One voucher per ride** — the ride is the ticket. Accepted proof: a confirmed
+  rideshare/taxi, or an activated KAT bus or trolley ticket. A group sharing one
+  Uber gets one card (the booker's). Two rides, two cards.
 - Valid **two days** from date stamp (covers the morning-after window; prevents hoarding).
 - Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
@@ -155,7 +159,7 @@ dram-shop-adjacent risk, and your name on a city-backed safety program. The ask
 is a 10-second stamp-and-hand at last call."
 - Cost to join: $0 at pilot. Program supplies all materials and voucher books.
 - Engagement: start with 5–8 anchor venues in the Old City and Market Square
-  whose owners talk to each other; founding-partner status (logo on vouchers,
+  whose owners talk to each other; early-partner billing (logo on vouchers,
   press) creates FOMO for the second wave.
 - Staff onboarding: one laminated card behind the bar; 5-minute pre-shift brief;
   small monthly staff perk (e.g., coffee for the crew) to keep buy-in.
@@ -170,7 +174,7 @@ with a monthly cap while we prove the ticket math together."
   (redemptions, average ticket uplift) so the value is visible.
 - Recruit shops within a short walk of major garages first (Gay Street, Market
   Square, Old City).
-- Founding shops help pick the funding architecture (Section 4) — real
+- Coffee shops help pick the funding architecture (Section 4) — real
   co-ownership, not a terms sheet.
 
 ### City of Knoxville — *credibility & promotion*
@@ -190,14 +194,26 @@ documented decision not to drive impaired."
   surveillance or a sobriety checkpoint. Vouchers are anonymous; no personal
   data is ever collected.
 
+### Knoxville Area Transit (KAT) — *an accepted ride & a service partner*
+**Pitch:** "Riders already using the bus or the free downtown trolley to get
+home safely should qualify for the perk too. Being an accepted proof puts KAT
+in front of the exact crowd that needs a late ride, and drives off-peak
+ridership."
+- Asks: recognize an activated KAT bus/trolley ticket as valid proof; help
+  communicate late-night and weekend routes/hours to patrons and bar staff.
+- Offer: co-branding on materials; a reason for the bar crowd to try transit.
+- Longer term: coordinate service/marketing around the highest-risk nights so
+  a bus home is a genuinely easy option, not just an eligible one.
+
 ### Outreach sequence
 1. **City + KPD first** (credibility unlocks everything else) — one-pager + this site.
 2. **3 anchor coffee shops** (redemption must exist before issuance; they
    co-design the funding model).
 3. **5–8 anchor bars** for the pilot footprint.
-4. **Sponsors** once the partner map makes the placement value concrete.
-5. **Press launch** with city/KPD, tied to a high-risk weekend.
-6. **Second wave** recruitment using pilot data.
+4. **KAT** to confirm transit tickets as accepted proof and align late-night service messaging.
+5. **Sponsors** once the partner map makes the placement value concrete.
+6. **Press launch** with city/KPD, tied to a high-risk weekend.
+7. **Second wave** recruitment using pilot data.
 
 ## 6. Metrics & Success Criteria
 
@@ -217,7 +233,7 @@ documented decision not to drive impaired."
 | Phase | Window | Milestones |
 |---|---|---|
 | Design & city buy-in | Months 0–2 | City/KPD MOU, free-parking co-promotion agreement |
-| Partner recruitment | Months 2–3 | 3 coffee shops + 6 bars signed; funding architecture locked with founding partners; materials printed |
+| Partner recruitment | Months 2–3 | 3 coffee shops + 6 bars + KAT signed; funding architecture locked with partners; materials printed |
 | Pilot launch | Month 4 | Press event on a high-visibility weekend |
 | Pilot run | Months 4–9 | Monthly reconciliation, mid-pilot tune-up |
 | Evaluate & scale | Month 10+ | Public report, second-wave recruitment, sponsor expansion |
