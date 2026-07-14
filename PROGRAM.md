@@ -43,7 +43,7 @@ crowd tips tomorrow's safe riders.
 - $5 face value; no cash value; overage paid by customer, underage not refunded.
 - **One voucher per booked ride** — the ride is the ticket. A group sharing one
   Uber gets one card (the booker's). Two cars' worth of people, two rides, two cards.
-- Valid **36 hours** from date stamp (covers the morning-after window; prevents hoarding).
+- Valid **two days** from date stamp (covers the morning-after window; prevents hoarding).
 - Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
 ### Fraud & abuse controls
