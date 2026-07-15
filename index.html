@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,500;1,9..144,600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,500;1,9..144,600;1,9..144,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --night: #141d33;
@@ -166,11 +166,21 @@
 
   /* ---------- Why band ---------- */
   .why { background: var(--cream-dim); position: relative; overflow: hidden; }
-  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.5rem; text-align: center; }
-  .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: var(--f-sans); }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 2rem 1.5rem; text-align: center; align-items: start; }
+  .why-grid .stat b {
+    display: block;
+    font-family: var(--f-display);
+    font-weight: 900; font-style: italic;
+    font-size: clamp(4.5rem, 11vw, 8rem);
+    line-height: .9; letter-spacing: -.03em;
+    background: linear-gradient(155deg, var(--gold) 0%, var(--sunrise) 50%, var(--sunrise-deep) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    margin-bottom: .5rem;
+  }
   .why-grid .stat { transition: transform .25s ease; }
-  .why-grid .stat:hover { transform: scale(1.08); }
-  .why-grid .stat span { font-size: .9rem; color: var(--espresso-light); }
+  .why-grid .stat:hover { transform: scale(1.05); }
+  .why-grid .stat span { font-size: .92rem; color: var(--espresso-light); display: block; max-width: 22ch; margin: 0 auto; }
   .why .fineprint { margin-top: 2rem; font-size: .8rem; color: var(--espresso-light); font-style: italic; max-width: 46ch; }
 
   /* ---------- Partners ---------- */
@@ -258,10 +268,10 @@
     <h2>Four steps. Safer roads. Free coffee.</h2>
     <p class="lede">You don't have to choose between leaving your car and getting stranded downtown. Park &amp; Perk turns the responsible choice into the rewarding one.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><h3>Park</h3><p>Park in a <a href="https://www.knoxparking.org/" target="_blank" rel="noopener">municipal garage</a> downtown.</p></div>
-      <div class="step"><div class="step-num">2</div><h3>Catch a ride</h3><p>At the end of the night, book an Uber, Lyft, or cab — or hop a KAT bus — home instead of driving. Leave the car; parking in downtown's municipal garages is free overnights and weekends.</p></div>
-      <div class="step"><div class="step-num">3</div><h3>Show it &amp; grab your card</h3><p>Show your rideshare screen or activated transit ticket to bar staff before you head out. They stamp and hand over a Morning Perk card — one per ride. (Sharing an Uber? The booker gets the card.)</p></div>
-      <div class="step"><div class="step-num">4</div><h3>Coffee &amp; car</h3><p>Ride KAT back downtown free on the card, claim your free large coffee within a day, grab your car, and drive home — sober and caffeinated.</p></div>
+      <div class="step"><div class="step-num">1</div><h3>Park</h3><p>Park in a <a href="https://www.downtownknoxville.org/explore/parking/?t%5B%5D=96&amp;q=" target="_blank" rel="noopener">municipal garage</a> downtown.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Catch a ride</h3><p>At the end of the night, book an Uber, Lyft, or cab — or hop a <a href="https://www.katbus.com/" target="_blank" rel="noopener">KAT</a> bus — home instead of driving. Leave the car; parking in downtown's municipal garages is free overnights and weekends.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Show it &amp; grab your card</h3><p>Show your rideshare screen or activated transit ticket to bar staff before you head out. They stamp and hand over a Morning Perk card — one per ride. (Sharing a Lyft? The booker gets the card.)</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Coffee &amp; car</h3><p>Ride <a href="https://www.katbus.com/" target="_blank" rel="noopener">KAT</a> back downtown free on the card, claim your free large coffee within a day, grab your car, and drive home — sober and caffeinated.</p></div>
     </div>
   </div>
 </section>
@@ -273,7 +283,7 @@
     <p class="lede">A simple, wallet-sized card handed to you at last call and redeemed the next morning. It's a thanks for keeping the roads safe — good for a free large coffee, and a free ride to go get your car.</p>
     <ul class="plain">
       <li><strong>A free large coffee</strong> at any participating downtown shop — the morning-after pick-me-up, on the house.</li>
-      <li><strong>Free KAT rides</strong> while it's valid — show the card and board any bus, including the morning trip back to your car.</li>
+      <li><strong>Free <a href="https://www.katbus.com/" target="_blank" rel="noopener">KAT</a> rides</strong> while it's valid — show the card and board any bus, including the morning trip back to your car.</li>
       <li><strong>One per booked ride</strong>, stamped with the date and the issuing bar's mark. One ride, one card.</li>
       <li><strong>Valid one day</strong> from issue, so it's for your morning-after trip — not a stockpile.</li>
       <li><strong>A QR code on every card</strong> links to the current list of participating businesses.</li>
@@ -332,9 +342,9 @@
         <p class="pc-cost">Role: parking policy, promotion, credibility</p>
       </div>
       <div class="pcard">
-        <h3>Knoxville Area Transit</h3>
+        <h3><a href="https://www.katbus.com/" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">Knoxville Area Transit</a></h3>
         <ul>
-          <li>An activated KAT ticket is an accepted safe-ride-home proof — no rideshare required.</li>
+          <li>An activated <a href="https://www.katbus.com/" target="_blank" rel="noopener">KAT</a> ticket is an accepted safe-ride-home proof — no rideshare required.</li>
           <li>A valid Perk Card rides KAT free while it lasts — including the morning trip back to the car.</li>
           <li>New off-peak and late-night ridership, and riders who try KAT for the first time.</li>
           <li>Co-branding alongside downtown's road-safety story.</li>
@@ -352,7 +362,7 @@
     <details><summary>What counts as "showing my ride"?</summary><p>A confirmed or just-booked rideshare (Uber/Lyft), a taxi receipt, an activated Knoxville Area Transit (KAT) bus or trolley ticket, or a designated-driver pickup at the bartender's discretion. The point is simple: you're not driving.</p></details>
     <details><summary>What about my car overnight?</summary><p>Good news: parking in the City of Knoxville's municipal garages downtown is free on evenings and weekends, so leaving your car overnight won't cost you a thing. Just grab it in the morning when you come back for your coffee. (Always check the posted signage for the garage you're in.)</p></details>
     <details><summary>Can I get more than one card?</summary><p>It's one card per booked ride — the ride is the ticket. Cards are date-stamped, bar-marked, and serialized, and are valid for one day from issue. If your whole group piles into one Uber, that's one card (whoever booked it gets the coffee — choose your friends wisely).</p></details>
-    <details><summary>The card gets me free transit too?</summary><p>Yes — while your Perk Card is valid, show it to board any Knoxville Area Transit (KAT) bus and ride free, including your morning trip back downtown to pick up your car. One card, coffee <em>and</em> the ride to go get it.</p></details>
+    <details><summary>The card gets me free transit too?</summary><p>Yes — while your Perk Card is valid, show it to board any <a href="https://www.katbus.com/" target="_blank" rel="noopener">Knoxville Area Transit (KAT)</a> bus and ride free, including your morning trip back downtown to pick up your car. One card, coffee <em>and</em> the ride to go get it.</p></details>
     <details><summary>What if I didn't drive downtown?</summary><p>The program is designed for people whose car is parked downtown — that's the moment the risky decision happens. But bartenders have discretion; the goal is safe rides home, not paperwork.</p></details>
     <details><summary>Who pays for the coffee?</summary><p>The funding model is being designed right now with our partners, drawing on sponsorships (rideshare companies, insurers, hospitals, parking operators), partner venues, and a "Perk It Forward" option that lets tonight's patrons chip in a dollar toward tomorrow's tips. What's already fixed: the perk is always free for the person who took the safe ride home.</p></details>
     <details><summary>Is this a City of Knoxville program?</summary><p>Knox Park &amp; Perk is a proposed public-private partnership, currently in the pilot design phase, seeking partnership with the City of Knoxville, the Knoxville Police Department, and downtown businesses.</p></details>
