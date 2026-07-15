@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Knox Park &amp; Perk favicon">
+  <defs>
+    <linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#141d33"/>
+      <stop offset="100%" stop-color="#0c1224"/>
+    </linearGradient>
+    <linearGradient id="fav-amp" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0%" stop-color="#ffce8a"/>
+      <stop offset="55%" stop-color="#ff8200"/>
+      <stop offset="100%" stop-color="#d96a00"/>
+    </linearGradient>
+  </defs>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#fav-bg)" stroke="#ffb95e" stroke-width="2.5"/>
+  <svg x="10" y="9" width="44" height="44" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+    <g fill="none" stroke="url(#fav-amp)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M74,66 C74,78 62,84 52,84 C34,84 24,72 30,58 C35,46 52,40 58,30 C63,22 58,14 49,14 C41,14 36,21 40,30 C45,41 60,52 72,66 C80,75 86,74 90,66"/>
+    </g>
+  </svg>
+</svg>

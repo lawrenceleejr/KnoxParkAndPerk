@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Knox Park &amp; Perk — Make it home safe. Tomorrow's coffee's on us.</title>
 <meta name="description" content="Knox Park & Perk is a Knoxville road-safety partnership between downtown bars, coffee shops, KAT transit, the City, and KPD. Book a safe ride home at last call and get a card good for a free large coffee — and a free KAT ride — the next morning when you come back for your car.">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,500;1,9..144,600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --night: #141d33;
@@ -17,19 +22,20 @@
     --sunrise-deep: #d96a00;
     --gold: #ffb95e;
     --maxw: 68rem;
+    --f-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --f-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: var(--f-sans);
     color: var(--espresso);
     background: var(--cream);
     line-height: 1.6;
     overflow-x: hidden;
   }
-  h1, h2, h3, .sans, nav, .btn, .step-num, .badge {
-    font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
-  }
+  h1, h2, h3 { font-family: var(--f-display); }
+  .sans, nav, .btn, .step-num, .badge { font-family: var(--f-sans); }
   a { color: var(--sunrise-deep); }
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; }
 
@@ -81,15 +87,16 @@
   .star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; animation: twinkle 3s ease-in-out infinite; }
   .hero-emblem { width: 128px; height: 128px; margin: 0 auto 1.4rem; display: block; position: relative; filter: drop-shadow(0 6px 18px rgba(0,0,0,.4)); }
   header .mark {
-    font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--f-sans);
     font-size: .8rem; text-transform: uppercase; letter-spacing: .28em;
     color: var(--gold); margin-bottom: 1.6rem;
   }
   header .mark span { white-space: nowrap; }
   header .mark i { color: var(--espresso-light); font-style: normal; margin: 0 .55rem; }
-  header h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: .01em; position: relative; }
-  header h1 .amp { color: var(--sunrise); font-family: Georgia, serif; font-style: italic; font-weight: 400; }
+  header h1 { font-size: clamp(2.6rem, 6.4vw, 4.2rem); font-weight: 800; letter-spacing: -.005em; position: relative; }
+  header h1 .amp { color: var(--sunrise); font-family: var(--f-display); font-style: italic; font-weight: 600; }
   header .tagline {
+    font-family: var(--f-display);
     font-size: clamp(1.15rem, 2.6vw, 1.5rem);
     font-style: italic; color: var(--gold);
     margin: 1.1rem auto 0; max-width: 34ch;
@@ -115,7 +122,7 @@
   .kicker {
     text-transform: uppercase; letter-spacing: .18em; font-size: .78rem;
     color: var(--sunrise-deep); font-weight: 700; display: block; margin-bottom: .8rem;
-    font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--f-sans);
   }
 
   /* ---------- Steps ---------- */
@@ -152,7 +159,7 @@
   .kit figure { margin: 0; width: 100%; max-width: 25rem; text-align: center; }
   .kit .card-img img { width: 100%; height: auto; border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.4); display: block; }
   .kit .coaster-img img { width: 100%; max-width: 17rem; height: auto; margin: 0 auto; display: block; filter: drop-shadow(0 10px 22px rgba(0,0,0,.45)); }
-  .kit figcaption { margin-top: .6rem; font-family: 'Avenir Next', Avenir, sans-serif; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .kit figcaption { margin-top: .6rem; font-family: var(--f-sans); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
   .voucher-band li strong { color: var(--gold); }
   .voucher-band ul.plain { list-style: none; }
   .voucher-band ul.plain li { padding: .45rem 0 .45rem 1.4rem; position: relative; }
@@ -161,7 +168,7 @@
   /* ---------- Why band ---------- */
   .why { background: var(--cream-dim); position: relative; overflow: hidden; }
   .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1.5rem; text-align: center; }
-  .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
+  .why-grid .stat b { display: block; font-size: 2.2rem; color: var(--sunrise-deep); font-family: var(--f-sans); }
   .why-grid .stat { transition: transform .25s ease; }
   .why-grid .stat:hover { transform: scale(1.08); }
   .why-grid .stat span { font-size: .9rem; color: var(--espresso-light); }
@@ -178,7 +185,7 @@
   .pcard h3 { margin-bottom: .7rem; }
   .pcard ul { padding-left: 1.1rem; font-size: .93rem; color: var(--espresso-light); }
   .pcard li { margin: .35rem 0; }
-  .pcard .pc-cost { margin-top: 1rem; font-size: .85rem; font-weight: 700; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; text-transform: uppercase; letter-spacing: .05em; }
+  .pcard .pc-cost { margin-top: 1rem; font-size: .85rem; font-weight: 700; color: var(--sunrise-deep); font-family: var(--f-sans); text-transform: uppercase; letter-spacing: .05em; }
 
   /* ---------- FAQ ---------- */
   details {
@@ -187,7 +194,7 @@
     transition: border-color .2s ease;
   }
   details[open] { border-color: var(--sunrise); }
-  details summary { cursor: pointer; font-weight: 700; font-family: 'Avenir Next', Avenir, sans-serif; }
+  details summary { cursor: pointer; font-weight: 700; font-family: var(--f-sans); }
   details p { margin-top: .7rem; color: var(--espresso-light); font-size: .95rem; }
 
   /* ---------- CTA + footer ---------- */
