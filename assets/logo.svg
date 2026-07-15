@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 260" role="img" aria-label="Knox Park & Perk logo">
+  <defs>
+    <linearGradient id="sky-l" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c1224"/>
+      <stop offset="45%" stop-color="#1b2749"/>
+      <stop offset="76%" stop-color="#6b3a12"/>
+      <stop offset="100%" stop-color="#ff8200"/>
+    </linearGradient>
+    <linearGradient id="sun-l" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff2cf"/>
+      <stop offset="55%" stop-color="#ffb95e"/>
+      <stop offset="100%" stop-color="#ff8200"/>
+    </linearGradient>
+    <clipPath id="disc-l"><circle cx="120" cy="120" r="112"/></clipPath>
+    <clipPath id="horizon-l"><rect x="4" y="8" width="232" height="146"/></clipPath>
+  </defs>
+
+  <!-- emblem -->
+  <svg x="10" y="18" width="224" height="224" viewBox="0 0 240 240">
+    <circle cx="120" cy="120" r="112" fill="url(#sky-l)"/>
+    <g clip-path="url(#disc-l)">
+      <circle cx="70" cy="52" r="1.7" fill="#fff7ec" opacity=".85"/>
+      <circle cx="168" cy="46" r="1.4" fill="#fff7ec" opacity=".7"/>
+      <circle cx="150" cy="66" r="1.2" fill="#fff7ec" opacity=".6"/>
+      <circle cx="120" cy="30" r="1.5" fill="#fff7ec" opacity=".75"/>
+      <g clip-path="url(#horizon-l)">
+        <g stroke="#ffb95e" stroke-width="4" stroke-linecap="round" opacity=".9">
+          <line x1="120" y1="92" x2="120" y2="76"/>
+          <line x1="140.5" y1="95.6" x2="146" y2="80.6"/>
+          <line x1="99.5" y1="95.6" x2="94" y2="80.6"/>
+          <line x1="158.6" y1="106" x2="168.9" y2="93.8"/>
+          <line x1="81.4" y1="106" x2="71.1" y2="93.8"/>
+          <line x1="172" y1="122" x2="185.8" y2="114"/>
+          <line x1="68" y1="122" x2="54.2" y2="114"/>
+        </g>
+        <circle cx="120" cy="152" r="56" fill="url(#sun-l)"/>
+      </g>
+      <line x1="40" y1="154" x2="200" y2="154" stroke="#ffb95e" stroke-width="3" stroke-linecap="round"/>
+      <g fill="none" stroke="#fff7ec" stroke-width="3.4" stroke-linecap="round" opacity=".75">
+        <path d="M112,122 C108,114 116,108 112,99 C110,95 112,93 112,90"/>
+        <path d="M128,122 C132,114 124,108 128,99 C130,95 128,93 128,90"/>
+      </g>
+      <path d="M146,130 C160,130 160,149 145,147" fill="none" stroke="#fff7ec" stroke-width="4"/>
+      <path d="M93,127 L147,127 L141,149 Q140,151 138,151 L102,151 Q100,151 99,149 Z" fill="#0c1224" stroke="#fff7ec" stroke-width="4" stroke-linejoin="round"/>
+      <ellipse cx="120" cy="127" rx="27" ry="5" fill="#141d33" stroke="#fff7ec" stroke-width="4"/>
+      <ellipse cx="120" cy="127" rx="20" ry="3" fill="#ff8200"/>
+    </g>
+    <circle cx="120" cy="120" r="112" fill="none" stroke="#ffb95e" stroke-width="5"/>
+  </svg>
+
+  <!-- wordmark -->
+  <text x="258" y="116" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="60" fill="#3a2a1d" letter-spacing="1">KNOX PARK <tspan fill="#ff8200" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-weight="400">&amp;</tspan> PERK</text>
+  <text x="260" y="156" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="23" fill="#6b543f">Make it home safe. Tomorrow&#39;s coffee&#39;s on us.</text>
+  <text x="262" y="190" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="15" font-weight="700" fill="#d96a00" letter-spacing="4">KNOXVILLE, TENNESSEE</text>
+</svg>
