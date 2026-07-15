@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525 300" role="img" aria-label="Knox Park & Perk — Morning Perk Card">
+  <defs>
+    <linearGradient id="sky-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c1224"/>
+      <stop offset="45%" stop-color="#1b2749"/>
+      <stop offset="76%" stop-color="#6b3a12"/>
+      <stop offset="100%" stop-color="#ff8200"/>
+    </linearGradient>
+    <linearGradient id="sun-c" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff2cf"/>
+      <stop offset="55%" stop-color="#ffb95e"/>
+      <stop offset="100%" stop-color="#ff8200"/>
+    </linearGradient>
+    <clipPath id="card-r"><rect x="6" y="6" width="513" height="288" rx="18"/></clipPath>
+    <clipPath id="disc-c"><circle cx="120" cy="120" r="112"/></clipPath>
+    <clipPath id="horizon-c"><rect x="4" y="8" width="232" height="146"/></clipPath>
+  </defs>
+
+  <rect x="6" y="6" width="513" height="288" rx="18" fill="#fff7ec" stroke="#d96a00" stroke-width="2"/>
+
+  <g clip-path="url(#card-r)">
+    <!-- header band -->
+    <rect x="6" y="6" width="513" height="86" fill="#141d33"/>
+    <!-- faint sun watermark bottom-right -->
+    <circle cx="470" cy="300" r="70" fill="#ff8200" opacity=".08"/>
+
+    <!-- emblem in header -->
+    <svg x="16" y="14" width="70" height="70" viewBox="0 0 240 240">
+      <circle cx="120" cy="120" r="112" fill="url(#sky-c)"/>
+      <g clip-path="url(#disc-c)">
+        <circle cx="120" cy="30" r="2" fill="#fff7ec" opacity=".75"/>
+        <circle cx="168" cy="46" r="2" fill="#fff7ec" opacity=".6"/>
+        <g clip-path="url(#horizon-c)">
+          <g stroke="#ffb95e" stroke-width="5" stroke-linecap="round">
+            <line x1="120" y1="92" x2="120" y2="74"/>
+            <line x1="140.5" y1="95.6" x2="147" y2="79"/>
+            <line x1="99.5" y1="95.6" x2="93" y2="79"/>
+            <line x1="160" y1="106" x2="171" y2="93"/>
+            <line x1="80" y1="106" x2="69" y2="93"/>
+          </g>
+          <circle cx="120" cy="152" r="56" fill="url(#sun-c)"/>
+        </g>
+        <line x1="40" y1="154" x2="200" y2="154" stroke="#ffb95e" stroke-width="4" stroke-linecap="round"/>
+        <path d="M93,127 L147,127 L141,149 Q140,151 138,151 L102,151 Q100,151 99,149 Z" fill="#0c1224" stroke="#fff7ec" stroke-width="5" stroke-linejoin="round"/>
+        <ellipse cx="120" cy="127" rx="27" ry="5" fill="#141d33" stroke="#fff7ec" stroke-width="5"/>
+      </g>
+      <circle cx="120" cy="120" r="112" fill="none" stroke="#ffb95e" stroke-width="6"/>
+    </svg>
+
+    <text x="98" y="42" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="21" fill="#fff7ec" letter-spacing="1.5">KNOX PARK <tspan fill="#ff8200" font-family="Georgia, serif" font-style="italic" font-weight="400">&amp;</tspan> PERK</text>
+    <text x="99" y="66" font-family="Georgia, serif" font-style="italic" font-size="13" fill="#ffb95e">Make it home safe. Tomorrow&#39;s coffee&#39;s on us.</text>
+    <text x="503" y="52" text-anchor="end" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="12" fill="#ffb95e" letter-spacing="2">MORNING PERK CARD</text>
+
+    <!-- body -->
+    <text x="28" y="132" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="30" fill="#d96a00" letter-spacing=".5">FREE LARGE COFFEE</text>
+    <text x="30" y="155" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#3a2a1d">You made the safe call. The morning&#39;s on us.</text>
+
+    <g font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-size="12.5" fill="#6b543f">
+      <text x="30" y="182">— One large coffee at participating downtown shops</text>
+      <text x="30" y="201">— Free KAT bus rides while this card is valid</text>
+      <text x="30" y="220">— One per ride &#183; Not for resale &#183; No cash value</text>
+    </g>
+
+    <line x1="28" y1="240" x2="497" y2="240" stroke="#d96a00" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+    <text x="28" y="262" font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="13" fill="#3a2a1d" letter-spacing=".5">VALID FOR ONE DAY FROM <tspan fill="#6b543f">________________</tspan></text>
+
+    <text x="28" y="284" font-family="'Courier New', monospace" font-size="12" fill="#6b543f">&#8470; KPP-2026-004217</text>
+    <text x="497" y="284" text-anchor="end" font-family="'Courier New', monospace" font-size="12" fill="#6b543f">BAR ____</text>
+  </g>
+</svg>

@@ -23,6 +23,11 @@ Market.
 - **[`PROGRAM.md`](PROGRAM.md)** — full program design: mechanics, card spec,
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
+- **[`assets/`](assets)** — print-ready brand assets as scalable SVG:
+  - [`logo.svg`](assets/logo.svg) — horizontal logo lockup (light backgrounds)
+  - [`logo-mark.svg`](assets/logo-mark.svg) — emblem only (any background)
+  - [`card.svg`](assets/card.svg) — the Morning Perk Card (business-card size)
+  - [`coaster.svg`](assets/coaster.svg) — the bar coaster (round)
 
 ## Publishing the site
 
