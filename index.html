@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Knox Park &amp; Perk — Make it home safe. Tomorrow's coffee's on us.</title>
-<meta name="description" content="Knox Park & Perk is a Knoxville partnership between downtown bars, coffee shops, KAT transit, the City, and KPD. Book a safe ride home at last call and get a $5 coffee voucher that also rides KAT free the next morning when you come back for your car.">
+<meta name="description" content="Knox Park & Perk is a Knoxville road-safety partnership between downtown bars, coffee shops, KAT transit, the City, and KPD. Book a safe ride home at last call and get a card good for a free large coffee — and a free KAT ride — the next morning when you come back for your car.">
 <style>
   :root {
     --night: #141d33;
@@ -34,24 +34,10 @@
   .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 1.5rem; }
 
   /* ---------- Animations ---------- */
-  @keyframes twinkle { 0%,100% { opacity:.25 } 50% { opacity:1 } }
-  @keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
-  @keyframes drive {
-    0%   { transform: translateX(-12vw) scaleX(-1); }
-    100% { transform: translateX(112vw) scaleX(-1); }
-  }
-  @keyframes steam {
-    0%   { transform: translateY(0) translateX(0) scale(.7); opacity: 0; }
-    20%  { opacity: .8; }
-    100% { transform: translateY(-2.2rem) translateX(.35rem) scale(1.15); opacity: 0; }
-  }
+  @keyframes twinkle { 0%,100% { opacity:.2 } 50% { opacity:.9 } }
   @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
-  @keyframes wiggle {
-    0%,100% { transform: rotate(-2deg); }
-    50%     { transform: rotate(1.5deg) scale(1.02); }
-  }
   @keyframes pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(255,130,0,.5); }
+    0%,100% { box-shadow: 0 0 0 0 rgba(255,130,0,.45); }
     70%     { box-shadow: 0 0 0 14px rgba(255,130,0,0); }
   }
   @keyframes gradientShift {
@@ -87,20 +73,18 @@
     animation: gradientShift 14s ease-in-out infinite;
     color: var(--cream);
     text-align: center;
-    padding: 5.5rem 1.5rem 8.5rem;
+    padding: 6rem 1.5rem 6.5rem;
     position: relative;
     overflow: hidden;
   }
   .star { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; animation: twinkle 3s ease-in-out infinite; }
-  .moon {
-    position: absolute; top: 3rem; right: 8%;
-    font-size: 3rem; animation: floaty 7s ease-in-out infinite;
-    filter: drop-shadow(0 0 18px rgba(255,247,220,.55));
+  header .mark {
+    font-family: 'Avenir Next', Avenir, 'Helvetica Neue', Arial, sans-serif;
+    font-size: .8rem; text-transform: uppercase; letter-spacing: .28em;
+    color: var(--gold); margin-bottom: 1.6rem;
   }
-  header .mark { font-size: 3rem; line-height: 1; margin-bottom: 1.2rem; letter-spacing: .1em; }
-  header .mark span { display: inline-block; animation: floaty 3.6s ease-in-out infinite; }
-  header .mark span:nth-child(2) { animation-delay: .5s; }
-  header .mark span:nth-child(3) { animation-delay: 1s; }
+  header .mark span { white-space: nowrap; }
+  header .mark i { color: var(--espresso-light); font-style: normal; margin: 0 .55rem; }
   header h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: .01em; position: relative; }
   header h1 .amp { color: var(--sunrise); font-family: Georgia, serif; font-style: italic; font-weight: 400; }
   header .tagline {
@@ -121,19 +105,7 @@
   .btn-ghost { border: 2px solid var(--cream-dim); color: var(--cream); }
   .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* road + driving car */
-  .road {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 3.4rem;
-    background: #1b2333;
-    border-top: 3px dashed rgba(255,185,94,.5);
-  }
-  .car {
-    position: absolute; bottom: .55rem; left: 0;
-    font-size: 2rem;
-    animation: drive 9s linear infinite;
-    will-change: transform;
-  }
-  .skyline { height: .6rem; background: repeating-linear-gradient(90deg, var(--sunrise) 0 2.5rem, var(--night) 2.5rem 2.75rem); }
+  .skyline { height: .5rem; background: repeating-linear-gradient(90deg, var(--sunrise) 0 2.5rem, var(--night) 2.5rem 2.75rem); }
 
   section { padding: 4.5rem 0; }
   section h2 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin-bottom: .6rem; }
@@ -152,9 +124,7 @@
     box-shadow: 0 2px 6px rgba(58,42,29,.06);
     transition: transform .25s ease, box-shadow .25s ease;
   }
-  .step:hover { transform: translateY(-6px) rotate(-.6deg); box-shadow: 0 12px 24px rgba(58,42,29,.14); }
-  .step .emoji { position: absolute; top: 1.2rem; right: 1.1rem; font-size: 1.5rem; transition: transform .25s ease; }
-  .step:hover .emoji { transform: scale(1.35) rotate(10deg); }
+  .step:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(58,42,29,.14); }
   .step-num {
     width: 2.1rem; height: 2.1rem; border-radius: 50%;
     background: var(--night); color: var(--gold);
@@ -178,37 +148,28 @@
   .voucher-flex > div { flex: 1 1 20rem; }
   .voucher-card {
     background: var(--cream); color: var(--espresso);
-    border-radius: 14px; padding: 1.4rem 1.6rem;
-    max-width: 24rem; margin: 0 auto;
-    border: 2px dashed var(--sunrise-deep);
-    box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    transform: rotate(-2deg);
-    transition: transform .3s ease;
+    border-radius: 14px; padding: 1.5rem 1.6rem;
+    max-width: 23rem; margin: 0 auto;
+    border: 1px solid var(--sunrise-deep);
+    box-shadow: 0 12px 34px rgba(0,0,0,.35);
     position: relative;
   }
-  .voucher-card:hover { animation: wiggle .5s ease-in-out; }
-  .voucher-card .cup {
-    position: absolute; top: -1.6rem; right: 1.2rem; font-size: 2.2rem;
+  .voucher-card::before {
+    content: ""; position: absolute; inset: .4rem;
+    border: 1px dashed rgba(217,106,0,.4); border-radius: 10px; pointer-events: none;
   }
-  .voucher-card .cup i {
-    position: absolute; left: .55rem; top: -.4rem;
-    width: .3rem; height: .8rem; border-radius: 50%;
-    background: rgba(255,255,255,.85); filter: blur(2px);
-    animation: steam 2.4s ease-out infinite;
-  }
-  .voucher-card .cup i:nth-child(2) { left: 1rem; animation-delay: .8s; }
-  .voucher-card .cup i:nth-child(3) { left: 1.45rem; animation-delay: 1.6s; }
   .voucher-card .vc-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid var(--espresso); padding-bottom: .5rem; margin-bottom: .7rem; }
-  .voucher-card .vc-head strong { font-family: 'Avenir Next', Avenir, sans-serif; letter-spacing: .05em; }
-  .voucher-card .vc-amt { font-size: 1.6rem; font-weight: 800; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; }
+  .voucher-card .vc-head strong { font-family: 'Avenir Next', Avenir, sans-serif; letter-spacing: .05em; font-size: .95rem; }
+  .voucher-card .vc-amt { font-size: 1.35rem; font-weight: 800; color: var(--sunrise-deep); font-family: 'Avenir Next', Avenir, sans-serif; letter-spacing: .04em; }
   .voucher-card ul { list-style: none; font-size: .85rem; color: var(--espresso-light); }
-  .voucher-card li { padding: .18rem 0; }
+  .voucher-card li { padding: .2rem 0 .2rem 1rem; position: relative; }
+  .voucher-card li::before { content: "—"; position: absolute; left: 0; color: var(--sunrise-deep); }
   .voucher-card .vc-valid { margin-top: .8rem; padding-top: .6rem; border-top: 1px dashed var(--espresso-light); font-family: 'Avenir Next', Avenir, sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: .02em; }
-  .voucher-card .vc-serial { margin-top: .55rem; font-family: monospace; font-size: .78rem; color: var(--espresso-light); display: flex; justify-content: space-between; }
+  .voucher-card .vc-serial { margin-top: .55rem; font-family: monospace; font-size: .76rem; color: var(--espresso-light); display: flex; justify-content: space-between; }
   .voucher-band li strong { color: var(--gold); }
   .voucher-band ul.plain { list-style: none; }
-  .voucher-band ul.plain li { padding: .45rem 0 .45rem 1.6rem; position: relative; }
-  .voucher-band ul.plain li::before { content: "☕"; position: absolute; left: 0; }
+  .voucher-band ul.plain li { padding: .45rem 0 .45rem 1.4rem; position: relative; }
+  .voucher-band ul.plain li::before { content: ""; position: absolute; left: 0; top: 1rem; width: .5rem; height: .5rem; border-radius: 50%; background: var(--sunrise); }
 
   /* ---------- Why band ---------- */
   .why { background: var(--cream-dim); position: relative; overflow: hidden; }
@@ -274,27 +235,25 @@
 </nav>
 
 <header id="top">
-  <div class="moon">🌙</div>
-  <div class="mark"><span>🍺</span> <span>🚗</span> <span>☕</span></div>
+  <div class="mark"><span>Last call</span><i>&rarr;</i><span>Ride home</span><i>&rarr;</i><span>Morning coffee</span></div>
   <h1>KNOX PARK <span class="amp">&amp;</span> PERK</h1>
   <p class="tagline">Make it home safe. Tomorrow's coffee's on us.</p>
-  <p class="sub">Drove downtown, then decided not to drive home? Good call. Show your bartender your booked rideshare or an activated transit ticket and get a $5 voucher for a downtown coffee shop — redeemable in the morning, when you come back for your car. Think of it as a tip, for making the responsible choice.</p>
+  <p class="sub">Drove downtown, then decided not to drive home? Good call. Show your bartender your booked rideshare or an activated transit ticket, and get a card good for a free large coffee at a downtown shop — for the morning you come back for your car. Consider it Knoxville thanking you for keeping the roads safe.</p>
   <a class="btn btn-solid" href="#how">How it works</a>
   <a class="btn btn-ghost" href="#partners">Become a partner</a>
-  <div class="road"><div class="car">🚕</div></div>
 </header>
 <div class="skyline"></div>
 
 <section id="how">
   <div class="wrap reveal">
     <span class="kicker">For Patrons</span>
-    <h2>Four steps. Zero DUIs. Free coffee.</h2>
+    <h2>Four steps. Safer roads. Free coffee.</h2>
     <p class="lede">You don't have to choose between leaving your car and getting stranded downtown. Park &amp; Perk turns the responsible choice into the rewarding one.</p>
     <div class="steps">
-      <div class="step"><span class="emoji">🅿️</span><div class="step-num">1</div><h3>Park &amp; play</h3><p>Drive downtown, park in a garage or lot, and enjoy your night in the Old City, Market Square, or Gay Street.</p></div>
-      <div class="step"><span class="emoji">📱</span><div class="step-num">2</div><h3>Catch a ride</h3><p>At the end of the night, book an Uber, Lyft, or cab — or hop a KAT bus or trolley — home instead of driving. Leave the car; parking in downtown's municipal garages is free overnights and weekends.</p></div>
-      <div class="step"><span class="emoji">🎟️</span><div class="step-num">3</div><h3>Show it &amp; grab your card</h3><p>Show your rideshare screen or activated transit ticket to bar staff before you head out. They stamp and hand over a $5 Morning Perk voucher — one per ride. (Sharing an Uber? The booker gets the card.)</p></div>
-      <div class="step"><span class="emoji">🌅</span><div class="step-num">4</div><h3>Coffee &amp; car</h3><p>Ride KAT back downtown free on the card, redeem your voucher within a day, grab your car, and drive home — sober, caffeinated, and $5 richer.</p></div>
+      <div class="step"><div class="step-num">1</div><h3>Park &amp; play</h3><p>Drive downtown, park in a garage or lot, and enjoy your night in the Old City, Market Square, or Gay Street.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Catch a ride</h3><p>At the end of the night, book an Uber, Lyft, or cab — or hop a KAT bus — home instead of driving. Leave the car; parking in downtown's municipal garages is free overnights and weekends.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Show it &amp; grab your card</h3><p>Show your rideshare screen or activated transit ticket to bar staff before you head out. They stamp and hand over a Morning Perk card — one per ride. (Sharing an Uber? The booker gets the card.)</p></div>
+      <div class="step"><div class="step-num">4</div><h3>Coffee &amp; car</h3><p>Ride KAT back downtown free on the card, claim your free large coffee within a day, grab your car, and drive home — sober and caffeinated.</p></div>
     </div>
   </div>
 </section>
@@ -304,24 +263,23 @@
     <div>
       <span class="kicker">The Perk</span>
       <h2>The Morning Perk Card</h2>
-      <p class="lede">You've been tipping your bartender all night. This is downtown tipping <em>you</em> back — a $5 thank-you for making the safe, responsible call. A serialized, coaster-sized card handed out at last call and redeemed at sunrise. Simple for bartenders, simple for baristas — and it saves lives.</p>
+      <p class="lede">A simple, wallet-sized card handed to you at last call and redeemed the next morning. It's Knoxville's way of saying thanks for keeping the roads safe — good for a free large coffee, and a free ride to go get your car.</p>
       <ul class="plain">
-        <li><strong>$5 value</strong> at any participating downtown coffee shop — drinks, pastries, whatever gets you moving.</li>
-        <li><strong>Free KAT rides</strong> while it's valid — show the card and hop any bus or trolley, including the morning trip back to your car.</li>
-        <li><strong>One per booked ride</strong>, stamped with the date and the issuing bar's mark. One ride, one card — no double-dipping.</li>
-        <li><strong>Valid one day</strong> from issue, so it's for your morning-after trip — not a coupon stockpile.</li>
-        <li><strong>Serialized &amp; tracked</strong> so the program can log redemptions and measure impact.</li>
+        <li><strong>A free large coffee</strong> at any participating downtown shop — the morning-after pick-me-up, on the house.</li>
+        <li><strong>Free KAT rides</strong> while it's valid — show the card and board any bus, including the morning trip back to your car.</li>
+        <li><strong>One per booked ride</strong>, stamped with the date and the issuing bar's mark. One ride, one card.</li>
+        <li><strong>Valid one day</strong> from issue, so it's for your morning-after trip — not a stockpile.</li>
+        <li><strong>Serialized &amp; tracked</strong> so the program can measure its impact.</li>
       </ul>
     </div>
     <div>
       <div class="voucher-card">
-        <div class="cup">☕<i></i><i></i><i></i></div>
-        <div class="vc-head"><strong>KNOX PARK &amp; PERK</strong><span class="vc-amt">$5</span></div>
-        <p style="font-style:italic; margin-bottom:.6rem;">You made the safe call. Consider this your tip.</p>
+        <div class="vc-head"><strong>KNOX PARK &amp; PERK</strong><span class="vc-amt">FREE COFFEE</span></div>
+        <p style="font-style:italic; margin-bottom:.6rem;">You made the safe call. The morning's on us.</p>
         <ul>
-          <li>✔ $5 at participating downtown coffee shops</li>
-          <li>✔ Free KAT bus &amp; trolley rides while valid</li>
-          <li>✔ One per booked ride · No cash value</li>
+          <li>One large coffee at participating downtown shops</li>
+          <li>Free KAT bus rides while valid</li>
+          <li>One per ride &middot; Not for resale &middot; No cash value</li>
         </ul>
         <div class="vc-valid">Valid for one day from ____________</div>
         <div class="vc-serial"><span>№ KPP-2026-004217</span><span>BAR ____</span></div>
@@ -333,15 +291,15 @@
 <section class="why" id="why">
   <div class="wrap reveal">
     <span class="kicker">Why It Matters</span>
-    <h2>The cheapest DUI prevention is a good reason to leave the car.</h2>
-    <p class="lede">The biggest reason people drive home after drinking downtown is the car itself — nobody wants to deal with retrieving it tomorrow. Park &amp; Perk flips that: your car becomes the reason you come back downtown and spend a morning here.</p>
+    <h2>Safer roads start with an easy reason to leave the car.</h2>
+    <p class="lede">Impaired driving hurts real people on Knoxville's roads every year. The single biggest reason someone drives home after drinking downtown is the car itself — nobody wants the hassle of coming back for it. Park &amp; Perk removes that reason: leave the car, get home safe, and let your car be the reason you're back downtown in the morning.</p>
     <div class="why-grid">
-      <div class="stat"><b>$5</b><span>turns "ugh, my car" into "free coffee downtown"</span></div>
-      <div class="stat"><b>~$10k+</b><span>typical all-in cost of a first DUI in Tennessee — versus a $10 ride home</span></div>
-      <div class="stat"><b>2 visits</b><span>every voucher brings a customer downtown twice: night and morning</span></div>
-      <div class="stat"><b>0</b><span>the number of good outcomes from driving after last call</span></div>
+      <div class="stat"><b>67</b><span>people seriously injured each year in Knoxville-area crashes involving an impaired driver</span></div>
+      <div class="stat"><b>27</b><span>lives lost each year in those same crashes</span></div>
+      <div class="stat"><b>1 in 3</b><span>Knox County crash deaths involve an impaired driver</span></div>
+      <div class="stat"><b>2 visits</b><span>every card brings someone downtown twice: the safe night out, and the morning after</span></div>
     </div>
-    <p class="fineprint">Program impact metrics (vouchers issued, redemption rates, late-night incident trends) will be published after the pilot in partnership with the City of Knoxville and KPD.</p>
+    <p class="fineprint">Injury and fatality figures: Knoxville Regional Transportation Planning Organization. Share of deadly crashes: Knox County Health Department. Program impact metrics will be published after the pilot with the City of Knoxville and KPD.</p>
   </div>
 </section>
 
@@ -352,7 +310,7 @@
     <p class="lede">Park &amp; Perk works because every partner wins — bars close out safer nights, coffee shops open to guaranteed morning traffic, transit picks up late-night riders, and the city gets safer streets and busier sidewalks.</p>
     <div class="cards3">
       <div class="pcard">
-        <h3>🍺 Downtown Bars</h3>
+        <h3>Downtown Bars</h3>
         <ul>
           <li>Send patrons home safe — and reduce your late-night liability exposure.</li>
           <li>Free co-branded coasters, table tents, and restroom signage supplied by the program.</li>
@@ -362,40 +320,40 @@
         <p class="pc-cost">Cost to join: $0</p>
       </div>
       <div class="pcard">
-        <h3>☕ Coffee Shops</h3>
+        <h3>Coffee Shops</h3>
         <ul>
           <li>Morning foot traffic from last night's crowd.</li>
-          <li>Average morning tickets run well past $5, and a good first visit makes a regular.</li>
+          <li>A large coffee is a small pour against a morning ticket that usually runs higher — and a good first visit makes a regular.</li>
           <li>Simple redemption: collect the card, log the serial — done.</li>
-          <li>Co-branding on every voucher and coaster in circulation downtown.</li>
+          <li>Co-branding on every card and coaster in circulation downtown.</li>
         </ul>
         <p class="pc-cost">Structure designed together with partners</p>
       </div>
       <div class="pcard">
-        <h3>🏛 City &amp; KPD</h3>
+        <h3>City &amp; KPD</h3>
         <ul>
-          <li>A positive-incentive complement to DUI enforcement — cheaper than one crash response.</li>
+          <li>A positive-incentive complement to enforcement — every card is a decision not to drive home impaired.</li>
           <li>Free overnight &amp; weekend parking in municipal garages already makes leaving the car easy — the program just spreads the word.</li>
-          <li>Clear metrics: vouchers issued and redeemed, by night and by venue.</li>
-          <li>A community-goodwill story the department can stand behind.</li>
+          <li>Clear metrics: cards issued and redeemed, by night and by venue.</li>
+          <li>A road-safety story the city and department can stand behind.</li>
         </ul>
         <p class="pc-cost">Role: parking policy, promotion, credibility</p>
       </div>
       <div class="pcard">
-        <h3>🚌 Knoxville Area Transit</h3>
+        <h3>Knoxville Area Transit</h3>
         <ul>
           <li>An activated KAT ticket is an accepted safe-ride-home proof — no rideshare required.</li>
-          <li>A valid Perk Card rides KAT free while it lasts — including the morning trip back to the car — reimbursed by the program.</li>
+          <li>A valid Perk Card rides KAT free while it lasts — including the morning trip back to the car.</li>
           <li>New off-peak and late-night ridership, and riders who try KAT for the first time.</li>
-          <li>Co-branding alongside downtown's safety story.</li>
+          <li>Co-branding alongside downtown's road-safety story.</li>
         </ul>
-        <p class="pc-cost">Role: accepted proof, free rides for cardholders (reimbursed)</p>
+        <p class="pc-cost">Role: accepted proof, free rides for cardholders</p>
       </div>
       <div class="pcard">
-        <h3>🥕 Market Square Farmers' Market</h3>
+        <h3>Market Square Farmers' Market</h3>
         <ul>
           <li>A Friday-night safe ride home is a Saturday-morning market visit — your car's downtown anyway.</li>
-          <li>Redeem your coffee voucher, then shop the market a block away.</li>
+          <li>Claim your free coffee, then shop the market a block away.</li>
           <li>New weekend-morning foot traffic from the night-before crowd.</li>
           <li>Co-branding that ties "make it home safe" to "come back Saturday."</li>
         </ul>
@@ -411,7 +369,7 @@
     <h2>FAQ</h2>
     <details><summary>What counts as "showing my ride"?</summary><p>A confirmed or just-booked rideshare (Uber/Lyft), a taxi receipt, an activated Knoxville Area Transit (KAT) bus or trolley ticket, or a designated-driver pickup at the bartender's discretion. The point is simple: you're not driving.</p></details>
     <details><summary>What about my car overnight?</summary><p>Good news: parking in the City of Knoxville's municipal garages downtown is free on evenings and weekends, so leaving your car overnight won't cost you a thing. Just grab it in the morning when you come back for your coffee. (Always check the posted signage for the garage you're in.)</p></details>
-    <details><summary>Can I get more than one voucher?</summary><p>It's one voucher per booked ride — the ride is the ticket. Vouchers are date-stamped, bar-marked, and serialized, and are valid for one day from issue. If your whole group piles into one Uber, that's one card (whoever booked it gets the coffee — choose your friends wisely).</p></details>
+    <details><summary>Can I get more than one card?</summary><p>It's one card per booked ride — the ride is the ticket. Cards are date-stamped, bar-marked, and serialized, and are valid for one day from issue. If your whole group piles into one Uber, that's one card (whoever booked it gets the coffee — choose your friends wisely).</p></details>
     <details><summary>The card gets me free transit too?</summary><p>Yes — while your Perk Card is valid, show it to board any Knoxville Area Transit (KAT) bus and ride free, including your morning trip back downtown to pick up your car. One card, coffee <em>and</em> the ride to go get it.</p></details>
     <details><summary>What if I didn't drive downtown?</summary><p>The program is designed for people whose car is parked downtown — that's the moment the risky decision happens. But bartenders have discretion; the goal is safe rides home, not paperwork.</p></details>
     <details><summary>Who pays for the coffee?</summary><p>The funding model is being designed right now with our partners, drawing on sponsorships (rideshare companies, insurers, hospitals, parking operators), partner venues, and a "Perk It Forward" option that lets tonight's patrons chip in a dollar toward tomorrow's tips. What's already fixed: the perk is always free for the person who took the safe ride home.</p></details>

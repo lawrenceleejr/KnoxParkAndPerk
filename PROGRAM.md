@@ -5,70 +5,76 @@
 A public-private partnership between the City of Knoxville, the Knoxville Police
 Department, Knoxville Area Transit (KAT), downtown bars, and downtown coffee
 shops. Patrons who drove downtown and choose a safe ride home at the end of the
-night — a rideshare, a taxi, or public transit — receive a **$5 Morning Perk
-voucher**, framed as a *tip for making the safe, responsible choice*, redeemable
-at a participating coffee shop when they return the next morning to retrieve
-their car.
+night — a rideshare, a taxi, or public transit — receive a **Morning Perk
+Card**: a card good for a **free large coffee** at a participating downtown shop
+(plus a free KAT ride) when they return the next morning to retrieve their car.
+It's framed as Knoxville saying *thanks for keeping the roads safe*.
 
 ---
 
 ## 1. The Problem & The Insight
 
+Impaired driving hurts real people on Knoxville's roads. In the Knoxville
+region, crashes involving an impaired driver **seriously injure about 67 people
+and kill 27 every year** (Knoxville Regional Transportation Planning
+Organization), and **one in three Knox County crash deaths involves an impaired
+driver** (Knox County Health Department).
+
 People drive downtown, drink more than planned, and then face a choice: pay for
 a ride home *and* a ride back tomorrow (plus the hassle), or just drive. The
-parked car is the single biggest driver of impaired driving decisions.
+parked car is the single biggest reason people talk themselves into driving.
 
 **The insight:** don't fight the car — use it. The car guarantees the patron
 returns downtown in the morning. Reward the safe choice at the exact moment it's
 made (last call, at the bar) and cash it in at the exact moment it pays off
-(the morning retrieval trip). Downtown gets the customer twice.
+(the morning trip back for the car). Downtown gets the visitor twice, and one
+more impaired driver stays off the road.
 
-**The framing:** the voucher is a **tip**. Patrons tip service staff all night;
-Park & Perk is downtown tipping the patron back for the most valuable service of
-the evening — getting home without driving. "Tip" keeps the tone warm and
-non-preachy, makes the $5 feel like recognition rather than a coupon, and sets
-up patron-side funding mechanics ("Perk It Forward," below) where tonight's
-crowd tips tomorrow's safe riders.
+**The framing:** the card is a **thank-you**, not a coupon. Knoxville thanks the
+patron for the most valuable thing they did all night — getting home without
+driving. Warm and non-preachy, it makes the free coffee feel like recognition,
+and it sets up patron-side funding ("Perk It Forward," below) where tonight's
+crowd stands the coffee for tomorrow's safe riders.
 
 ## 2. How It Works (Mechanics)
 
 1. **Patron** drives downtown, parks, and goes out.
 2. At the end of the night, patron **takes a safe ride home** instead of driving —
-   a booked rideshare/taxi, or a KAT bus or trolley.
+   a booked rideshare/taxi, or a KAT bus.
 3. Patron **shows proof of the ride** to a bartender at a participating bar: a
    confirmed rideshare screen or an activated transit ticket.
-4. Bartender **date-stamps and hands over one Morning Perk voucher** ($5) per
-   ride.
+4. Bartender **date-stamps and hands over one Morning Perk Card** per ride.
 5. While the card is valid, it **doubles as a free KAT pass** — the patron can
    ride any bus free, including the morning trip back downtown to the car.
-6. Patron returns in the morning, **redeems the voucher** at a participating
-   coffee shop, and drives home sober.
+6. Patron returns in the morning, **claims a free large coffee** at a
+   participating shop, and drives home sober.
 
-### Voucher rules
-- $5 face value; no cash value; overage paid by customer, underage not refunded.
+### Card rules
+- Good for **one free large coffee**; no cash value; not for resale; any
+  add-ons beyond the large coffee are on the customer.
 - **Doubles as a free KAT pass while valid** — show the card to board any bus
-  free during its validity window; KAT is reimbursed by the program (see Section
-  4). This closes the loop: a free ride back downtown to retrieve the car.
-- **One voucher per ride** — the ride is the ticket. Accepted proof: a confirmed
-  rideshare/taxi, or an activated KAT bus or trolley ticket. A group sharing one
-  Uber gets one card (the booker's). Two rides, two cards.
+  free during its validity window. This closes the loop: a free ride back
+  downtown to retrieve the car.
+- **One card per ride** — the ride is the ticket. Accepted proof: a confirmed
+  rideshare/taxi, or an activated KAT ticket. A group sharing one Uber gets one
+  card (the booker's). Two rides, two cards.
 - Valid **one day** from date stamp — the card reads "valid for one day from ____"
-  (covers the morning-after window; prevents hoarding and caps free-transit exposure).
+  (covers the morning-after window; prevents hoarding).
 - Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
 ### Fraud & abuse controls
-- **Serialization:** every voucher has a unique number; books of 50 are checked
+- **Serialization:** every card has a unique number; books of 50 are checked
   out to bars, so issuance is traceable per venue per week.
-- **One-per-ride rule** is self-limiting: a voucher requires a distinct booked
-  ride shown at the bar, and the bartender stamps at the moment of proof.
+- **One-per-ride rule** is self-limiting: a card requires a distinct booked
+  ride shown at the bar, stamped at the moment of proof.
 - **Two-touch validation:** bar stamp at issue, coffee shop log at redemption.
   Mismatched or duplicate serials are flagged in monthly reconciliation.
 - **Short expiry** kills secondary-market and stockpiling value.
-- **Low stakes by design:** the worst case of a gamed voucher is $5 of coffee.
+- **Low stakes by design:** the worst case of a gamed card is one free coffee.
   Controls are proportionate — the program must stay a 10-second interaction at
   the bar, or bartenders won't do it on a busy Saturday.
 - **Bartender discretion is a feature:** staff already judge sobriety and IDs;
-  they can decline a voucher without confrontation ("we're out tonight").
+  they can decline a card without confrontation ("we're out tonight").
 
 ### Overnight parking
 Leaving the car overnight has to feel free and safe, or the program falls apart.
@@ -86,49 +92,53 @@ operators as sponsors where a garage isn't nearby.
 |---|---|
 | Name | **Knox Park & Perk** ("Park" = your car; "Perk" = the coffee, and the perk) |
 | Tagline | *Make it home safe. Tomorrow's coffee's on us.* |
-| Core frame | The voucher is a **tip** for making the safe, responsible choice — recognition, not a coupon |
-| Story arc | Night → Ride → Sunrise → Coffee (🌙 → 🚗 → ☕) |
+| Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
+| Story arc | Last call → Ride home → Morning → Coffee |
 | Palette | Midnight navy `#141d33`, cream `#fff7ec`, espresso `#3a2a1d`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color), gold `#ffb95e` |
-| Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "free coffee downtown," never oversell ($5 is a coffee, not breakfast). |
-| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Perk Partner"), bartender stamp, voucher books |
+| Design | Clean and typographic — lean on type, the palette, and the night-to-morning arc rather than emoji or clip-art |
+| Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "a free large coffee," and don't oversell it. |
+| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Perk Partner"), bartender stamp, and books of Morning Perk Cards |
 
-Coasters are the hero medium: they sit under the drink at exactly the decision
-moment, and bars go through thousands of them anyway — the program replaces a
-cost with free branded stock.
+Two distinct pieces of print: **coasters** are the advertising medium — they sit
+under the drink at exactly the decision moment, and bars go through thousands
+anyway, so the program replaces a cost with free branded stock. The **Morning
+Perk Card** is the redeemable item — a simple, wallet-sized card (not a coaster),
+easy to stamp, carry home, and hand to a barista.
 
 ## 4. Monetization & Sustainability
 
 The funding model is deliberately open — it will be locked with partners as
-they come on board. The design constraint is fixed: **the perk is always free to the
-patron who took the safe ride.** Candidate revenue streams, roughly in order of
-long-run sustainability:
+they come on board. The design constraint is fixed: **the perk is always free to
+the patron who took the safe ride.** Candidate revenue streams, roughly in order
+of long-run sustainability:
 
 ### A. Merchant-funded ("coupon economics") — the self-sustaining core
-Coffee shops honor the $5 card as their own customer-acquisition cost, the way
-they'd fund any promotion. The math that makes it rational: the card brings in
-a late-night demographic they rarely see before noon, average morning tickets
-exceed $5, and a good first visit creates a repeat customer. Shops can cap
-monthly redemptions while the model proves out.
+Coffee shops provide the free large coffee as their own customer-acquisition
+cost, the way they'd fund any promotion — not a program payout. The math that
+makes it rational: the card brings in a late-night crowd they rarely see in the
+morning, a large coffee is a small pour against a morning ticket that usually
+runs higher, and a good first visit creates a regular. Shops can cap monthly
+redemptions while the model proves out.
 *Pro:* zero external money needed; scales automatically with participation.
 *Con:* asks the smallest businesses to carry the direct cost; needs early
 ticket-size data to keep shops convinced.
 
-### B. Perk It Forward (patron round-up) — the tip loop
-An optional $1 line on bar tabs: tonight's patrons "tip" tomorrow's safe
-riders. This is the purest expression of the brand — the community literally
-tips people for getting home safe — and even modest uptake at busy venues
-funds a large share of vouchers.
+### B. Perk It Forward (patron round-up) — the thank-you loop
+An optional $1 line on bar tabs: tonight's patrons stand the coffee for
+tomorrow's safe riders. This is the purest expression of the brand — the
+community literally thanking people for getting home safe — and even modest
+uptake at busy venues funds a large share of the coffees.
 *Pro:* on-brand, visible, feels like Knoxville looking after Knoxville.
 *Con:* revenue varies with uptake; needs simple POS handling and transparent
 accounting (publish the pot monthly).
 
 ### C. Sponsorship tiers — the accelerant
-Annual "presented by" packages for brands whose economics align with fewer
-impaired drivers and more rides: rideshare companies (the program drives
-bookings), auto insurers, hospital/trauma systems, parking operators, downtown
-property owners. Sponsor logos ride on coasters and vouchers already in every
-bar downtown — unusually good placement per dollar.
-*Pro:* covers fixed costs (printing, coordinator) that per-voucher models don't.
+Annual "presented by" packages for organizations whose interests align with
+safer roads: rideshare companies (the program drives bookings), auto insurers,
+hospital/trauma systems, parking operators, downtown property owners. Sponsor
+logos ride on coasters and cards already in every bar downtown — unusually good
+placement per dollar.
+*Pro:* covers fixed costs (printing, coordinator) that per-coffee models don't.
 *Con:* renewal risk; keep alcohol brands off patron-facing materials.
 
 ### D. Bar partner dues — optional, later
@@ -141,86 +151,86 @@ One-time money (highway-safety grants, downtown-vitality funds, community
 foundations) for the pilot's fixed costs. Treated strictly as seed, never as
 the operating model.
 
-**Recommended architecture:** A as the base (vouchers cost the program nothing
-in cash), B as the community flywheel and story, C to cover fixed costs, E to
-get off the ground. D held in reserve. Under this structure the marginal cost
-of one more safe ride home is approximately zero to the program — which is
-what makes it durable.
+**Recommended architecture:** A as the base (the coffee costs the program
+nothing in cash — the shop absorbs it as CAC), B as the community flywheel and
+story, C to cover fixed costs, E to get off the ground. D held in reserve. KAT
+rides come in as KAT's in-kind contribution (see Section 5). Under this
+structure the marginal cost of one more safe ride home is approximately zero to
+the program — which is what makes it durable.
 
 ### Pilot fixed costs (6 months, illustrative)
 
 | Item | Estimate |
 |---|---|
-| Printing: coasters, vouchers, signage, stamps | $4,000 |
+| Printing: coasters, cards, signage, stamps | $4,000 |
 | Part-time coordinator (reconciliation, restock, partner care) | $9,000 |
 | Launch marketing & press event | $3,000 |
-| KAT free-ride reimbursement (pilot estimate) | $2,000 |
 | Contingency | $2,000 |
-| **Total fixed** | **~$20,000** (coffee voucher face value carried per model A/B above) |
+| **Total fixed** | **~$18,000** |
 
-KAT fares are a small, capped line: a valid card is good for one day, most
-holders use one or two boardings (home and/or the morning return), and standard
-fares are low. Budget it as a flat per-card estimate or reimburse logged
-boardings monthly, whichever KAT prefers.
+The coffee itself is carried by participating shops (Model A) and backstopped by
+Perk It Forward / sponsorship (B/C) if a shop needs it; KAT rides are KAT's
+in-kind contribution. So the program's cash budget is essentially the fixed
+costs above, not a per-perk payout.
 
 ## 5. Partner Value & Engagement Playbook
 
 ### Downtown bars — *the distribution network*
 **Pitch:** "Free coasters and signage, a safer close to your night, reduced
-dram-shop-adjacent risk, and your name on a city-backed safety program. The ask
-is a 10-second stamp-and-hand at last call."
-- Cost to join: $0 at pilot. Program supplies all materials and voucher books.
+dram-shop-adjacent risk, and your name on a city-backed road-safety program.
+The ask is a 10-second stamp-and-hand at last call."
+- Cost to join: $0 at pilot. Program supplies all materials and card books.
 - Engagement: start with 5–8 anchor venues in the Old City and Market Square
-  whose owners talk to each other; early-partner billing (logo on vouchers,
-  press) creates FOMO for the second wave.
-- Staff onboarding: one laminated card behind the bar; 5-minute pre-shift brief;
-  small monthly staff perk (e.g., coffee for the crew) to keep buy-in.
+  whose owners talk to each other; early-partner billing (logo on cards, press)
+  creates FOMO for the second wave.
+- Staff onboarding: one laminated reference behind the bar; 5-minute pre-shift
+  brief; small monthly staff perk (e.g., coffee for the crew) to keep buy-in.
 - Perk It Forward: venues that opt in add the $1 round-up line and get
-  "Community Tipper" billing.
+  "Community" billing.
 
 ### Coffee shops — *the redemption network*
 **Pitch:** "Morning traffic from the late-night crowd — customers you don't
 currently get — plus your logo in every bar downtown. You control your exposure
 with a monthly cap while we prove the ticket math together."
-- Redemption workflow: take voucher, log serial, done. Monthly data shared back
-  (redemptions, average ticket uplift) so the value is visible.
+- Redemption workflow: take the card, log the serial, done. Monthly data shared
+  back (redemptions, average ticket uplift) so the value is visible.
 - Recruit shops within a short walk of major garages first (Gay Street, Market
   Square, Old City).
 - Coffee shops help pick the funding architecture (Section 4) — real
   co-ownership, not a terms sheet.
 
 ### City of Knoxville — *credibility & promotion*
-**Pitch:** "A positive-incentive complement to enforcement. One prevented DUI
-crash costs the city more than this program's entire pilot. The asks are mostly
-promotion, not an open-ended budget line."
+**Pitch:** "A positive-incentive complement to enforcement. One prevented
+impaired-driving crash costs the city far more than this program's entire pilot.
+The asks are mostly promotion, not an open-ended budget line."
 - Asks: co-promote the already-free evening/weekend municipal garage parking,
   inclusion in city communications, optional one-time seed for launch costs.
 - Offer: full transparency — quarterly issuance/redemption data by venue.
 
 ### Knoxville Police Department — *credibility & reach*
-**Pitch:** "You get a carrot to pair with the stick. Every voucher is a
-documented decision not to drive impaired."
-- Asks: public endorsement, program mention at DUI-awareness moments (football
-  Saturdays, New Year's), no enforcement role inside bars.
+**Pitch:** "You get a carrot to pair with the stick. Every card is a documented
+decision not to drive home impaired — one less risk on the road."
+- Asks: public endorsement, program mention at high-risk moments (football
+  Saturdays, New Year's, holiday weekends), no enforcement role inside bars.
 - KPD is a *supporter*, not an operator — the program must never feel like
-  surveillance or a sobriety checkpoint. Vouchers are anonymous; no personal
-  data is ever collected.
+  surveillance or a sobriety checkpoint. Cards are anonymous; no personal data
+  is ever collected.
 
 ### Knoxville Area Transit (KAT) — *an accepted ride & a free-ride partner*
 **Pitch:** "Riders already taking the bus home safely should qualify for the
 perk too — and a valid Perk Card should let anyone ride KAT free while it lasts,
 including the morning trip back to the car. It puts KAT in front of the exact
 crowd that needs a late ride, wins first-time riders, and drives off-peak
-ridership — and the program reimburses the fares."
+ridership."
 - Asks: (1) recognize an activated KAT ticket as valid ride proof; (2) accept a
   valid Perk Card as free fare during its one-day window; help communicate
   late-night and weekend routes/hours to patrons and bar staff.
-- Offer: full reimbursement of Perk Card rides (settled monthly on logged
-  boardings or a flat per-card estimate agreed at pilot); co-branding on
-  materials; a pipeline of new riders trying the system.
-- Cost control: the card is valid one day only and rides are anonymous-but-
-  counted (driver tally or farebox code), capping exposure and giving KAT clean
-  ridership data.
+- Structure: the free rides are KAT's in-kind contribution to a shared
+  road-safety goal — new riders and goodwill in exchange, not a program payout.
+  Sponsorship can support KAT's marketing of the program if useful.
+- Cost control for KAT: the card is valid one day only, so exposure is naturally
+  capped; boardings can be tallied (driver count or farebox code) for clean,
+  anonymous ridership data.
 - Longer term: coordinate service/marketing around the highest-risk nights so
   a bus home is a genuinely easy option, not just an eligible one.
 - Note: there is no longer a free downtown trolley, so the free-ride benefit is
@@ -231,23 +241,25 @@ ridership — and the program reimburses the fares."
 2. **3 anchor coffee shops** (redemption must exist before issuance; they
    co-design the funding model).
 3. **5–8 anchor bars** for the pilot footprint.
-4. **KAT** to confirm transit tickets as accepted proof, agree the free-ride-for-cardholders benefit and its reimbursement, and align late-night service messaging.
+4. **KAT** to confirm transit tickets as accepted proof, agree the
+   free-ride-for-cardholders benefit, and align late-night service messaging.
 5. **Sponsors** once the partner map makes the placement value concrete.
 6. **Press launch** with city/KPD, tied to a high-risk weekend.
 7. **Second wave** recruitment using pilot data.
 
 ## 6. Metrics & Success Criteria
 
-- **Primary:** vouchers issued and redeemed (by venue, by night of week).
-- **Secondary:** late-night DUI arrests / single-vehicle incidents in the
-  downtown zone (with KPD, acknowledging small-sample noise in a pilot).
-- **Economic:** average redemption ticket size vs. $5 face value (the number
-  that proves model A); repeat-customer reports from coffee shops; Perk It
-  Forward uptake rate; overnight garage stays on program nights.
-- **Qualitative:** bartender friction reports, patron surveys via QR on voucher.
+- **Primary:** cards issued and redeemed (by venue, by night of week).
+- **Road safety:** late-night impaired-driving crashes / arrests / single-vehicle
+  incidents in the downtown zone (with KPD, acknowledging small-sample noise in a
+  pilot) — the outcome the program exists to move.
+- **Economic:** average redemption ticket size vs. the cost of a large coffee
+  (the number that proves Model A); repeat-customer reports from coffee shops;
+  Perk It Forward uptake; overnight garage stays on program nights.
+- **Qualitative:** bartender friction reports, patron surveys via QR on the card.
 - **Pilot success gates:** ≥60% of anchor bars actively issuing by month 2;
-  ≥50% redemption rate; average redemption ticket ≥2× face value; zero material
-  fraud incidents; partner renewal intent.
+  ≥50% redemption rate; average redemption ticket comfortably above the coffee's
+  cost; zero material fraud incidents; partner renewal intent.
 
 ## 7. Timeline
 
@@ -264,13 +276,17 @@ ridership — and the program reimburses the fares."
 | Risk | Mitigation |
 |---|---|
 | Bartenders skip it on busy nights | 10-second workflow, staff perks, coasters do the marketing passively |
-| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages are free evenings/weekends; confirm garage hours with the City; print them on signage; hotline on voucher |
-| Perception of promoting drinking | Framing is strictly "safe ride home"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
-| Fraud (fake ride screens, duplicates) | $5 cap, one-per-booked-ride, serials, expiry, bartender discretion; accept small leakage as marketing cost |
+| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages are free evenings/weekends; confirm garage hours with the City; print them on signage; hotline on the card |
+| Perception of promoting drinking | Framing is strictly "safe ride home / safer roads"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
+| Fraud (fake ride screens, duplicates) | One-free-coffee cap, one-per-ride rule, serials, expiry, bartender discretion; accept small leakage as marketing cost |
 | Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
-| Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Perk It Forward / sponsor funds can backstop face value if model A underperforms |
-| Program conflated with enforcement | KPD as endorser only; vouchers anonymous — no data on individuals is ever collected |
+| Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Perk It Forward / sponsor funds can backstop the coffee cost if Model A underperforms |
+| Program conflated with enforcement | KPD as endorser only; cards anonymous — no data on individuals is ever collected |
 
 ---
+
+*Data sources: Knoxville Regional Transportation Planning Organization (annual
+injuries and fatalities in area impaired-driving crashes); Knox County Health
+Department (share of deadly crashes involving an impaired driver).*
 
 *Contact: hello@knoxparkandperk.org · Knoxville, TN*
