@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Knox Park &amp; Perk ampersand mark">
+  <defs>
+    <linearGradient id="amp" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0%" stop-color="#ffb95e"/>
+      <stop offset="55%" stop-color="#ff8200"/>
+      <stop offset="100%" stop-color="#d96a00"/>
+    </linearGradient>
+  </defs>
+  <!-- monoline stylized ampersand -->
+  <g fill="none" stroke="url(#amp)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M74,66
+             C74,78 62,84 52,84
+             C34,84 24,72 30,58
+             C35,46 52,40 58,30
+             C63,22 58,14 49,14
+             C41,14 36,21 40,30
+             C45,41 60,52 72,66
+             C80,75 86,74 90,66"/>
+  </g>
+</svg>

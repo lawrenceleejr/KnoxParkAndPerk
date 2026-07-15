@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 250" role="img" aria-label="Knox Park &amp; Perk color palette">
+  <style>
+    .nm { font-family: Poppins, 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 14px; fill: #3a2a1d; }
+    .hx { font-family: 'Courier New', monospace; font-size: 13px; fill: #6b543f; }
+  </style>
+  <rect x="0" y="0" width="920" height="250" fill="#fff7ec"/>
+
+  <g>
+    <rect x="20"  y="24" width="100" height="120" rx="10" fill="#0c1224"/>
+    <text class="nm" x="20"  y="172">Night Deep</text>
+    <text class="hx" x="20"  y="192">#0C1224</text>
+  </g>
+  <g>
+    <rect x="132" y="24" width="100" height="120" rx="10" fill="#141d33"/>
+    <text class="nm" x="132" y="172">Midnight Navy</text>
+    <text class="hx" x="132" y="192">#141D33</text>
+  </g>
+  <g>
+    <rect x="244" y="24" width="100" height="120" rx="10" fill="#3a2a1d"/>
+    <text class="nm" x="244" y="172">Espresso</text>
+    <text class="hx" x="244" y="192">#3A2A1D</text>
+  </g>
+  <g>
+    <rect x="356" y="24" width="100" height="120" rx="10" fill="#6b543f"/>
+    <text class="nm" x="356" y="172">Espresso Lt</text>
+    <text class="hx" x="356" y="192">#6B543F</text>
+  </g>
+  <g>
+    <rect x="468" y="24" width="100" height="120" rx="10" fill="#fff7ec" stroke="#e6d6bf" stroke-width="1"/>
+    <text class="nm" x="468" y="172">Cream</text>
+    <text class="hx" x="468" y="192">#FFF7EC</text>
+  </g>
+  <g>
+    <rect x="580" y="24" width="100" height="120" rx="10" fill="#ffb95e"/>
+    <text class="nm" x="580" y="172">Gold</text>
+    <text class="hx" x="580" y="192">#FFB95E</text>
+  </g>
+  <g>
+    <rect x="692" y="24" width="100" height="120" rx="10" fill="#ff8200"/>
+    <text class="nm" x="692" y="172">Sunrise</text>
+    <text class="hx" x="692" y="192">#FF8200</text>
+  </g>
+  <g>
+    <rect x="804" y="24" width="100" height="120" rx="10" fill="#d96a00"/>
+    <text class="nm" x="804" y="172">Sunrise Deep</text>
+    <text class="hx" x="804" y="192">#D96A00</text>
+  </g>
+
+  <text x="20" y="228" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#6b543f">Knox Park &amp; Perk — core palette · night-to-sunrise</text>
+</svg>
