@@ -283,6 +283,91 @@ ridership."
 | Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Perk It Forward / sponsor funds can backstop the coffee cost if Model A underperforms |
 | Program conflated with enforcement | KPD as endorser only; cards anonymous — no data on individuals is ever collected |
 
+## 9. Program Philosophy & References
+
+**The objection we expect:** *"You're rewarding people for a night of drinking
+— with public money, no less."* It's a fair thing to raise, and the honest
+answer is a **harm-reduction** one. People are going to go out and drink
+downtown whether or not this program exists. Given that, the only question that
+changes outcomes is: *when they've had too much, how do we make the safe choice
+the easy one?* Park & Perk doesn't subsidize the drinking — the perk is
+explicitly tied to **not driving**, it's claimed the *next morning*, and it's
+capped at a coffee. It buys down the single largest friction that pushes people
+to drive impaired (the parked car). The public-interest math is
+straightforward: alcohol-impaired crashes impose enormous public costs, so even
+a modest reduction easily outweighs the cost of coffee and bus fare.
+
+This is not a new or fringe idea — there's a substantial literature on
+harm reduction, alternative-transportation programs, and the behavioral design
+of incentives. The evidence is genuinely **mixed**, and we take that seriously:
+the responsible reading is that a reward like this should be **one component of
+a broader effort** (enforcement, education, transit, responsible-service
+training) and should be **evaluated**, not sold as a silver bullet. The
+references below are the ones to read first — both the supportive and the
+skeptical.
+
+### The harm-reduction frame ("meet people where they are")
+- **What Is Harm Reduction?** — Johns Hopkins Bloomberg School of Public Health
+  (2022). Plain-language primer on the philosophy.
+  <https://publichealth.jhu.edu/2022/what-is-harm-reduction>
+- **Harm Reduction as an Alcohol-Prevention Strategy** — *Alcohol Research:
+  Current Reviews* (NIAAA), 2018.
+  <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6876518/>
+- **Harm reduction approaches to alcohol use: health promotion, prevention, and
+  treatment** — *Addictive Behaviors* (2002). Foundational framing of pragmatic,
+  non-abstinence approaches. <https://www.sciencedirect.com/science/article/abs/pii/S0306460302002940>
+
+### Do "safe ride" / alternative-transportation programs actually work?
+- **The effectiveness of alternative transportation programs in reducing
+  impaired driving: a literature review and synthesis** — *Journal of Safety
+  Research* (2020). Reviews ~125 studies; well-implemented programs *can* reduce
+  impaired driving, and identifies the design attributes that predict success
+  (low cost, high awareness, convenience, rides to *and* from venues, multiple
+  sponsors, year-round availability). <https://pubmed.ncbi.nlm.nih.gov/33334469/>
+- **Safe Ride Programs: Alternatives to Impaired Driving** — Traffic Injury
+  Research Foundation (TIRF) literature review. Practitioner-oriented synthesis.
+  <https://tirf.ca/projects/safe-ride-programs-alternatives-impaired-driving/>
+- **Alternative Transportation** — NHTSA, *Countermeasures That Work*. The
+  standard U.S. reference rating what's proven vs. promising.
+  <https://www.nhtsa.gov/book/countermeasures-that-work/alcohol-impaired-driving/countermeasures/other-strategies-behavior-change/alternative>
+
+### The skeptical / cost-effectiveness view (read these too)
+- **Efficacy and cost-effectiveness of subsidized ridesharing as a drunk-driving
+  intervention in Columbus, OH** — *Accident Analysis & Prevention* (2020).
+  Found crash reductions but modest, expensive savings — and a self-reported
+  *increase* in drinking that partly offset the benefit. A direct caution about
+  the "rewarding drinking" risk, and why the perk must be small and safe-ride-
+  tied. <https://pubmed.ncbi.nlm.nih.gov/32866769/>
+- **Effectiveness of designated driver programs for reducing alcohol-impaired
+  driving: a systematic review** — *American Journal of Preventive Medicine*
+  (2005). The Community Preventive Services Task Force found **insufficient
+  evidence** that designated-driver *promotion* alone works.
+  <https://pubmed.ncbi.nlm.nih.gov/15894161/>
+- **Alcohol-Impaired Driving: Multicomponent Interventions with Community
+  Mobilization** — The Community Guide (CPSTF **recommends**, strong evidence).
+  Why Park & Perk should sit inside a multi-part strategy, not stand alone.
+  <https://www.thecommunityguide.org/findings/motor-vehicle-injury-alcohol-impaired-driving-multicomponent-interventions-community.html>
+
+### Behavioral design (why reward at the decision moment)
+- **Nudge: Improving Decisions About Health, Wealth, and Happiness** — Thaler &
+  Sunstein (2008). The case for removing friction and rewarding the desired
+  choice at the exact moment it's made — the design principle behind stamping
+  the card at last call.
+
+### The scale of the problem (why public money is justified)
+- **The Economic and Societal Impact of Motor Vehicle Crashes, 2019** — NHTSA
+  (Report DOT HS 813 403): alcohol-impaired crashes cost an estimated **$58
+  billion** in economic costs and **$296 billion** in comprehensive (quality-of-
+  life-inclusive) societal harm in 2019 alone.
+  <https://crashstats.nhtsa.dot.gov/Api/Public/ViewPublication/813403.pdf>
+- **Impaired Driving Facts** — CDC. Ongoing toll and cost figures for
+  alcohol-impaired driving. <https://www.cdc.gov/impaired-driving/facts/index.html>
+
+*How to use these:* lead partner and city conversations with the harm-reduction
+frame and the cost-of-the-problem figures; be upfront that the direct evidence
+for reward programs is mixed; commit to the design attributes the successful
+programs share (Section 5) and to publishing an honest evaluation (Section 6).
+
 ---
 
 *Data sources: Knoxville Regional Transportation Planning Organization (annual
