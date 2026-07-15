@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,500;1,9..144,600;1,9..144,900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,600;0,700;1,600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,500;1,9..144,600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --night: #141d33;
@@ -24,6 +24,7 @@
     --maxw: 68rem;
     --f-display: 'Fraunces', Georgia, 'Times New Roman', serif;
     --f-sans: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+    --f-figures: 'EB Garamond', Garamond, 'Times New Roman', serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -169,10 +170,11 @@
   .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 2rem 1.5rem; text-align: center; align-items: start; }
   .why-grid .stat b {
     display: block;
-    font-family: var(--f-display);
-    font-weight: 900; font-style: italic;
-    font-size: clamp(4.5rem, 11vw, 8rem);
-    line-height: .9; letter-spacing: -.03em;
+    font-family: var(--f-figures);
+    font-weight: 600; font-style: normal;
+    font-variant-numeric: oldstyle-nums; font-feature-settings: "onum" 1;
+    font-size: clamp(5rem, 12vw, 8.5rem);
+    line-height: 1; letter-spacing: 0;
     background: linear-gradient(155deg, var(--gold) 0%, var(--sunrise) 50%, var(--sunrise-deep) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent; color: transparent;
