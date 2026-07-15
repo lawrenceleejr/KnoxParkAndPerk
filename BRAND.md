@@ -4,8 +4,10 @@
 
 This is the brand guide for Knox Park & Perk. Everything here is built on one
 idea: **the journey from a dark night out to a bright morning coffee.** Night
-navy resolves into sunrise orange; a coffee cup rises like the sun; the
-ampersand ties "Park **&** Perk" together.
+navy resolves into sunrise orange. The signature **mark** — a coffee cup whose
+inside is a steering wheel, steam rising — says the whole program in one glyph
+("park the car, coffee's on us") and doubles as the connective **"and"** in
+"Park [mark] Perk."
 
 All assets live in [`assets/`](assets) as scalable SVG (resolution-independent,
 print- and web-ready).
@@ -28,42 +30,48 @@ print- and web-ready).
 
 | Asset | File | Use |
 |---|---|---|
-| Primary lockup (light bg) | [`assets/logo.svg`](assets/logo.svg) | Default. On cream/white and light photos. |
+| Primary lockup (light bg) | [`assets/logo.svg`](assets/logo.svg) | Default. "KNOX PARK [mark] PERK" on cream/white and light photos. |
 | Lockup (dark bg) | [`assets/logo-dark.svg`](assets/logo-dark.svg) | On navy/espresso/dark photos. Cream wordmark. |
-| Emblem / badge | [`assets/logo-mark.svg`](assets/logo-mark.svg) | Standalone icon where the full name is elsewhere; stamps, seals, large watermark. |
-| Ampersand mark | [`assets/ampersand.svg`](assets/ampersand.svg) | The signature glyph on its own (see §3). |
+| The mark | [`assets/mark.svg`](assets/mark.svg) | The signature glyph on its own — the connective "and," a bullet, a watermark. Uses `currentColor` so it takes the surrounding text color; steam & coffee stay orange. |
+| Emblem / badge | [`assets/logo-mark.svg`](assets/logo-mark.svg) | The mark sealed in a navy badge, for stamps, avatars, spot use. |
 | App icon / favicon | [`assets/favicon.svg`](assets/favicon.svg) | Browser tab, social avatar, app tile. |
 
-**The emblem** is a coffee cup at sunrise inside a badge whose sky runs from
-night at the top to sunrise at the bottom — "you made it to morning." It is
-ringed with **KNOX PARK & PERK** and **MAKE IT HOME SAFE**.
+**The mark** is a coffee cup whose interior is a three-spoke steering wheel,
+with steam rising and coffee pooled at the bottom — "park the car, the morning's
+on us." It is the heart of the identity: it sits **between the two words as the
+connective "and"** ("KNOX PARK [mark] PERK"), and stands alone as the icon.
 
-**Clear space:** keep at least the height of the emblem's ring stroke — roughly
-the cap-height of the wordmark — clear on all sides. Don't crowd it.
+**Clear space:** keep at least one cup-width of clear space around the lockup.
+Don't crowd it.
 
-**Minimum size:** lockup no smaller than 180 px / 1.6 in wide; emblem and app
-icon no smaller than 24 px. Below ~32 px prefer the **ampersand mark** or
-**favicon**, which are built to stay legible when tiny.
+**Minimum size:** lockup no smaller than 180 px / 1.6 in wide; the mark/app icon
+no smaller than 20 px. The mark is drawn to stay legible when small.
 
 **Don't:** recolor the wordmark outside the palette · stretch or skew ·
 add drop shadows/outlines · rebuild the lockup with different fonts ·
-place the light lockup on a busy/dark background (use `logo-dark.svg`).
+place the light lockup on a busy/dark background (use `logo-dark.svg`) ·
+recolor the steam/coffee away from sunrise orange.
 
 ---
 
-## 3. The ampersand — our signature mark
+## 3. The mark — our connective "and"
 
-Park **&** Perk lives and dies on that ampersand, so we made it the brand's
-monogram. [`assets/ampersand.svg`](assets/ampersand.svg) is a custom, calligraphic
-ampersand drawn as a single flowing stroke in the sunrise gradient. It reads
-cleanly from hero-size down to a 16 px favicon.
+Park **and** Perk are joined by the mark itself: in the wordmark it literally
+takes the place of the ampersand, so the logo reads "KNOX PARK [cup] PERK." The
+cup-and-steering-wheel does double duty — it *is* the program (drive safe,
+coffee's on us) and it *is* the conjunction.
 
-Use it for: the **favicon / app icon** (set in a navy rounded square, see
-`favicon.svg`), social avatars, a large watermark or section divider, a "loading"
-or bullet glyph, merch (coaster backs, pins, cup sleeves).
+[`assets/mark.svg`](assets/mark.svg) is drawn with the silhouette in
+`currentColor` (so it inherits the text color — cream on dark, espresso on
+light) and the steam and coffee locked to sunrise orange. Inline it (SVG
+`<use>`) so `currentColor` works; when embedded via `<img>` set the color
+explicitly.
 
-Keep it in brand colors — sunrise gradient, solid cream, solid navy, or solid
-sunrise. Don't outline it, add effects, or set it at an angle.
+Use it for: the connective "and" in the wordmark, the **favicon / app icon**,
+social avatars, a large watermark or section divider, a bullet glyph, and merch.
+
+Keep the silhouette in a single brand color (cream, navy, or espresso) with the
+steam/coffee in sunrise orange. Don't outline it, add effects, or tilt it.
 
 ---
 
@@ -98,12 +106,14 @@ background, and app icon:
 
 ## 5. Typography
 
-A warm serif for personality, a clean geometric sans for everything functional.
+The wordmark is set in a heavy geometric sans so its stroke weight matches the
+mark; a warm serif adds personality in the taglines and section headings.
 
 | Role | Typeface | Weights | Used for |
 |---|---|---|---|
-| Display | **Fraunces** (serif) | 500 / 600 / 800, incl. *italic* | Wordmark, headings (h1–h3), taglines. Its italic ampersand echoes our mark. |
-| Text & UI | **Poppins** (sans) | 400 / 500 / 600 / 700 / 800 | Body copy, nav, buttons, labels, kickers, the "Knoxville, Tennessee" line. |
+| Wordmark | **Poppins ExtraBold** (sans) | 800 | "KNOX PARK [mark] PERK." Chosen because its even, geometric strokes match the weight of the mark. Tight tracking (~-0.02em). |
+| Headings | **Fraunces** (serif) | 600 / 800, incl. *italic* | Section headings (h2–h3) and the italic taglines — editorial warmth. |
+| Text & UI | **Poppins** (sans) | 400 / 500 / 600 / 700 | Body copy, nav, buttons, labels, kickers, the "Knoxville, Tennessee" line. |
 
 Both are free (Google Fonts / SIL OFL). Web embed:
 
@@ -128,8 +138,8 @@ uppercase Poppins with generous letter-spacing (~0.18em).
 
 ## 6. Favicon & app icon
 
-[`assets/favicon.svg`](assets/favicon.svg) — the ampersand in the sunrise
-gradient on a Night-Deep rounded square with a gold edge. Wired into the site as:
+[`assets/favicon.svg`](assets/favicon.svg) — the mark (cream cup, orange steam
+& coffee) on a Night-Deep rounded square with a gold edge. Wired into the site as:
 
 ```html
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -154,14 +164,15 @@ SVG to PNG at 16, 32, 180, 192, and 512 px.
 
 ```
 assets/
-  logo.svg          Primary lockup (light backgrounds)
+  logo.svg          Primary lockup — "KNOX PARK [mark] PERK" (light bg)
   logo-dark.svg     Lockup for dark backgrounds
-  logo-mark.svg     Emblem / badge
-  ampersand.svg     Signature ampersand glyph
-  favicon.svg       App icon / favicon (ampersand in a rounded square)
+  mark.svg          The signature mark (cup + steering wheel); the connective "and"
+  logo-mark.svg     The mark sealed in a navy badge (emblem)
+  favicon.svg       App icon / favicon (the mark in a rounded square)
   card.svg          The Morning Perk Card artwork
   coaster.svg       The bar coaster artwork
   palette.svg       Color swatch sheet
+  ampersand.svg     Alternate calligraphic ampersand glyph (secondary)
 ```
 
 *Contact: hello@knoxparkandperk.org · Knoxville, TN*

@@ -26,10 +26,10 @@ Market.
 - **[`BRAND.md`](BRAND.md)** — the visual identity guide: logo suite, the
   signature ampersand, color palette, typography, favicon, motifs, and usage.
 - **[`assets/`](assets)** — brand assets as scalable SVG (print- and web-ready):
-  - [`logo.svg`](assets/logo.svg) — primary lockup (light backgrounds)
+  - [`logo.svg`](assets/logo.svg) — primary lockup, "KNOX PARK [mark] PERK" (light backgrounds)
   - [`logo-dark.svg`](assets/logo-dark.svg) — lockup for dark backgrounds
-  - [`logo-mark.svg`](assets/logo-mark.svg) — emblem only (any background)
-  - [`ampersand.svg`](assets/ampersand.svg) — the signature ampersand mark
+  - [`mark.svg`](assets/mark.svg) — the signature mark (cup + steering wheel); the connective "and"
+  - [`logo-mark.svg`](assets/logo-mark.svg) — the mark sealed in a badge (emblem)
   - [`favicon.svg`](assets/favicon.svg) — app icon / favicon
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
   - [`card.svg`](assets/card.svg) — the Morning Perk Card (business-card size)
