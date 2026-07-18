@@ -142,7 +142,7 @@ function demoData() {
   const packs = [];
   for (let i = 0; i < 12; i++)
     packs.push([new Date(Date.now() - 86400000 * (70 - i * 5)).toISOString(),
-                'KPU-2026-00000000' + String(81 + i).padStart(2, '0'), bars[i % bars.length], '']);
+                'KPMU-2026-00000000' + String(81 + i).padStart(2, '0'), bars[i % bars.length], '']);
   const reds = [];
   for (let d = 75; d >= 0; d--) {
     const day = new Date(Date.now() - d * 86400000);

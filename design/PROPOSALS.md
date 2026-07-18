@@ -58,7 +58,7 @@ glance. The most "civic seal" of the four.
 | **Icon set** | Six monoline icons on a shared grid (Park, KAT, Ride, Card, Coffee, Morning) for the site's steps, signage, and wayfinding — one stroke weight, ink + one orange accent, consistent with the marks above. |
 | **Coffee-ring stain** | An imperfect double ring in Sunrise Ink for coasters, posters, and envelope interiors — the one deliberately loose element in an otherwise precise system. |
 | **Sunrise scallop** | A repeating half-sun border alternating Sunrise and Night along a rule — card edges, table tents, lanyards. |
-| **Serial treatment** | Every card is numbered; make the number a visible feature — dashed keyline box, `Nº KPU-….` — so the fraud control doubles as a design detail. |
+| **Serial treatment** | Every card is numbered; make the number a visible feature — dashed keyline box, `Nº KPMU-….` — so the fraud control doubles as a design detail. |
 
 ---
 

@@ -80,9 +80,9 @@ python3 tools/build_cards.py --year 2026 --start 1 --count 1000
 ```
 
 That writes to `print/` (gitignored):
-- `print/cards/card-KPU-2026-00000001.svg` … — one file per card (front)
+- `print/cards/card-KPMU-2026-00000001.svg` … — one file per card (front)
 - `print/cards/card-back.svg` — the static back, once
-- `print/packs/pack-KPU-2026-0000000001.svg` … — one cover sheet per 50
+- `print/packs/pack-KPMU-2026-0000000001.svg` … — one cover sheet per 50
 
 Everything is SVG with **all type converted to outlines** — no font
 substitution surprises at the shop. Most shops prefer PDF; convert with:

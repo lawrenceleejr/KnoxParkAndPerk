@@ -22,12 +22,12 @@ site URL with serial     dropdown]" — 10 sec    phone camera → serial      L
 ```
 
 **The one clever trick — the card QR is dual-use.** Every card's QR encodes
-`https://…/?c=KPU-2026-00004217#partners` — a plain link to the public site:
+`https://…/?c=KPMU-2026-00004217#partners` — a plain link to the public site:
 
 - A **patron** who scans it just lands on the participating-businesses
   section of the website. No login walls, nothing weird.
 - The **shop scanner page** (`redeem.html`) doesn't *follow* the URL — it
-  *reads* it with the camera and extracts the `KPU-…` serial with a regex.
+  *reads* it with the camera and extracts the `KPMU-…` serial with a regex.
 
 Same printed code, two behaviors, zero extra infrastructure.
 
@@ -55,7 +55,7 @@ else ever writes to the file. Three tabs:
 | `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the pack Google Form (voided: you, by hand) |
 | `Venues` | slug · display name · type (bar/shop) · joined date | you, by hand, rarely |
 
-**Pack serials** are 10 digits (`KPU-YYYY-##########`) — two more than the
+**Pack serials** are 10 digits (`KPMU-YYYY-##########`) — two more than the
 8-digit card serials, so a pack can never be mistaken for a card anywhere in
 the data. The bar attribution is **stored on each redemption row at scan
 time**: the Apps Script looks the card's serial up in `Packs` (which range
@@ -85,11 +85,11 @@ const BACKUP_KEY = 'CHOOSE-A-LONG-RANDOM-STRING';   // for the GitHub backup job
 // serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
   const rows = SpreadsheetApp.getActive().getSheetByName(PACKS).getDataRange().getValues();
-  const year = serial.slice(4, 8), n = Number(serial.slice(9));
+  const year = serial.slice(5, 9), n = Number(serial.slice(10));
   for (let i = 1; i < rows.length; i++) {
     const [, pack, first, last] = rows[i].map(String);
-    if (first.slice(4, 8) === year &&
-        n >= Number(first.slice(9)) && n <= Number(last.slice(9))) {
+    if (first.slice(5, 9) === year &&
+        n >= Number(first.slice(10)) && n <= Number(last.slice(10))) {
       return { bar: String(rows[i][4] || ''), pack: pack,
                voided: String(rows[i][5] || '').trim() !== '' };
     }
@@ -101,7 +101,7 @@ function lookupBar(serial) {
 function doGet(e) {
   const p = e.parameter;
   let out = { status: 'error' };
-  if (p.action === 'redeem' && /^KPU-\d{4}-\d{8}$/i.test(p.serial || '')) {
+  if (p.action === 'redeem' && /^KPMU-\d{4}-\d{8}$/i.test(p.serial || '')) {
     const serial = p.serial.toUpperCase();
     const shop = String(p.shop || 'unknown').slice(0, 40);
     const lock = LockService.getScriptLock();
@@ -164,9 +164,9 @@ function doGet(e) {
 function nightlySnapshot() {
   const KEEP = 30;
   const src = DriveApp.getFileById(SpreadsheetApp.getActive().getId());
-  const folders = DriveApp.getFoldersByName('KPU Backups');
-  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('KPU Backups');
-  src.makeCopy('KPU data ' + Utilities.formatDate(new Date(), 'America/New_York', 'yyyy-MM-dd'), folder);
+  const folders = DriveApp.getFoldersByName('KPMU Backups');
+  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('KPMU Backups');
+  src.makeCopy('KPMU data ' + Utilities.formatDate(new Date(), 'America/New_York', 'yyyy-MM-dd'), folder);
   const copies = [];
   const it = folder.getFiles();
   while (it.hasNext()) copies.push(it.next());
@@ -241,7 +241,7 @@ none of which you have to remember to run:
 | Layer | What it protects against | Where it lives | Effort |
 |---|---|---|---|
 | 1. **Sheet version history** | a bad edit, a deleted column, a broken formula | built into Google Sheets (File → Version history → See version history) | zero — automatic |
-| 2. **Nightly Drive snapshot** | a mangled or deleted *tab*, script accidents | `nightlySnapshot()` in the same Apps Script + one daily trigger; keeps 30 dated copies in a "KPU Backups" Drive folder | one-time trigger setup |
+| 2. **Nightly Drive snapshot** | a mangled or deleted *tab*, script accidents | `nightlySnapshot()` in the same Apps Script + one daily trigger; keeps 30 dated copies in a "KPMU Backups" Drive folder | one-time trigger setup |
 | 3. **Nightly off-Google backup** | Google account lockout, Drive loss, "I just don't trust Google" | [`.github/workflows/backup.yml`](../.github/workflows/backup.yml) pulls every tab via the key-gated `backup` action and commits CSVs to `data/backup/` in this repo — **git history is the archive**, so every past day is recoverable | two repo secrets |
 | 4. **Print artifacts** | everything digital at once | pack cover sheets have a hand-written bar/date line; cards are physically stamped | already in the workflow |
 
@@ -256,7 +256,7 @@ none of which you have to remember to run:
 **Restore runbook** (worst case — the sheet is ruined):
 1. Try **File → Version history** first; restoring a version fixes 95% of
    accidents in one click.
-2. Else open the newest copy in the **KPU Backups** Drive folder, rename it,
+2. Else open the newest copy in the **KPMU Backups** Drive folder, rename it,
    and repoint nothing — instead copy its tabs back into the original file
    (the Apps Script and form are bound to the original's ID; keeping that
    file alive is simpler than re-deploying).

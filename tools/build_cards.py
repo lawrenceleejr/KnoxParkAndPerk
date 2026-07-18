@@ -1,7 +1,7 @@
 """Batch-generate print-ready Morning Pick-Me-Up cards and pack cover sheets.
 
 Each card gets a unique serial and a unique QR. The QR encodes a URL on the
-public site with the serial embedded (?c=KPU-...#partners):
+public site with the serial embedded (?c=KPMU-...#partners):
   - a PATRON who scans it lands on the participating-businesses section;
   - a SHOP scanning it from redeem.html has the serial read straight off it.
 
@@ -63,7 +63,7 @@ def card_svg(serial):
     b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, tracking=0.18, anchor='end')[0])
     b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
-    b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 27, 174, INK2)[0])
+    b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
     rows = [
         [('One large coffee at participating downtown shops', inter4, INK2)],
         [('Hair of the KAT', inter6, ORANGE_INK),
@@ -72,16 +72,16 @@ def card_svg(serial):
     ]
     for i, segs in enumerate(rows):
         y = 202 + i * 19
-        b.append(f'<rect x="27" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
-        x = 42
+        b.append(f'<rect x="26" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
+        x = 41
         for seg, face, col in segs:
             pth, w = text(face, seg, 11, x, y, col)
             b.append(pth)
             x += w
-    b.append(f'<rect x="398" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-    b.append(qr_group(url, 408, 114, 82))
-    b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 449, 222, INK2, tracking=0.16, anchor='middle')[0])
-    b.append(text(inter6, 'BUSINESSES', 6.8, 449, 233, INK2, tracking=0.16, anchor='middle')[0])
+    b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
+    b.append(qr_group(url, 407, 114, 82))
+    b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
+    b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
     b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(inter6, 'VALID FOR ONE DAY FROM', 9.5, 26, 274, INK, tracking=0.14)[0])
     b.append(f'<line x1="190" y1="276" x2="310" y2="276" stroke="{INK2}" stroke-width="1"/>')
@@ -99,18 +99,18 @@ def card_back_svg():
     # header: mark + wordmark + tagline
     b.append(mark(26, 34, 44, dark=PAPER))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 24, 86, 58, PAPER)[0])
-    b.append(text(fraunces_it, 'Ride from last call to first call.', 14.5, 87, 80, GOLD)[0])
+    b.append(text(fraunces_it, 'Ride from last call to first call.', 14.5, 86, 80, GOLD)[0])
     b.append('<line x1="26" y1="100" x2="499" y2="100" stroke="#2a3550" stroke-width="1"/>')
     # how it works — three numbered lines
     steps = [
         ('1', 'Booked a safe ride home? Show your bartender before you leave.'),
         ('2', 'Sleep easy — downtown municipal garages are free overnight.'),
-        ('3', 'Ride KAT back free on this card, and coffee’s on Knoxville.'),
+        ('3', 'Ride KAT back free on this card — coffee’s on us.'),
     ]
     for i, (num, line) in enumerate(steps):
         y = 132 + i * 34
-        b.append(text(fraunces, num, 22, 30, y, ORANGE)[0])
-        b.append(text(inter4, line, 11.5, 52, y - 3, PAPER)[0])
+        b.append(text(fraunces, num, 22, 26, y, ORANGE)[0])
+        b.append(text(inter4, line, 11.5, 48, y - 3, PAPER)[0])
     b.append('<line x1="26" y1="232" x2="499" y2="232" stroke="#2a3550" stroke-width="1"/>')
     # footer: partnership + sponsor slot
     b.append(text(inter6, 'A ROAD-SAFETY PARTNERSHIP · CITY OF KNOXVILLE · KPD · KAT', 7.5, 26, 254, GOLD, tracking=0.14)[0])
@@ -122,7 +122,7 @@ def card_back_svg():
 def pack_serial(year, pack_no):
     # Pack serials carry two more digits than the 8-digit card serials, so a
     # pack is never mistakable for a card (or vice versa) anywhere in the DB.
-    return f'KPU-{year}-{pack_no:010d}'
+    return f'KPMU-{year}-{pack_no:010d}'
 
 
 def pack_svg(year, pack_no, first, last):
@@ -172,7 +172,7 @@ def main():
     os.makedirs(cards_dir, exist_ok=True)
     os.makedirs(packs_dir, exist_ok=True)
 
-    serials = [f'KPU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
+    serials = [f'KPMU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
     for s in serials:
         open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
     open(os.path.join(cards_dir, 'card-back.svg'), 'w').write(card_back_svg())
