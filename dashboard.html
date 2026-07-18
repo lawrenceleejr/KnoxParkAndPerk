@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knox Pick-Me-Up — Program Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root {
+    --paper: #faf5eb; --paper-2: #f2e9d8; --ink: #241a10; --ink-2: #6f5f4c;
+    --night: #101a30; --accent: #ff8200; --accent-ink: #b04e00;
+    --rule: #ddcfb4; --grid: #efe6d2; --card: #fffdf7;
+    --warn: #b04e00; --bad: #b3261e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter','Helvetica Neue',Arial,sans-serif; background: var(--paper); color: var(--ink); line-height: 1.5; font-size: .95rem; }
+  .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  header { display: flex; align-items: center; gap: .6rem; padding: 1rem 0; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  header img { width: 1.9rem; height: 1.9rem; }
+  header .name { font-family: 'Fraunces',Georgia,serif; font-weight: 600; font-size: 1.15rem; }
+  header .tool { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); }
+  header .right { margin-left: auto; display: flex; gap: 1rem; align-items: center; font-size: .75rem; color: var(--ink-2); }
+  button.btn { font: inherit; font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--paper); border: 0; border-radius: 3px; padding: .45rem .9rem; cursor: pointer; }
+  .badge-demo { font-size: .62rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--bad); border: 1px solid var(--bad); border-radius: 2px; padding: .05rem .4rem; }
+
+  .filters { display: flex; gap: .5rem; align-items: center; padding: 1rem 0; flex-wrap: wrap; }
+  .filters .flabel { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); margin-right: .3rem; }
+  .chip { font: inherit; font-size: .78rem; font-weight: 500; border: 1px solid var(--rule); background: var(--card); color: var(--ink); border-radius: 999px; padding: .3rem .95rem; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .8rem; margin: .4rem 0 1.6rem; }
+  .tile { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: .9rem 1rem; }
+  .tile .tl { font-size: .72rem; color: var(--ink-2); }
+  .tile .tv { font-weight: 600; font-size: 1.9rem; letter-spacing: -.01em; line-height: 1.2; }
+  .tile .td { font-size: .72rem; color: var(--ink-2); }
+  .tile.alert .tv { color: var(--bad); }
+  .tile.warn .tv { color: var(--warn); }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+  .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem 1.2rem; margin-bottom: .8rem; }
+  .panel h2 { font-family: 'Fraunces',Georgia,serif; font-weight: 600; font-size: 1.05rem; margin-bottom: .15rem; }
+  .panel .sub { font-size: .72rem; color: var(--ink-2); margin-bottom: .8rem; }
+  .panel svg { display: block; width: 100%; height: auto; }
+  .empty { color: var(--ink-2); font-size: .82rem; padding: 1.2rem 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+  th { text-align: left; font-size: .65rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); padding: .4rem .5rem; border-bottom: 1px solid var(--rule); }
+  td { padding: .35rem .5rem; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  td.num, th.num { text-align: right; }
+  .st { font-weight: 600; } .st.ok { color: #2e7d32; } .st.dup { color: var(--warn); } .st.void { color: var(--bad); }
+  .matrix td.cell { text-align: right; border-radius: 3px; }
+
+  #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
+  #gate { max-width: 30rem; margin: 4rem auto; text-align: left; }
+  #gate h1 { font-family: 'Fraunces',Georgia,serif; font-size: 1.5rem; margin-bottom: .6rem; }
+  #gate p { color: var(--ink-2); font-size: .9rem; margin-bottom: .8rem; }
+  #gate code { background: var(--paper-2); padding: .1rem .35rem; border-radius: 3px; }
+  footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="assets/logo-mark.svg" alt="">
+    <span class="name">Knox Pick-Me-Up</span>
+    <span class="tool">Program dashboard</span>
+    <span class="right">
+      <span class="badge-demo" id="demobadge" hidden>demo data</span>
+      <span id="updated"></span>
+      <button class="btn" id="refresh" type="button">Refresh</button>
+    </span>
+  </header>
+
+  <div id="gate" hidden>
+    <h1>This page needs its key.</h1>
+    <p>The dashboard is for program admins. Open it with the access key in the
+    address, like <code>dashboard.html#k=YOUR-KEY</code> — bookmark that full
+    address. The key is set in the Apps Script (see <code>design/LOGGING.md</code>)
+    and is never stored in this repository.</p>
+    <p>Looking for the program? <a href="index.html">knoxpickmeup site</a>.</p>
+  </div>
+
+  <div id="app" hidden>
+    <div class="filters" role="group" aria-label="Time range">
+      <span class="flabel">Range</span>
+      <button class="chip" data-days="7">7 days</button>
+      <button class="chip" data-days="30" aria-pressed="true">30 days</button>
+      <button class="chip" data-days="90">90 days</button>
+      <button class="chip" data-days="0">All time</button>
+    </div>
+
+    <div class="tiles" id="tiles"></div>
+
+    <div class="panel">
+      <h2>Redemptions over time</h2>
+      <p class="sub" id="trend-sub"></p>
+      <div id="trend"></div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h2>To which coffee shops</h2>
+        <p class="sub">Redemptions in range, by redeeming shop</p>
+        <div id="byshop"></div>
+      </div>
+      <div class="panel">
+        <h2>From which bars</h2>
+        <p class="sub">Redemptions in range, by issuing bar (via pack check-outs)</p>
+        <div id="bybar"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Bar &rarr; shop flows</h2>
+      <p class="sub">Where each bar&rsquo;s cards get redeemed (count in range)</p>
+      <div id="matrix"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Latest activity</h2>
+      <p class="sub">Most recent 20 scans in range (all statuses)</p>
+      <div id="latest"></div>
+    </div>
+  </div>
+
+  <footer>Data: the program&rsquo;s Google Sheet via Apps Script · No patron data is collected — serial, venue, and time only. · <a href="index.html">Public site</a></footer>
+</div>
+<div id="tip" role="tooltip"></div>
+
+<script>
+'use strict';
+/* ================= CONFIG =================
+   Same Apps Script web app as redeem.html (see design/LOGGING.md).
+   The access key is NOT stored here: open the page as dashboard.html#k=KEY.
+   With SCRIPT_URL empty the dashboard renders generated demo data. */
+const SCRIPT_URL = '';
+/* ========================================== */
+
+const ACCENT = '#ff8200';
+const RAMP = ['#fbedd8', '#f5c48a', '#ff8200', '#c26200', '#7d3f00'];
+const $ = id => document.getElementById(id);
+const demo = !SCRIPT_URL;
+const key = (location.hash.match(/[#&]k=([^&]+)/) || [])[1] || '';
+let DATA = null;        // { redemptions: [[iso, shop, status, bar]], packs: [[iso, pack, bar, voided]] }
+let rangeDays = 30;
+
+/* ---------- demo data (deterministic) ---------- */
+function demoData() {
+  let s = 42; const rnd = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
+  const shops = ['remedy', 'wild-love', 'k-brew', 'honeybee'];
+  const bars = ['Preservation Pub', 'Barley’s', 'Suttree’s', 'Peter Kern Library'];
+  const packs = [];
+  for (let i = 0; i < 12; i++)
+    packs.push([new Date(Date.now() - 86400000 * (70 - i * 5)).toISOString(),
+                'KPU-2026-00000000' + String(81 + i).padStart(2, '0'), bars[i % bars.length], '']);
+  const reds = [];
+  for (let d = 75; d >= 0; d--) {
+    const day = new Date(Date.now() - d * 86400000);
+    const dow = day.getDay();
+    const n = Math.round((dow === 0 || dow === 6 ? 7 : 2.5) * (0.5 + rnd()) * (1 + (75 - d) / 60));
+    for (let i = 0; i < n; i++) {
+      const t = new Date(day); t.setHours(7 + Math.floor(rnd() * 5), Math.floor(rnd() * 60));
+      const status = rnd() < 0.045 ? 'dup' : (rnd() < 0.012 ? 'void' : 'ok');
+      reds.push([t.toISOString(), shops[Math.floor(rnd() * shops.length)], status,
+                 bars[Math.floor(Math.pow(rnd(), 1.4) * bars.length)]]);
+    }
+  }
+  return { redemptions: reds, packs };
+}
+
+/* ---------- data ---------- */
+async function load() {
+  $('updated').textContent = 'loading…';
+  try {
+    DATA = demo ? demoData()
+      : await (await fetch(SCRIPT_URL + '?action=stats&key=' + encodeURIComponent(key))).json();
+    if (DATA.status === 'denied') { $('app').hidden = true; $('gate').hidden = false; return; }
+    render();
+    $('updated').textContent = 'updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  } catch (e) {
+    $('updated').textContent = 'could not reach the data — retry';
+  }
+}
+
+function inRange(iso) {
+  if (!rangeDays) return true;
+  return (Date.now() - new Date(iso).getTime()) <= rangeDays * 86400000;
+}
+
+/* ---------- svg helpers ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs, parent) {
+  const n = document.createElementNS(NS, name);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(n);
+  return n;
+}
+function txt(node, s) { node.textContent = s; return node; }
+const tip = $('tip');
+function hover(node, html) {
+  node.addEventListener('mousemove', e => {
+    tip.style.display = 'block'; tip.textContent = html;
+    tip.style.left = Math.min(e.clientX + 12, innerWidth - 180) + 'px';
+    tip.style.top = (e.clientY + 14) + 'px';
+  });
+  node.addEventListener('mouseleave', () => tip.style.display = 'none');
+}
+
+/* Column chart: buckets = [{label, value}] */
+function columns(host, buckets, unit) {
+  host.innerHTML = '';
+  if (!buckets.length) { host.innerHTML = '<p class="empty">Nothing in this range yet.</p>'; return; }
+  const W = 920, H = 220, padL = 34, padB = 24, padT = 12;
+  const max = Math.max(1, ...buckets.map(b => b.value));
+  const step = Math.max(1, Math.ceil(max / 3));
+  const top = step * 3 >= max ? step * 3 : step * 4;
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Redemptions per ' + unit });
+  for (let g = 0; g <= 3; g++) {
+    const y = padT + (H - padB - padT) * (1 - g / 3);
+    el('line', { x1: padL, x2: W - 4, y1: y, y2: y, stroke: g === 0 ? '#ddcfb4' : '#efe6d2', 'stroke-width': 1 }, svg);
+    txt(el('text', { x: padL - 6, y: y + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#6f5f4c' }, svg), g * top / 3);
+  }
+  const bw = Math.min(24, (W - padL - 8) / buckets.length - 2);
+  buckets.forEach((b, i) => {
+    const x = padL + (W - padL - 8) * (i + 0.5) / buckets.length - bw / 2;
+    const h = (H - padB - padT) * (b.value / top);
+    const y = H - padB - h;
+    const r = Math.min(4, bw / 2, h);
+    const bar = el('path', {
+      d: `M${x} ${H - padB} v${-(h - r)} a${r} ${r} 0 0 1 ${r} ${-r} h${bw - 2 * r} a${r} ${r} 0 0 1 ${r} ${r} v${h - r} Z`,
+      fill: ACCENT }, svg);
+    hover(bar, `${b.label}: ${b.value} redemption${b.value === 1 ? '' : 's'}`);
+    if (b.value === max && b.value > 0)
+      txt(el('text', { x: x + bw / 2, y: y - 5, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 600, fill: '#241a10' }, svg), b.value);
+    if (buckets.length <= 16 || i % Math.ceil(buckets.length / 12) === 0)
+      txt(el('text', { x: x + bw / 2, y: H - 7, 'text-anchor': 'middle', 'font-size': 10.5, fill: '#6f5f4c' }, svg), b.label);
+  });
+  host.appendChild(svg);
+}
+
+/* Horizontal ranked bars: rows = [{label, value}] */
+function hbars(host, rows) {
+  host.innerHTML = '';
+  if (!rows.length) { host.innerHTML = '<p class="empty">Nothing in this range yet.</p>'; return; }
+  const W = 460, rowH = 30, padL = 4, labelW = 132;
+  const H = rows.length * rowH + 6;
+  const max = Math.max(1, ...rows.map(r => r.value));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Ranked totals' });
+  rows.forEach((r, i) => {
+    const y = i * rowH + 6;
+    txt(el('text', { x: padL, y: y + 12, 'font-size': 12, fill: '#241a10' }, svg),
+        r.label.length > 18 ? r.label.slice(0, 17) + '…' : r.label);
+    const bw = Math.max(2, (W - labelW - 46) * (r.value / max));
+    const bar = el('path', {
+      d: `M${labelW} ${y} h${Math.max(0, bw - 4)} a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h${-Math.max(0, bw - 4)} Z`,
+      fill: ACCENT }, svg);
+    hover(bar, `${r.label}: ${r.value}`);
+    txt(el('text', { x: labelW + bw + 7, y: y + 12, 'font-size': 12, 'font-weight': 600, fill: '#241a10' }, svg), r.value);
+  });
+  host.appendChild(svg);
+}
+
+/* ---------- render ---------- */
+function tile(label, value, detail, cls) {
+  return `<div class="tile ${cls || ''}"><div class="tl">${label}</div><div class="tv">${value}</div><div class="td">${detail || ''}</div></div>`;
+}
+function count(arr, f) { return arr.reduce((n, r) => n + (f(r) ? 1 : 0), 0); }
+
+function render() {
+  const reds = DATA.redemptions.filter(r => inRange(r[0]));
+  const ok = reds.filter(r => r[2] === 'ok');
+  const dups = count(reds, r => r[2] === 'dup');
+  const voids = count(reds, r => r[2] === 'void');
+  const issued = DATA.packs.length * 50;
+  const okAll = count(DATA.redemptions, r => r[2] === 'ok');
+  const rate = issued ? Math.round(okAll / issued * 100) : null;
+  const last7 = count(DATA.redemptions, r => r[2] === 'ok' && (Date.now() - new Date(r[0])) <= 7 * 86400000);
+
+  $('tiles').innerHTML =
+    tile('Cards issued to bars', issued.toLocaleString(), DATA.packs.length + ' packs checked out, all time') +
+    tile('Coffees redeemed', ok.length.toLocaleString(), 'in range') +
+    tile('Redemption rate', rate === null ? '—' : rate + '%', 'redeemed ÷ issued, all time') +
+    tile('Last 7 days', last7.toLocaleString(), 'coffees redeemed') +
+    tile('Duplicate attempts', dups.toLocaleString(), 'already-used cards shown again', dups ? 'warn' : '') +
+    tile('Voided-pack attempts', voids.toLocaleString(), 'refused at the register', voids ? 'alert' : '');
+
+  // trend: daily <=31 buckets, else weekly
+  const days = rangeDays || Math.ceil((Date.now() - Math.min(...DATA.redemptions.map(r => +new Date(r[0])), Date.now())) / 86400000);
+  const byDay = days <= 31;
+  const nb = byDay ? days : Math.ceil(days / 7);
+  const buckets = [];
+  for (let i = nb - 1; i >= 0; i--) {
+    const start = new Date(Date.now() - (i + 1) * (byDay ? 1 : 7) * 86400000);
+    const end = new Date(Date.now() - i * (byDay ? 1 : 7) * 86400000);
+    buckets.push({
+      label: (byDay ? end : start).toLocaleDateString([], { month: 'short', day: 'numeric' }),
+      value: count(ok, r => { const t = new Date(r[0]); return t > start && t <= end; })
+    });
+  }
+  $('trend-sub').textContent = 'Coffees redeemed per ' + (byDay ? 'day' : 'week');
+  columns($('trend'), buckets, byDay ? 'day' : 'week');
+
+  const tally = (rows, idx, fallback) => {
+    const m = new Map();
+    rows.forEach(r => { const k = r[idx] || fallback; m.set(k, (m.get(k) || 0) + 1); });
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value }));
+  };
+  hbars($('byshop'), tally(ok, 1, '(unknown shop)'));
+  hbars($('bybar'), tally(ok, 3, '(pack not checked out)'));
+
+  // bar -> shop matrix
+  const shops = tally(ok, 1, '(unknown)').slice(0, 6).map(r => r.label);
+  const bars = tally(ok, 3, '(unassigned)').slice(0, 8).map(r => r.label);
+  if (!shops.length) { $('matrix').innerHTML = '<p class="empty">Nothing in this range yet.</p>'; }
+  else {
+    const cellCount = {};
+    let cmax = 1;
+    ok.forEach(r => {
+      const k = (r[3] || '(unassigned)') + '|' + (r[1] || '(unknown)');
+      cellCount[k] = (cellCount[k] || 0) + 1; cmax = Math.max(cmax, cellCount[k]);
+    });
+    let h = '<table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(s => `<th class="num">${s}</th>`).join('') + '</tr>';
+    for (const b of bars) {
+      h += `<tr><td>${b}</td>` + shops.map(s => {
+        const v = cellCount[b + '|' + s] || 0;
+        const step = v === 0 ? -1 : Math.min(4, Math.floor(v / cmax * 4.999));
+        const bg = step < 0 ? 'transparent' : RAMP[step];
+        const fg = step >= 2 ? '#fffdf7' : '#241a10';
+        return `<td class="cell" data-t="${b} → ${s}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
+      }).join('') + '</tr>';
+    }
+    $('matrix').innerHTML = h + '</table>';
+    $('matrix').querySelectorAll('td.cell').forEach(td => hover(td, td.dataset.t));
+  }
+
+  // latest table
+  const latest = [...reds].sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 20);
+  $('latest').innerHTML = '<table><tr><th>When</th><th>Shop</th><th>Issuing bar</th><th>Status</th></tr>' +
+    latest.map(r => `<tr><td>${new Date(r[0]).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>` +
+      `<td>${r[1] || ''}</td><td>${r[3] || '—'}</td><td class="st ${r[2]}">${{ok:'redeemed',dup:'duplicate',void:'voided pack'}[r[2]] || r[2]}</td></tr>`).join('') +
+    '</table>';
+}
+
+/* ---------- wiring ---------- */
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', 'false'));
+  c.setAttribute('aria-pressed', 'true');
+  rangeDays = Number(c.dataset.days);
+  render();
+}));
+$('refresh').addEventListener('click', load);
+setInterval(load, 5 * 60 * 1000);
+
+if (demo) { $('demobadge').hidden = false; $('app').hidden = false; load(); }
+else if (!key) { $('gate').hidden = false; }
+else { $('app').hidden = false; load(); }
+</script>
+</body>
+</html>
