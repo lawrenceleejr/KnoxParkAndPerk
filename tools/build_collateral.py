@@ -112,9 +112,21 @@ open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', d
 # =====================================================================
 # The spec card shows a real, working QR: like every printed card, it encodes
 # the public site URL with this sample's serial embedded.
-import io, segno
+import hashlib, hmac, io, os, segno
 SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
-SAMPLE_SERIAL = 'KPMU-2026-00004217'
+
+# Keyed serial checksum: last letter = HMAC(secret, digits part) -> A-Z minus
+# I/O. The key is NEVER stored in this repo — the real one lives in the Apps
+# Script and is passed to build_cards.py at print time. 'demo-key' is only
+# for samples and demo artwork.
+CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+DEMO_KEY = 'demo-key'
+
+def checksum(base, key):
+    d = hmac.new(key.encode(), base.encode(), hashlib.sha256).digest()
+    return CK_ALPHABET[d[0] % 24]
+
+SAMPLE_SERIAL = 'KPMU-2026-00004217' + checksum('KPMU-2026-00004217', DEMO_KEY)
 
 def qr_svg(data, x, y, size, color=NIGHT, error='m'):
     q = segno.make(data, error=error, micro=False)

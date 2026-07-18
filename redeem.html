@@ -168,7 +168,7 @@
   <div class="manual">
     <span class="label">Manual entry (if the code won&rsquo;t scan)</span>
     <div class="row">
-      <input id="serialbox" placeholder="KPMU-2026-00004217" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <input id="serialbox" placeholder="KPMU-2026-00004217H" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="manualgo" type="button">Log it</button>
     </div>
   </div>
@@ -200,7 +200,7 @@ const SHOPS = {
 };
 /* ========================================== */
 
-const SERIAL_RE = /KPMU-\d{4}-\d{8}/i;
+const SERIAL_RE = /KPMU-\d{4}-\d{8}[A-HJ-NP-Z]/i;   // trailing letter = keyed checksum
 const qs = new URLSearchParams(location.search);
 const shopSlug = (qs.get('shop') || '').toLowerCase();
 const shopName = SHOPS[shopSlug] || null;
@@ -290,8 +290,12 @@ async function handleSerial(raw, fromCamera) {
   setStatus('', 'Logging ' + serial + '…', '');
   try {
     const out = await submit(serial);
-    if (out.status !== 'void') { seen.add(serial); saveLocal(); }
-    if (out.status === 'void') {
+    if (out.status !== 'void' && out.status !== 'invalid') { seen.add(serial); saveLocal(); }
+    if (out.status === 'invalid') {
+      if (fromCamera) flashReticle('bad');
+      setStatus('bad', 'Serial doesn’t check out', serial + ' fails the check letter — mistyped, or not a real card. The attempt has been logged.');
+      addLog(serial, 'bad', 'invalid');
+    } else if (out.status === 'void') {
       if (fromCamera) flashReticle('bad');
       setStatus('bad', 'Card not valid', serial + ' belongs to a card pack that was voided (lost or withdrawn). Don’t accept it — the attempt has been logged.');
       addLog(serial, 'bad', 'voided pack');
@@ -488,7 +492,7 @@ async function scanLoop() {
 $('camstart').addEventListener('click', startCamera);
 $('manualgo').addEventListener('click', () => {
   const v = $('serialbox').value.trim();
-  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217.');
+  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217H — including the letter at the end.');
   $('serialbox').value = '';
 });
 function handleSerialSync(v) { const ok = SERIAL_RE.test(v); if (ok) handleSerial(v); return ok; }

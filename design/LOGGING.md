@@ -63,6 +63,17 @@ contains it) and writes the issuing bar and pack serial alongside the shop.
 No formulas required for the join; keep a duplicate flag
 (`=COUNTIF(B:B,B2)>1`) as a belt-and-suspenders check.
 
+**Serial checksum — the anti-guessing letter.** Every card serial ends in
+one letter (`KPMU-2026-00004217H`) computed as a **keyed** HMAC of the
+digits: `letter = HMAC-SHA256(SERIAL_KEY, "KPMU-2026-00004217")` mapped to a
+24-letter alphabet (no I/O, which read as 1/0). Because the key lives only
+in the Apps Script and in the print-run command — never in this public
+repo — nobody can mint valid serials by counting up from a card in their
+hand: a made-up serial passes only 1 time in 24, and every failure is
+logged (status `bad`) and surfaced on the dashboard, so guessing at scale
+is visible immediately. Cost: one letter on the card, zero extra steps for
+anyone. The stakes stay one coffee; this just makes the lazy attack noisy.
+
 **Kill switch:** to invalidate an entire pack (lost, stolen, misprinted,
 or a bar leaves the program), type anything in its `voided` cell —
 e.g. `LOST 7/20`. From that moment every card in the pack **fails to scan**
@@ -81,15 +92,24 @@ it — this is configuration, not a server you babysit.
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
 const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
 const BACKUP_KEY = 'CHOOSE-A-LONG-RANDOM-STRING';   // for the GitHub backup job ONLY
+const SERIAL_KEY = 'CHOOSE-A-SECRET-CHECKSUM-KEY';  // MUST match the --key used to print cards
+
+// keyed serial checksum: last letter of every serial = HMAC(key, digits part)
+const CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';     // 24 letters, no I/O
+function checkLetter(base) {
+  const raw = Utilities.computeHmacSha256Signature(base, SERIAL_KEY);
+  return CK_ALPHABET[((raw[0] % 256) + 256) % 256 % 24];
+}
 
 // serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
   const rows = SpreadsheetApp.getActive().getSheetByName(PACKS).getDataRange().getValues();
-  const year = serial.slice(5, 9), n = Number(serial.slice(10));
+  // digits only — serials end in a checksum letter, so slice a fixed width
+  const year = serial.slice(5, 9), n = Number(serial.slice(10, 18));
   for (let i = 1; i < rows.length; i++) {
     const [, pack, first, last] = rows[i].map(String);
     if (first.slice(5, 9) === year &&
-        n >= Number(first.slice(10)) && n <= Number(last.slice(10))) {
+        n >= Number(first.slice(10, 18)) && n <= Number(last.slice(10, 18))) {
       return { bar: String(rows[i][4] || ''), pack: pack,
                voided: String(rows[i][5] || '').trim() !== '' };
     }
@@ -101,13 +121,20 @@ function lookupBar(serial) {
 function doGet(e) {
   const p = e.parameter;
   let out = { status: 'error' };
-  if (p.action === 'redeem' && /^KPMU-\d{4}-\d{8}$/i.test(p.serial || '')) {
+  if (p.action === 'redeem' && /^KPMU-\d{4}-\d{8}[A-Z]$/i.test(p.serial || '')) {
     const serial = p.serial.toUpperCase();
     const shop = String(p.shop || 'unknown').slice(0, 40);
     const lock = LockService.getScriptLock();
     lock.waitLock(5000);                       // serialize concurrent scans
     try {
       const sh = SpreadsheetApp.getActive().getSheetByName(SHEET);
+      if (checkLetter(serial.slice(0, -1)) !== serial.slice(-1)) {
+        // fails the keyed checksum — mistyped or made up; log it and refuse
+        sh.appendRow([new Date(), serial, shop, 'bad', '', '']);
+        out = { status: 'invalid' };
+        return ContentService.createTextOutput(JSON.stringify(out))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
       const src = lookupBar(serial);
       if (src.voided) {
         // pack was invalidated — refuse, but keep the attempt for the audit trail
@@ -315,8 +342,9 @@ the pack form dropdown — that's how the dashboard links them.
    card serial, bar dropdown), link it to the Sheet's `Packs` tab, and grab
    a pre-filled URL (⋮ → *Get pre-filled link*) to learn the three
    `entry.NNNN` IDs.
-3. Paste the Apps Script above into the Sheet, deploy as web app, copy the
-   `/exec` URL.
+3. Paste the Apps Script above into the Sheet; set `SERIAL_KEY` (the card
+   checksum secret — save it somewhere safe, every future print run needs
+   it) and `BACKUP_KEY`; deploy as web app, copy the `/exec` URL.
 4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
    set `SCRIPT_URL` in `dashboard.html`; set `PACK_FORM_URL` in
    `tools/build_cards.py`. Commit, merge — Pages redeploys.
