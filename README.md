@@ -29,6 +29,9 @@ Transit (KAT) · downtown bars · downtown coffee shops.
 - **[`design/LOGGING.md`](design/LOGGING.md)** — the card-tracking system:
   QR scan-to-log redemptions (`redeem.html`), pack check-out, Google Sheets
   backend, Looker Studio dashboards — no servers, $0, volunteer-proof.
+- **[`PRINTING.md`](PRINTING.md)** — the printing guide: card-book specs and
+  a copy-paste RFQ, vendor guidance, file generation, register QRs, and the
+  pre-flight checklist for every print run.
 - **[`BRAND.md`](BRAND.md)** — the visual identity guide: logo suite, the
   signature mark, color palette, typography, favicon, layout language, and usage.
 - **[`assets/`](assets)** — brand assets as scalable SVG (print- and web-ready;
@@ -85,10 +88,10 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    - [`tools/build_cards.py`](tools/build_cards.py): `PACK_FORM_URL` using
      the three `entry.NNNNN` IDs from step 3.
    Commit and merge to `main` — Pages redeploys automatically.
-6. **Print things** — `python3 tools/build_cards.py --year 2026 --start 1
-   --count 500` writes per-serial cards and pack cover sheets to `print/`;
-   send those to a print shop. Make one register QR per coffee shop pointing
-   at `https://…/redeem.html?shop=<slug>`; print and laminate.
+6. **Print things** — follow [`PRINTING.md`](PRINTING.md): generate the
+   card books and pack cover sheets with `tools/build_cards.py`, make one
+   register QR per coffee shop, and use the RFQ + pre-flight checklist
+   there when ordering.
 7. **Dashboards** — the built-in one is live immediately at
    [`dashboard.html`](dashboard.html) (unlinked and unindexed; share the URL
    freely). Optionally build a Looker Studio view on the Sheet for partners
