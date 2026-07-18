@@ -75,6 +75,7 @@ it — this is configuration, not a server you babysit.
 ```javascript
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
 const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
+const STATS_KEY = 'CHOOSE-A-LONG-RANDOM-KEY';   // for dashboard.html#k=...
 
 // serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
@@ -112,6 +113,8 @@ function doGet(e) {
         const rows = sh.getRange(2, 2, Math.max(sh.getLastRow() - 1, 1), 3).getValues();
         const hit = rows.find(r => r[0] === serial && r[2] === 'ok');
         if (hit) {
+          // refused, but logged so the dashboard can count duplicate attempts
+          sh.appendRow([new Date(), serial, shop, 'dup', src.bar, src.pack]);
           out = { status: 'duplicate', firstShop: hit[1] };
         } else {
           sh.appendRow([new Date(), serial, shop, 'ok', src.bar, src.pack]);
@@ -120,6 +123,18 @@ function doGet(e) {
       }
     } finally {
       lock.releaseLock();
+    }
+  }
+  if (p.action === 'stats') {
+    if (p.key !== STATS_KEY) {
+      out = { status: 'denied' };
+    } else {
+      const ss = SpreadsheetApp.getActive();
+      const red = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1)
+        .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || '')]);
+      const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
+        .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
+      out = { redemptions: red, packs: packs };
     }
   }
   return ContentService.createTextOutput(JSON.stringify(out))
@@ -156,7 +171,24 @@ per-serial card SVGs and one cover sheet per 50 into `print/` (gitignored),
 ready for any print shop (SVG→PDF one-liner included in the script output).
 Unique QR per card is what makes scan-to-log possible.
 
-### F. Dashboards: Looker Studio (free)
+### F. The admin dashboard: `dashboard.html` (this repo, GitHub Pages)
+A brand-styled, self-contained dashboard on the same static site, fed live
+from the Sheet through the Apps Script's `stats` action. It shows a KPI row
+(issued, redeemed, redemption rate, last 7 days, duplicate attempts,
+voided-pack attempts), redemptions per day/week, ranked **to-shop** and
+**from-bar** charts, a bar → shop flow matrix, and the latest activity —
+with 7/30/90-day/all-time range chips and a 5-minute auto-refresh.
+
+**Access:** open `dashboard.html#k=YOUR-KEY` and bookmark it. The key lives
+in the Apps Script (`STATS_KEY`) and in your bookmark — never in this public
+repository; the fragment (`#…`) is not sent to any server or logged
+anywhere. Honest scope: this is a light gate, not Fort Knox — but the data
+behind it is only venue names, timestamps, and serials (no patron data), so
+the worst case of a leaked key is someone seeing coffee counts. Rotate the
+key by changing `STATS_KEY` and your bookmark. With `SCRIPT_URL` unset the
+page renders generated demo data, so you can try it right now.
+
+### G. Dashboards for partners: Looker Studio (free)
 Connect it to the Sheet once; it stays live. Suggested pages:
 - **Program**: cards issued vs redeemed, redemption rate, trend by week.
 - **By venue**: redemptions per shop, issuance per bar (via the range
@@ -179,7 +211,9 @@ site later if wanted. Nothing to host.
 3. Paste the Apps Script above into the Sheet, deploy as web app, copy the
    `/exec` URL.
 4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
-   set `PACK_FORM_URL` in `tools/build_cards.py`. Commit, merge — Pages
+   set `SCRIPT_URL` in `dashboard.html`; set `PACK_FORM_URL` in
+   `tools/build_cards.py`. Pick a long random `STATS_KEY` in the Apps
+   Script and bookmark `dashboard.html#k=THAT-KEY`. Commit, merge — Pages
    redeploys.
 5. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
    at `https://…/redeem.html?shop=<slug>`; print and laminate.
