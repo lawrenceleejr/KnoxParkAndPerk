@@ -52,6 +52,12 @@
   td.num, th.num { text-align: right; }
   .st { font-weight: 600; } .st.ok { color: #2e7d32; } .st.dup { color: var(--warn); } .st.void { color: var(--bad); }
   .matrix td.cell { text-align: right; border-radius: 3px; }
+  .matrixwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .matrix th, .matrix td { white-space: nowrap; }
+  .matrix th:first-child, .matrix td:first-child {
+    position: sticky; left: 0; background: var(--card);
+    box-shadow: 2px 0 0 var(--grid);
+  }
 
   #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
   footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
@@ -297,9 +303,9 @@ function render() {
   hbars($('byshop'), tally(ok, 1, '(unknown shop)'));
   hbars($('bybar'), tally(ok, 3, '(pack not checked out)'));
 
-  // bar -> shop matrix
-  const shops = tally(ok, 1, '(unknown)').slice(0, 6).map(r => r.label);
-  const bars = tally(ok, 3, '(unassigned)').slice(0, 8).map(r => r.label);
+  // bar -> shop matrix — every business, sorted by volume; the wrapper scrolls
+  const shops = tally(ok, 1, '(unknown)').map(r => r.label);
+  const bars = tally(ok, 3, '(unassigned)').map(r => r.label);
   if (!shops.length) { $('matrix').innerHTML = '<p class="empty">Nothing in this range yet.</p>'; }
   else {
     const cellCount = {};
@@ -308,7 +314,7 @@ function render() {
       const k = (r[3] || '(unassigned)') + '|' + (r[1] || '(unknown)');
       cellCount[k] = (cellCount[k] || 0) + 1; cmax = Math.max(cmax, cellCount[k]);
     });
-    let h = '<table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(s => `<th class="num">${s}</th>`).join('') + '</tr>';
+    let h = '<div class="matrixwrap"><table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(s => `<th class="num">${s}</th>`).join('') + '</tr>';
     for (const b of bars) {
       h += `<tr><td>${b}</td>` + shops.map(s => {
         const v = cellCount[b + '|' + s] || 0;
@@ -318,7 +324,7 @@ function render() {
         return `<td class="cell" data-t="${b} → ${s}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
       }).join('') + '</tr>';
     }
-    $('matrix').innerHTML = h + '</table>';
+    $('matrix').innerHTML = h + '</table></div>';
     $('matrix').querySelectorAll('td.cell').forEach(td => hover(td, td.dataset.t));
   }
 
