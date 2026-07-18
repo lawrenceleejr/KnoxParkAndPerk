@@ -182,9 +182,12 @@ function nightlySnapshot() {
 Already built. Brand-styled, self-contained static page:
 - opens from a per-shop QR (`redeem.html?shop=slug`), shows which shop it's
   logging for;
-- tap-to-start camera; native `BarcodeDetector` where available, vendored
-  [jsQR](../assets/vendor/jsQR.js) (Apache-2.0) everywhere else — works on
-  iPhone Safari and old Androids alike;
+- tap-to-start camera with live detection feedback (polygon over the code,
+  serial chip, outcome-colored reticle, scan line, torch toggle) and a stop
+  button; native `BarcodeDetector` where available, vendored
+  [jsQR](../assets/vendor/jsQR.min.js) (Apache-2.0, minified) everywhere
+  else — **lazy-loaded only at camera start on browsers that need it**, so
+  the page itself is a ~20 KB instant load;
 - manual-entry box for damaged codes;
 - **offline-tolerant**: no signal → the scan queues in `localStorage`, the
   barista is told to hand over the coffee, and the queue auto-flushes when
