@@ -94,8 +94,8 @@ operators as sponsors where a garage isn't nearby.
 | Tagline | *Make it home safe. Tomorrow's coffee's on us.* |
 | Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
 | Story arc | Last call → Ride home → Morning → Coffee |
-| Palette | Midnight navy `#141d33`, cream `#fff7ec`, espresso `#3a2a1d`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color), gold `#ffb95e` |
-| Design | Clean and typographic — lean on type, the palette, and the night-to-morning arc rather than emoji or clip-art |
+| Palette | Warm paper `#faf5eb`, espresso ink `#241a10`, night navy `#101a30`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color) used sparingly as the single accent — see [BRAND.md](BRAND.md) |
+| Design | Editorial and typographic — generous whitespace, hairline rules, a serif display face (Fraunces), and one accent color; no gradients, shadows, emoji, or clip-art |
 | Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "a free large coffee," and don't oversell it. |
 | Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Pick-Me-Up Partner"), bartender stamp, and books of Morning Pick-Me-Up Cards |
 

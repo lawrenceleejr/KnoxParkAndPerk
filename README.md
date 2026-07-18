@@ -24,11 +24,12 @@ Market.
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
 - **[`BRAND.md`](BRAND.md)** — the visual identity guide: logo suite, the
-  signature ampersand, color palette, typography, favicon, motifs, and usage.
-- **[`assets/`](assets)** — brand assets as scalable SVG (print- and web-ready):
-  - [`logo.svg`](assets/logo.svg) — primary lockup, "KNOX PARK [mark] PERK" (light backgrounds)
+  signature mark, color palette, typography, favicon, layout language, and usage.
+- **[`assets/`](assets)** — brand assets as scalable SVG (print- and web-ready;
+  all type converted to outlines, no font dependencies):
+  - [`logo.svg`](assets/logo.svg) — primary lockup (light backgrounds)
   - [`logo-dark.svg`](assets/logo-dark.svg) — lockup for dark backgrounds
-  - [`mark.svg`](assets/mark.svg) — the signature mark (cup + steering wheel); the connective "and"
+  - [`mark.svg`](assets/mark.svg) — the signature mark (cup + steering wheel)
   - [`logo-mark.svg`](assets/logo-mark.svg) — the mark sealed in a badge (emblem)
   - [`favicon.svg`](assets/favicon.svg) — app icon / favicon
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
