@@ -273,6 +273,31 @@ none of which you have to remember to run:
 **Failure alerting for free:** after setup, a failed nightly backup fails
 the GitHub Action, and GitHub emails the repo owner. No pager, no service.
 
+### I. Businesses joining or leaving
+
+The system is designed so the roster can churn without touching any data:
+
+**A coffee shop joins:** add one line to the `SHOPS` map in `redeem.html`
+(slug → display name), merge, print their register QR, and add them to the
+`Venues` tab. Their name appears in the dashboard automatically with their
+first scan — every chart and the flow matrix build their axes from the
+data, uncapped, and the matrix scrolls as the roster grows.
+
+**A coffee shop leaves:** remove their `SHOPS` line and take back the
+register QR. Their history stays in the Sheet and keeps appearing in
+past-date dashboard views (correct — those coffees happened). A scan from
+a stale register QR still logs, labeled as an unknown shop code, so
+nothing is silently lost while the change propagates.
+
+**A bar joins:** add it to the pack form's Bar dropdown (a one-minute
+Google Forms edit) and the `Venues` tab, then check packs out to it as
+usual. Attribution flows from the pack records — nothing else to update.
+
+**A bar leaves:** void its unredeemed packs (the kill-switch column) so
+outstanding cards stop scanning, and remove it from the form dropdown.
+All historical attribution is stored on the redemption rows at scan time,
+so past data never shifts when the roster changes.
+
 ## 3. Setup runbook (one afternoon, in order)
 
 1. Create the program Google account; create the Sheet with the three tabs.
