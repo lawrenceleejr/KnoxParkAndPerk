@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up — Visual Identity
 
-*Make it home safe. Tomorrow's coffee's on us.*
+*Ride from last call to first call.*
 
 This is the brand guide for Knox Pick-Me-Up. The identity is built on one idea:
 **the journey from a dark night out to a bright morning coffee** — told with
@@ -20,10 +20,11 @@ everywhere — web, print, email — with no font dependencies.
 | | |
 |---|---|
 | **Name** | Knox Pick-Me-Up |
-| **Tagline** | *Make it home safe. Tomorrow's coffee's on us.* |
+| **Tagline** | *Ride from last call to first call.* |
 | **Essence** | Road safety made warm and rewarding — not preachy |
 | **Story arc** | Last call → Ride home → Morning → Coffee |
-| **Voice** | Warm, wry, plainspoken. Never "don't drink and drive"; always "good call — coffee's on us." |
+| **Voice** | Warm, wry, plainspoken. Never "don't drink and drive"; always "good call — coffee's on us." Puns are welcome when they carry the message: *two brews*, *Hair of the KAT*. |
+| **Sub-brands** | *Hair of the KAT* — the card doubles as KAT bus fare while valid; *Pick It Forward* — patrons chip in a dollar for tomorrow's cards |
 | **Design posture** | Editorial and civic: generous whitespace, hairline rules, one accent color used sparingly. No gradients, no drop shadows, no decoration that doesn't carry meaning. |
 
 ---

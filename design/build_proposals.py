@@ -45,7 +45,7 @@ open(f'{OUT}/concept-1-first-light.svg', 'w').write(
 b = [first_light()]
 w1, ww = text(fraunces, 'Knox Pick-Me-Up', 56, 264, 118, INK)
 b.append(w1)
-b.append(text(fraunces_it, 'Make it home safe. Tomorrow’s coffee’s on us.', 20, 266, 152, ORANGE_INK)[0])
+b.append(text(fraunces_it, 'Ride from last call to first call.', 20, 266, 152, ORANGE_INK)[0])
 open(f'{OUT}/concept-1-lockup.svg', 'w').write(
     svg(math.ceil(264+ww+16), 240, ''.join(b), 'Concept 1 lockup — First Light mark with wordmark'))
 

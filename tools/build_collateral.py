@@ -96,13 +96,13 @@ def lockup(ink, accent, sub_ink, dark_bg=None):
     body.append(mark(mx, my, mh, dark=ink, orange=ORANGE))
     w1_path, w1 = text(fraunces, 'Knox Pick-Me-Up', 58, tx, 88, ink)
     body.append(w1_path)
-    t_path, tw = text(fraunces_it, 'Make it home safe. Tomorrow’s coffee’s on us.', 21, tx+2, 124, accent)
+    t_path, tw = text(fraunces_it, 'Ride from last call to first call.', 21, tx+2, 124, accent)
     body.append(t_path)
     l_path, lw = text(inter6, 'DOWNTOWN KNOXVILLE, TENNESSEE', 11, tx+2, 156, sub_ink, tracking=0.22)
     body.append(l_path)
     W = math.ceil(tx + max(w1, tw, lw) + 12)
     return svg(W, H, ''.join(body),
-               'Knox Pick-Me-Up — Make it home safe. Tomorrow’s coffee’s on us. Downtown Knoxville, Tennessee')
+               'Knox Pick-Me-Up — Ride from last call to first call. Downtown Knoxville, Tennessee')
 
 open(f'{REPO}/assets/logo.svg', 'w').write(lockup(INK, ORANGE_INK, INK2))
 open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', dark_bg=True))
@@ -124,16 +124,21 @@ b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, trackin
 b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
 # offer
 b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
-b.append(text(fraunces_it, 'You made the safe call. The morning’s on us.', 14.5, 27, 174, INK2)[0])
-bullets = [
-    'One large coffee at participating downtown shops',
-    'Free KAT bus rides while this card is valid',
-    'One per ride · Not for resale · No cash value',
+b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 27, 174, INK2)[0])
+bullet_rows = [
+    [('One large coffee at participating downtown shops', inter4, INK2)],
+    [('Hair of the KAT', inter6, ORANGE_INK),
+     (' — your KAT bus fare while this card is valid', inter4, INK2)],
+    [('One per ride · Not for resale · No cash value', inter4, INK2)],
 ]
-for i, t in enumerate(bullets):
+for i, segs in enumerate(bullet_rows):
     y = 202 + i*19
     b.append(f'<rect x="27" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
-    b.append(text(inter4, t, 11, 42, y, INK2)[0])
+    x = 42
+    for seg, face, col in segs:
+        pth, w = text(face, seg, 11, x, y, col)
+        b.append(pth)
+        x += w
 # QR
 b.append(f'<rect x="398" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
 b.append(f'<g transform="translate(5.4,9)">{qr}</g>')
@@ -156,7 +161,7 @@ c.append(f'<circle cx="{cx}" cy="{cy}" r="204" fill="{PAPER}" stroke="{RULE}" st
 c.append(f'<circle cx="{cx}" cy="{cy}" r="192" fill="none" stroke="{INK}" stroke-width="2"/>')
 c.append(f'<circle cx="{cx}" cy="{cy}" r="158" fill="none" stroke="{RULE}" stroke-width="1"/>')
 c.append(arc_text(inter6, 'KNOX PICK-ME-UP', 15, cx, cy, 175, INK, tracking=0.32, mode='top'))
-c.append(arc_text(inter6, 'FREE LARGE COFFEE · FREE KAT RIDE', 12, cx, cy, 172, ORANGE_INK, tracking=0.26, mode='bottom'))
+c.append(arc_text(inter6, 'FREE LARGE COFFEE · HAIR OF THE KAT', 12, cx, cy, 172, ORANGE_INK, tracking=0.26, mode='bottom'))
 # side dots
 for sdeg in (90, 270):
     px = cx + 175*math.sin(math.radians(sdeg))
