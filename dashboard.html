@@ -59,6 +59,8 @@
     box-shadow: 2px 0 0 var(--grid);
   }
 
+  .inote { font-size: .72rem; color: #8a8172; font-style: italic; margin-top: .55rem; }
+  .matrix .inactive, td .inactive { color: #a39b8b; font-style: italic; }
   #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
   footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
 </style>
@@ -149,6 +151,16 @@ function demoData() {
   for (let i = 0; i < 12; i++)
     packs.push([new Date(Date.now() - 86400000 * (70 - i * 5)).toISOString(),
                 'KPMU-2026-00000000' + String(81 + i).padStart(2, '0'), bars[i % bars.length], '']);
+  const venues = [
+    ['remedy', 'Remedy Coffee', 'shop', ''],
+    ['wild-love', 'Wild Love Bakehouse', 'shop', ''],
+    ['k-brew', 'K Brew Downtown', 'shop', ''],
+    ['honeybee', 'Honeybee Coffee', 'shop', 'left 7/1'],
+    ['', 'Preservation Pub', 'bar', ''],
+    ['', 'Barley’s', 'bar', ''],
+    ['', 'Suttree’s', 'bar', ''],
+    ['', 'Peter Kern Library', 'bar', 'left 7/10'],
+  ];
   const reds = [];
   for (let d = 75; d >= 0; d--) {
     const day = new Date(Date.now() - d * 86400000);
@@ -161,7 +173,7 @@ function demoData() {
                  bars[Math.floor(Math.pow(rnd(), 1.4) * bars.length)]]);
     }
   }
-  return { redemptions: reds, packs };
+  return { redemptions: reds, packs, venues };
 }
 
 /* ---------- data ---------- */
@@ -243,19 +255,40 @@ function hbars(host, rows) {
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Ranked totals' });
   rows.forEach((r, i) => {
     const y = i * rowH + 6;
-    txt(el('text', { x: padL, y: y + 12, 'font-size': 12, fill: '#241a10' }, svg),
+    const ink = r.inactive ? '#a39b8b' : '#241a10';
+    const lbl = txt(el('text', { x: padL, y: y + 12, 'font-size': 12, fill: ink }, svg),
         r.label.length > 18 ? r.label.slice(0, 17) + '…' : r.label);
+    if (r.inactive) lbl.setAttribute('font-style', 'italic');
     const bw = Math.max(2, (W - labelW - 46) * (r.value / max));
     const bar = el('path', {
       d: `M${labelW} ${y} h${Math.max(0, bw - 4)} a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h${-Math.max(0, bw - 4)} Z`,
-      fill: ACCENT }, svg);
-    hover(bar, `${r.label}: ${r.value}`);
-    txt(el('text', { x: labelW + bw + 7, y: y + 12, 'font-size': 12, 'font-weight': 600, fill: '#241a10' }, svg), r.value);
+      fill: r.inactive ? '#bdb4a3' : ACCENT }, svg);
+    hover(bar, `${r.label}: ${r.value}` + (r.inactive ? ' — deactivated (historical)' : ''));
+    txt(el('text', { x: labelW + bw + 7, y: y + 12, 'font-size': 12, 'font-weight': 600, fill: ink }, svg), r.value);
   });
   host.appendChild(svg);
+  if (rows.some(r => r.inactive)) host.insertAdjacentHTML('beforeend', INOTE);
 }
 
 /* ---------- render ---------- */
+/* venue roster: display names + deactivation state.
+   Shops are matched by slug; bars by display name (as in the pack form). */
+function venueList() {
+  return (DATA.venues || []).map(v => ({
+    slug: String(v[0] || '').toLowerCase(), name: String(v[1] || ''),
+    type: String(v[2] || '').toLowerCase(), off: String(v[3] || '').trim() !== ''
+  }));
+}
+function shopInfo(slug) {
+  const v = venueList().find(x => x.slug === slug && x.slug);
+  return { name: v ? v.name : slug, off: !!(v && v.off) };
+}
+function barInfo(name) {
+  const v = venueList().find(x => x.name === name);
+  return { name, off: !!(v && v.off) };
+}
+const INOTE = '<p class="inote">Greyed venues are deactivated — no longer in the program; their history stays.</p>';
+
 function tile(label, value, detail, cls) {
   return `<div class="tile ${cls || ''}"><div class="tl">${label}</div><div class="tv">${value}</div><div class="td">${detail || ''}</div></div>`;
 }
@@ -300,8 +333,12 @@ function render() {
     rows.forEach(r => { const k = r[idx] || fallback; m.set(k, (m.get(k) || 0) + 1); });
     return [...m.entries()].sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value }));
   };
-  hbars($('byshop'), tally(ok, 1, '(unknown shop)'));
-  hbars($('bybar'), tally(ok, 3, '(pack not checked out)'));
+  hbars($('byshop'), tally(ok, 1, '(unknown shop)').map(r => {
+    const v = shopInfo(r.label); return { label: v.name, value: r.value, inactive: v.off };
+  }));
+  hbars($('bybar'), tally(ok, 3, '(pack not checked out)').map(r => {
+    const v = barInfo(r.label); return { label: v.name, value: r.value, inactive: v.off };
+  }));
 
   // bar -> shop matrix — every business, sorted by volume; the wrapper scrolls
   const shops = tally(ok, 1, '(unknown)').map(r => r.label);
@@ -314,9 +351,11 @@ function render() {
       const k = (r[3] || '(unassigned)') + '|' + (r[1] || '(unknown)');
       cellCount[k] = (cellCount[k] || 0) + 1; cmax = Math.max(cmax, cellCount[k]);
     });
-    let h = '<div class="matrixwrap"><table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(s => `<th class="num">${s}</th>`).join('') + '</tr>';
+    const shopHead = s => { const v = shopInfo(s); return `<th class="num${v.off ? ' inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${v.name}${v.off ? ' †' : ''}</th>`; };
+    const barHead = b => { const v = barInfo(b); return `<td class="${v.off ? 'inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${v.name}${v.off ? ' †' : ''}</td>`; };
+    let h = '<div class="matrixwrap"><table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(shopHead).join('') + '</tr>';
     for (const b of bars) {
-      h += `<tr><td>${b}</td>` + shops.map(s => {
+      h += `<tr>${barHead(b)}` + shops.map(s => {
         const v = cellCount[b + '|' + s] || 0;
         const step = v === 0 ? -1 : Math.min(4, Math.floor(v / cmax * 4.999));
         const bg = step < 0 ? 'transparent' : RAMP[step];
@@ -324,15 +363,19 @@ function render() {
         return `<td class="cell" data-t="${b} → ${s}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
       }).join('') + '</tr>';
     }
-    $('matrix').innerHTML = h + '</table></div>';
+    const anyOff = shops.some(x => shopInfo(x).off) || bars.some(x => barInfo(x).off);
+    $('matrix').innerHTML = h + '</table></div>' + (anyOff ? INOTE.replace('Greyed venues are', '† Greyed venues are') : '');
     $('matrix').querySelectorAll('td.cell').forEach(td => hover(td, td.dataset.t));
   }
 
   // latest table
   const latest = [...reds].sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 20);
+  const vcell = info => info.off
+    ? `<span class="inactive" title="deactivated">${info.name} †</span>` : info.name;
   $('latest').innerHTML = '<table><tr><th>When</th><th>Shop</th><th>Issuing bar</th><th>Status</th></tr>' +
     latest.map(r => `<tr><td>${new Date(r[0]).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>` +
-      `<td>${r[1] || ''}</td><td>${r[3] || '—'}</td><td class="st ${r[2]}">${{ok:'redeemed',dup:'duplicate',void:'voided pack'}[r[2]] || r[2]}</td></tr>`).join('') +
+      `<td>${r[1] ? vcell(shopInfo(r[1])) : ''}</td><td>${r[3] ? vcell(barInfo(r[3])) : '—'}</td>` +
+      `<td class="st ${r[2]}">${{ok:'redeemed',dup:'duplicate',void:'voided pack'}[r[2]] || r[2]}</td></tr>`).join('') +
     '</table>';
 }
 

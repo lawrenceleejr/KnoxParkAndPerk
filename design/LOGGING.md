@@ -53,7 +53,7 @@ else ever writes to the file. Three tabs:
 |---|---|---|
 | `Redemptions` | timestamp · serial · shop · status · **bar** · **pack serial** | Apps Script (below) |
 | `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the pack Google Form (voided: you, by hand) |
-| `Venues` | slug · display name · type (bar/shop) · joined date | you, by hand, rarely |
+| `Venues` | slug · display name · type (bar/shop) · joined date · **deactivated** | you, by hand, rarely |
 
 **Pack serials** are 10 digits (`KPMU-YYYY-##########`) — two more than the
 8-digit card serials, so a pack can never be mistaken for a card anywhere in
@@ -138,7 +138,10 @@ function doGet(e) {
       .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || '')]);
     const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
       .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
-    out = { redemptions: red, packs: packs };
+    const vsheet = ss.getSheetByName('Venues');
+    const venues = !vsheet ? [] : vsheet.getDataRange().getValues().slice(1)
+      .map(r => [String(r[0] || ''), String(r[1] || ''), String(r[2] || ''), String(r[4] || '')]);
+    out = { redemptions: red, packs: packs, venues: venues };
   }
   if (p.action === 'backup') {
     // full dump (serials included) for the nightly GitHub backup — key-gated,
@@ -283,20 +286,27 @@ The system is designed so the roster can churn without touching any data:
 first scan — every chart and the flow matrix build their axes from the
 data, uncapped, and the matrix scrolls as the roster grows.
 
-**A coffee shop leaves:** remove their `SHOPS` line and take back the
-register QR. Their history stays in the Sheet and keeps appearing in
-past-date dashboard views (correct — those coffees happened). A scan from
-a stale register QR still logs, labeled as an unknown shop code, so
-nothing is silently lost while the change propagates.
+**A coffee shop leaves (deactivation):** put anything in its `deactivated`
+cell on the `Venues` tab (e.g. `left 9/15`) — the dashboard immediately
+shows it **greyed out with a "deactivated" note** wherever it appears,
+while its history stays visible (correct — those coffees happened). Then
+remove its `SHOPS` line and take back the register QR. A scan from a stale
+register QR still logs, labeled as an unknown shop code, so nothing is
+silently lost while the change propagates. Clearing the cell reactivates
+it. Don't delete the Venues row — the row is what keeps the display name
+and the grey-out working for historical data.
 
 **A bar joins:** add it to the pack form's Bar dropdown (a one-minute
 Google Forms edit) and the `Venues` tab, then check packs out to it as
 usual. Attribution flows from the pack records — nothing else to update.
 
-**A bar leaves:** void its unredeemed packs (the kill-switch column) so
-outstanding cards stop scanning, and remove it from the form dropdown.
-All historical attribution is stored on the redemption rows at scan time,
-so past data never shifts when the roster changes.
+**A bar leaves (deactivation):** mark it `deactivated` on the `Venues` tab
+(the dashboard greys it out with a note, keeping its history), void its
+unredeemed packs (the kill-switch column) so outstanding cards stop
+scanning, and remove it from the form dropdown. All historical attribution
+is stored on the redemption rows at scan time, so past data never shifts.
+Note: the bar's `Venues` display name must exactly match the name used in
+the pack form dropdown — that's how the dashboard links them.
 
 ## 3. Setup runbook (one afternoon, in order)
 
