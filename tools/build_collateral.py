@@ -124,7 +124,7 @@ b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, trackin
 b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
 # offer
 b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
-b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 27, 174, INK2)[0])
+b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
 bullet_rows = [
     [('One large coffee at participating downtown shops', inter4, INK2)],
     [('Hair of the KAT', inter6, ORANGE_INK),
@@ -133,22 +133,22 @@ bullet_rows = [
 ]
 for i, segs in enumerate(bullet_rows):
     y = 202 + i*19
-    b.append(f'<rect x="27" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
-    x = 42
+    b.append(f'<rect x="26" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
+    x = 41
     for seg, face, col in segs:
         pth, w = text(face, seg, 11, x, y, col)
         b.append(pth)
         x += w
 # QR
-b.append(f'<rect x="398" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-b.append(f'<g transform="translate(5.4,9)">{qr}</g>')
-b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 449, 222, INK2, tracking=0.16, anchor='middle')[0])
-b.append(text(inter6, 'BUSINESSES', 6.8, 449, 233, INK2, tracking=0.16, anchor='middle')[0])
+b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
+b.append(f'<g transform="translate(4.4,9)">{qr}</g>')
+b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
+b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
 # validity + serial
 b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
 b.append(text(inter6, 'VALID FOR ONE DAY FROM', 9.5, 26, 274, INK, tracking=0.14)[0])
 b.append(f'<line x1="190" y1="276" x2="310" y2="276" stroke="{INK2}" stroke-width="1"/>')
-b.append(text(inter4, 'Nº KPU-2026-00004217', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
+b.append(text(inter4, 'Nº KPMU-2026-00004217', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
 open(f'{REPO}/assets/card.svg', 'w').write(
     svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
 
