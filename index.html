@@ -134,11 +134,12 @@
   }
   .hero .eyebrow::before { content: ""; width: 2.5rem; height: 1px; background: var(--orange); }
   .hero h1 {
-    font-size: clamp(2.7rem, 5.6vw, 4.6rem);
-    line-height: 1.04;
+    font-size: clamp(2.6rem, 5.2vw, 4.35rem);
+    line-height: 1.06;
     letter-spacing: -.02em;
     text-wrap: balance;
   }
+  .hero h1 span, .hero h1 em { display: block; }
   .hero h1 em { font-style: italic; font-weight: 400; color: var(--orange-ink); }
   .hero .sub {
     margin-top: 1.8rem;
@@ -155,7 +156,7 @@
   }
   .hero-meta { border-top: 1px solid var(--rule); }
   .hero-meta .wrap {
-    display: flex; flex-wrap: wrap; gap: .5rem 3rem;
+    display: flex; flex-wrap: wrap; gap: .55rem 2.4rem; align-items: baseline;
     padding-top: 1.1rem; padding-bottom: 1.1rem;
     color: var(--ink-2); font-size: .72rem;
   }
@@ -177,8 +178,9 @@
     line-height: 1.12;
     text-wrap: balance;
   }
-  .section-head .lede { margin-top: 1.2rem; color: var(--ink-2); font-size: var(--f0); }
-  .on-dark .section-head .lede { color: var(--cream-2); }
+  .lede { color: var(--ink-2); font-size: var(--f0); }
+  .section-head .lede { margin-top: 1.2rem; }
+  .on-dark .lede { color: var(--cream-2); }
 
   /* ---------- How it works ---------- */
   .steps { border-top: 1px solid var(--rule); }
@@ -330,7 +332,7 @@
   <div class="wrap">
     <div>
       <p class="eyebrow label">A road-safety program for downtown Knoxville</p>
-      <h1>Make it home safe. <em>Tomorrow&rsquo;s coffee&rsquo;s on us.</em></h1>
+      <h1><span>Make it home safe.</span> <em>Tomorrow&rsquo;s coffee&rsquo;s on us.</em></h1>
       <p class="sub">Drove downtown, then decided not to drive home? Good call. Show your bartender your booked rideshare or an activated transit ticket, and get a card good for a free large coffee at a downtown shop — for the morning you come back for your car. Consider it a thanks for keeping the roads safe.</p>
       <div class="actions">
         <a class="btn" href="#how">How it works</a>
@@ -338,16 +340,16 @@
       </div>
     </div>
     <div class="hero-mark">
-      <svg viewBox="-51.12 -22.23 622.48 622.48" role="img" aria-label="Knox Pick-Me-Up mark — a coffee cup whose saucer is a steering wheel"><use href="#kpp-mark"/></svg>
+      <svg viewBox="0 0 622.48 622.48" role="img" aria-label="Knox Pick-Me-Up mark — a coffee cup whose saucer is a steering wheel"><use href="#kpp-mark"/></svg>
     </div>
   </div>
   <div class="hero-meta">
     <div class="wrap label">
       <span>In pilot design with</span>
-      <span><strong>City of Knoxville</strong></span>
-      <span><strong>Knoxville Police Department</strong></span>
-      <span><strong>Knoxville Area Transit</strong></span>
-      <span><strong>Downtown bars &amp; coffee shops</strong></span>
+      <strong>City of Knoxville</strong>
+      <strong>Knoxville Police Department</strong>
+      <strong>Knoxville Area Transit</strong>
+      <strong>Downtown bars &amp; coffee shops</strong>
     </div>
   </div>
 </header>
@@ -387,7 +389,7 @@
         <span class="label">Why it matters</span>
         <h2>Safer roads start with an easy reason to leave the car.</h2>
       </div>
-      <p class="section-head lede" style="margin-top:0">Impaired driving hurts real people on Knoxville&rsquo;s roads every year. The single biggest reason someone drives home after drinking downtown is the car itself — nobody wants the hassle of coming back for it. Pick-Me-Up removes that reason: leave the car, get home safe, and let your car be the reason you&rsquo;re back downtown in the morning.</p>
+      <p class="lede">Impaired driving hurts real people on Knoxville&rsquo;s roads every year. The single biggest reason someone drives home after drinking downtown is the car itself — nobody wants the hassle of coming back for it. Pick-Me-Up removes that reason: leave the car, get home safe, and let your car be the reason you&rsquo;re back downtown in the morning.</p>
     </div>
     <div class="why-grid">
       <div class="stat"><b>67</b><span>people seriously injured each year in Knoxville-area crashes involving an impaired driver</span></div>
@@ -422,7 +424,7 @@
         <span class="label">Partners</span>
         <h2>Built with downtown, for downtown.</h2>
       </div>
-      <p class="section-head lede" style="margin-top:0">Pick-Me-Up works because every partner wins — bars close out safer nights, coffee shops open to guaranteed morning traffic, transit picks up late-night riders, and the city gets safer streets and busier sidewalks.</p>
+      <p class="lede">Pick-Me-Up works because every partner wins — bars close out safer nights, coffee shops open to guaranteed morning traffic, transit picks up late-night riders, and the city gets safer streets and busier sidewalks.</p>
     </div>
     <div class="partners-grid">
       <div class="partner">
