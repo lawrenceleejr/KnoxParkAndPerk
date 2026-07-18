@@ -42,7 +42,12 @@ Same printed code, two behaviors, zero extra infrastructure.
 
 ### A. The database: one Google Sheet
 Owned by a program Google account (make one — `knoxpickmeup@gmail.com` — so
-this survives any individual volunteer). Three tabs:
+this survives any individual volunteer). **How it gets written:** the
+`Redemptions` tab is appended to by the **Apps Script web app** (below) every
+time a barista scans — no form involved; the `Packs` tab is filled by the
+**pack check-out Google Form** (a normal form-linked-to-sheet setup); the
+`Venues` tab and the `voided` column are edited **by hand**, rarely. Nothing
+else ever writes to the file. Three tabs:
 
 | Tab | Columns | Filled by |
 |---|---|---|
@@ -75,6 +80,7 @@ it — this is configuration, not a server you babysit.
 ```javascript
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
 const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
+const BACKUP_KEY = 'CHOOSE-A-LONG-RANDOM-STRING';   // for the GitHub backup job ONLY
 
 // serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
@@ -134,8 +140,38 @@ function doGet(e) {
       .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
     out = { redemptions: red, packs: packs };
   }
+  if (p.action === 'backup') {
+    // full dump (serials included) for the nightly GitHub backup — key-gated,
+    // the key lives here and in a GitHub Actions secret, never in the repo
+    if (p.key !== BACKUP_KEY) {
+      out = { status: 'denied' };
+    } else {
+      const ss = SpreadsheetApp.getActive();
+      out = {};
+      for (const name of ['Redemptions', 'Packs', 'Venues']) {
+        const sheet = ss.getSheetByName(name);
+        if (sheet) out[name] = sheet.getDataRange().getValues();
+      }
+    }
+  }
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Nightly whole-file snapshot inside Google Drive (backup layer 2).
+// After pasting, run it once to authorize, then add a time-driven trigger:
+// Apps Script editor → Triggers → Add → nightlySnapshot, time-driven, daily 3–4 AM.
+function nightlySnapshot() {
+  const KEEP = 30;
+  const src = DriveApp.getFileById(SpreadsheetApp.getActive().getId());
+  const folders = DriveApp.getFoldersByName('KPU Backups');
+  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('KPU Backups');
+  src.makeCopy('KPU data ' + Utilities.formatDate(new Date(), 'America/New_York', 'yyyy-MM-dd'), folder);
+  const copies = [];
+  const it = folder.getFiles();
+  while (it.hasNext()) copies.push(it.next());
+  copies.sort((a, b) => b.getDateCreated() - a.getDateCreated())
+        .slice(KEEP).forEach(f => f.setTrashed(true));
 }
 ```
 
@@ -197,6 +233,43 @@ Connect it to the Sheet once; it stays live. Suggested pages:
 Share as view-only links with the City, KPD, KAT, and partners; embed on the
 site later if wanted. Nothing to host.
 
+### H. Backups & disaster recovery
+
+"What if someone breaks the sheet?" is handled in four independent layers,
+none of which you have to remember to run:
+
+| Layer | What it protects against | Where it lives | Effort |
+|---|---|---|---|
+| 1. **Sheet version history** | a bad edit, a deleted column, a broken formula | built into Google Sheets (File → Version history → See version history) | zero — automatic |
+| 2. **Nightly Drive snapshot** | a mangled or deleted *tab*, script accidents | `nightlySnapshot()` in the same Apps Script + one daily trigger; keeps 30 dated copies in a "KPU Backups" Drive folder | one-time trigger setup |
+| 3. **Nightly off-Google backup** | Google account lockout, Drive loss, "I just don't trust Google" | [`.github/workflows/backup.yml`](../.github/workflows/backup.yml) pulls every tab via the key-gated `backup` action and commits CSVs to `data/backup/` in this repo — **git history is the archive**, so every past day is recoverable | two repo secrets |
+| 4. **Print artifacts** | everything digital at once | pack cover sheets have a hand-written bar/date line; cards are physically stamped | already in the workflow |
+
+**Hardening the sheet against "someone breaks something":**
+- Share the Sheet with **no editors**. The Apps Script runs as the owner and
+  the pack form writes through Google's own plumbing — nobody else needs
+  edit access, ever. Give the City/partners the dashboard link, not the sheet.
+- Protect the `Redemptions` tab (right-click tab → Protect sheet → only the
+  owner). The script still writes; stray humans can't.
+- The one column humans touch on purpose (`Packs.voided`) stays editable.
+
+**Restore runbook** (worst case — the sheet is ruined):
+1. Try **File → Version history** first; restoring a version fixes 95% of
+   accidents in one click.
+2. Else open the newest copy in the **KPU Backups** Drive folder, rename it,
+   and repoint nothing — instead copy its tabs back into the original file
+   (the Apps Script and form are bound to the original's ID; keeping that
+   file alive is simpler than re-deploying).
+3. Else pull `data/backup/*.csv` from this repo (or any older version via
+   `git log -- data/backup`) and File → Import → each CSV into its tab.
+4. If the whole Google account is lost: create a new Sheet from the CSVs,
+   re-paste the Apps Script, re-deploy, and update `SCRIPT_URL` in
+   `redeem.html`/`dashboard.html` and the two GitHub secrets. That is the
+   entire blast radius — under an hour.
+
+**Failure alerting for free:** after setup, a failed nightly backup fails
+the GitHub Action, and GitHub emails the repo owner. No pager, no service.
+
 ## 3. Setup runbook (one afternoon, in order)
 
 1. Create the program Google account; create the Sheet with the three tabs.
@@ -213,7 +286,12 @@ site later if wanted. Nothing to host.
    at `https://…/redeem.html?shop=<slug>`; print and laminate.
 6. Run `tools/build_cards.py`, send `print/` to the print shop.
 7. Build the Looker Studio dashboard on the Sheet; share view links.
-8. Dry-run with one friendly bar + one shop before the real pilot.
+8. Backups: in the Apps Script, set `BACKUP_KEY` to a long random string and
+   add the daily `nightlySnapshot` trigger; in this repo's Settings →
+   Secrets → Actions add `BACKUP_URL` (the `/exec` URL) and `BACKUP_KEY`,
+   then run the "Nightly data backup" workflow once by hand to confirm a
+   `data/backup/` commit appears.
+9. Dry-run with one friendly bar + one shop before the real pilot.
 
 ## 4. What this costs and what can break
 
