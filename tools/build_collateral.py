@@ -110,9 +110,20 @@ open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', d
 # =====================================================================
 # 2. Morning Pick-Me-Up card (525 x 300)
 # =====================================================================
-card_src = open(f'{REPO}/assets/card.svg').read()
-qr = re.search(r'<g transform="translate\(404,106\) scale\(2\.49\)">.*?</g>', card_src, re.S).group(0)
-qr = qr.replace('stroke="#141d33"', f'stroke="{NIGHT}"')
+# The spec card shows a real, working QR: like every printed card, it encodes
+# the public site URL with this sample's serial embedded.
+import io, segno
+SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
+SAMPLE_SERIAL = 'KPMU-2026-00004217'
+
+def qr_svg(data, x, y, size, color=NIGHT, error='m'):
+    q = segno.make(data, error=error, micro=False)
+    buf = io.BytesIO()
+    q.save(buf, kind='svg', xmldecl=False, svgns=False, border=0)
+    d = re.search(r'<path[^>]* d="([^"]+)"', buf.getvalue().decode()).group(1)
+    n = q.symbol_size(border=0)[0]
+    return (f'<g transform="translate({x},{y}) scale({size / n:.5f})">'
+            f'<path stroke="{color}" d="{d}"/></g>')
 
 b = []
 b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
@@ -141,14 +152,14 @@ for i, segs in enumerate(bullet_rows):
         x += w
 # QR
 b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-b.append(f'<g transform="translate(4.4,9)">{qr}</g>')
+b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#partners', 407, 114, 82))
 b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
 b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
 # validity + serial
 b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
 b.append(text(inter6, 'VALID FOR ONE DAY FROM', 9.5, 26, 274, INK, tracking=0.14)[0])
 b.append(f'<line x1="190" y1="276" x2="310" y2="276" stroke="{INK2}" stroke-width="1"/>')
-b.append(text(inter4, 'Nº KPMU-2026-00004217', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
+b.append(text(inter4, f'Nº {SAMPLE_SERIAL}', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
 open(f'{REPO}/assets/card.svg', 'w').write(
     svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
 
