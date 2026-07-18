@@ -60,7 +60,10 @@ crowd stands the coffee for tomorrow's safe riders.
   card (the booker's). Two rides, two cards.
 - Valid **one day** from date stamp — the card reads "valid for one day from ____"
   (covers the morning-after window; prevents hoarding).
-- Serialized (`KPU-YYYY-########`), date-stamped, and marked with the issuing bar's initials.
+- Serialized (`KPU-YYYY-########`), date-stamped, and marked with the issuing
+  bar's initials. Packs of 50 carry their own 10-digit serial
+  (`KPU-YYYY-##########`); the pack check-out record ties every card serial
+  to its issuing bar, and each redemption is stored with that bar attached.
 
 ### Fraud & abuse controls
 - **Serialization:** every card has a unique number; books of 50 are checked

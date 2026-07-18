@@ -241,7 +241,8 @@ async function handleSerial(raw, fromCamera) {
       setStatus('bad', 'Card already redeemed', serial + ' was used at ' + (out.firstShop || 'another shop') + ' ' + (out.firstAt ? 'on ' + out.firstAt : 'earlier') + '.');
       addLog(serial, 'bad', 'already used');
     } else {
-      setStatus('ok', 'Good to go — coffee’s on Knoxville ☀', serial + (out.demo ? ' (demo mode: not sent anywhere)' : ' logged for ' + (shopName || shopSlug)) + '.');
+      const issued = out.bar ? ' Issued by ' + out.bar + '.' : '';
+      setStatus('ok', 'Good to go — coffee’s on Knoxville ☀', serial + (out.demo ? ' (demo mode: not sent anywhere)' : ' logged for ' + (shopName || shopSlug)) + '.' + issued);
       addLog(serial, 'ok', out.demo ? 'demo' : 'logged');
     }
   } catch (e) {

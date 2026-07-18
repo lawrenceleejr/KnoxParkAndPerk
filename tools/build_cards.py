@@ -25,10 +25,10 @@ from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, RULE,
 # ================= CONFIG =================
 SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
 # Pack check-out Google Form (see design/LOGGING.md step 2). Template gets
-# .format(first=..., last=...). Leave empty until the form exists.
+# .format(pack=..., first=..., last=...). Leave empty until the form exists.
 PACK_FORM_URL = ''
 # e.g. ('https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url'
-#       '&entry.1111111={first}&entry.2222222={last}')
+#       '&entry.0000000={pack}&entry.1111111={first}&entry.2222222={last}')
 PACK_SIZE = 50
 # ==========================================
 
@@ -89,28 +89,37 @@ def card_svg(serial):
                f'Knox Pick-Me-Up — Morning Pick-Me-Up Card {serial}')
 
 
-def pack_svg(pack_no, first, last):
+def pack_serial(year, pack_no):
+    # Pack serials carry two more digits than the 8-digit card serials, so a
+    # pack is never mistakable for a card (or vice versa) anywhere in the DB.
+    return f'KPU-{year}-{pack_no:010d}'
+
+
+def pack_svg(year, pack_no, first, last):
+    pk = pack_serial(year, pack_no)
     b = []
     b.append(f'<rect width="525" height="700" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
     b.append(f'<rect width="525" height="16" fill="{ORANGE}"/>')
     b.append(mark(40, 52, 56))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 30, 118, 92, INK)[0])
-    b.append(text(inter6, f'CARD PACK Nº {pack_no:03d} · {PACK_SIZE} CARDS', 11, 40, 142, ORANGE_INK, tracking=0.16)[0])
+    b.append(text(inter6, f'CARD PACK · {PACK_SIZE} CARDS', 11, 40, 142, ORANGE_INK, tracking=0.16)[0])
     b.append(f'<line x1="40" y1="162" x2="485" y2="162" stroke="{RULE}" stroke-width="1"/>')
-    b.append(text(inter6, 'SERIALS', 9, 40, 194, INK2, tracking=0.18)[0])
-    b.append(text(fraunces, f'{first}', 26, 40, 228, INK)[0])
-    b.append(text(fraunces, f'through  {last}', 26, 40, 262, INK)[0])
-    b.append(f'<line x1="40" y1="292" x2="485" y2="292" stroke="{RULE}" stroke-width="1"/>')
-    b.append(text(inter6, 'CHECKING THIS PACK OUT TO A BAR?', 11, 40, 326, INK, tracking=0.14)[0])
+    b.append(text(inter6, 'PACK SERIAL', 9, 40, 190, INK2, tracking=0.18)[0])
+    b.append(text(fraunces, pk, 26, 40, 222, INK)[0])
+    b.append(text(inter6, 'CARD SERIALS', 9, 40, 254, INK2, tracking=0.18)[0])
+    b.append(text(fraunces, f'{first}', 20, 40, 282, INK)[0])
+    b.append(text(fraunces, f'through  {last}', 20, 40, 310, INK)[0])
+    b.append(f'<line x1="40" y1="336" x2="485" y2="336" stroke="{RULE}" stroke-width="1"/>')
+    b.append(text(inter6, 'CHECKING THIS PACK OUT TO A BAR?', 11, 40, 366, INK, tracking=0.14)[0])
     if PACK_FORM_URL:
-        url = PACK_FORM_URL.format(first=first, last=last)
-        b.append(qr_group(url, 40, 348, 170))
-        b.append(text(inter4, 'Scan, pick the bar from the list, submit. Ten seconds.', 12, 232, 380, INK2)[0])
-        b.append(text(inter4, 'That ties every card in this pack to the bar for the', 12, 232, 400, INK2)[0])
-        b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 232, 420, INK2)[0])
+        url = PACK_FORM_URL.format(pack=pk, first=first, last=last)
+        b.append(qr_group(url, 40, 382, 160))
+        b.append(text(inter4, 'Scan, pick the bar from the list, submit. Ten seconds.', 12, 222, 414, INK2)[0])
+        b.append(text(inter4, 'That ties every card in this pack to the bar for the', 12, 222, 434, INK2)[0])
+        b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])
     else:
-        b.append(text(inter4, 'Pack check-out form not configured yet — set PACK_FORM_URL in', 12, 40, 356, INK2)[0])
-        b.append(text(inter4, 'tools/build_cards.py (see design/LOGGING.md) and rebuild.', 12, 40, 376, INK2)[0])
+        b.append(text(inter4, 'Pack check-out form not configured yet — set PACK_FORM_URL in', 12, 40, 390, INK2)[0])
+        b.append(text(inter4, 'tools/build_cards.py (see design/LOGGING.md) and rebuild.', 12, 40, 410, INK2)[0])
     b.append(f'<line x1="40" y1="560" x2="485" y2="560" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(inter6, 'BAR', 9, 40, 592, INK2, tracking=0.18)[0])
     b.append(f'<line x1="80" y1="592" x2="300" y2="592" stroke="{INK2}" stroke-width="1"/>')
@@ -118,7 +127,7 @@ def pack_svg(pack_no, first, last):
     b.append(f'<line x1="378" y1="592" x2="485" y2="592" stroke="{INK2}" stroke-width="1"/>')
     b.append(text(inter4, 'Backup for the QR: write it down and text a photo to the program.', 10.5, 40, 630, INK2)[0])
     return svg(525, 700, ''.join(b),
-               f'Knox Pick-Me-Up card pack {pack_no:03d}, serials {first} to {last}')
+               f'Knox Pick-Me-Up card pack {pk}, card serials {first} to {last}')
 
 
 def main():
@@ -140,8 +149,8 @@ def main():
     for i in range(0, len(serials), PACK_SIZE):
         chunk = serials[i:i + PACK_SIZE]
         pack_no = (args.start + i - 1) // PACK_SIZE + 1
-        open(os.path.join(packs_dir, f'pack-{pack_no:03d}.svg'), 'w').write(
-            pack_svg(pack_no, chunk[0], chunk[-1]))
+        open(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'), 'w').write(
+            pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
 
     print(f'{len(serials)} cards -> {cards_dir}')
     print(f'{math.ceil(len(serials)/PACK_SIZE)} pack sheets -> {packs_dir}')

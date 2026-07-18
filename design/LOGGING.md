@@ -46,12 +46,16 @@ this survives any individual volunteer). Three tabs:
 
 | Tab | Columns | Filled by |
 |---|---|---|
-| `Redemptions` | timestamp · serial · shop · status | Apps Script (below) |
-| `Packs` | timestamp · first serial · last serial · bar | the pack Google Form |
+| `Redemptions` | timestamp · serial · shop · status · **bar** · **pack serial** | Apps Script (below) |
+| `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar | the pack Google Form |
 | `Venues` | slug · display name · type (bar/shop) · joined date | you, by hand, rarely |
 
-Plus formula columns you set up once: `bar` on Redemptions via a range
-lookup against `Packs`, and a duplicate flag
+**Pack serials** are 10 digits (`KPU-YYYY-##########`) — two more than the
+8-digit card serials, so a pack can never be mistaken for a card anywhere in
+the data. The bar attribution is **stored on each redemption row at scan
+time**: the Apps Script looks the card's serial up in `Packs` (which range
+contains it) and writes the issuing bar and pack serial alongside the shop.
+No formulas required for the join; keep a duplicate flag
 (`=COUNTIF(B:B,B2)>1`) as a belt-and-suspenders check.
 
 ### B. The redemption endpoint: a bound Apps Script web app
@@ -62,7 +66,22 @@ the Sheet (Extensions → Apps Script), deployed as a web app
 it — this is configuration, not a server you babysit.
 
 ```javascript
-const SHEET = 'Redemptions';
+const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
+const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar
+
+// serial -> { bar, pack } via the Packs tab (which range contains it)
+function lookupBar(serial) {
+  const rows = SpreadsheetApp.getActive().getSheetByName(PACKS).getDataRange().getValues();
+  const year = serial.slice(4, 8), n = Number(serial.slice(9));
+  for (let i = 1; i < rows.length; i++) {
+    const [, pack, first, last] = rows[i].map(String);
+    if (first.slice(4, 8) === year &&
+        n >= Number(first.slice(9)) && n <= Number(last.slice(9))) {
+      return { bar: String(rows[i][4] || ''), pack: pack };
+    }
+  }
+  return { bar: '', pack: '' };   // pack never checked out — visible in the dashboard
+}
 
 function doGet(e) {
   const p = e.parameter;
@@ -79,8 +98,9 @@ function doGet(e) {
       if (hit) {
         out = { status: 'duplicate', firstShop: hit[1] };
       } else {
-        sh.appendRow([new Date(), serial, shop, 'ok']);
-        out = { status: 'ok' };
+        const src = lookupBar(serial);
+        sh.appendRow([new Date(), serial, shop, 'ok', src.bar, src.pack]);
+        out = { status: 'ok', bar: src.bar };
       }
     } finally {
       lock.releaseLock();
@@ -110,8 +130,8 @@ Already built. Brand-styled, self-contained static page:
   to try right now.
 
 ### D. Pack check-out: a plain Google Form
-One question that matters: **Bar** (dropdown). Serial range arrives
-pre-filled by the pack cover sheet's QR. Whoever delivers packs scans,
+One question that matters: **Bar** (dropdown). The pack serial and card
+serial range arrive pre-filled by the pack cover sheet's QR. Whoever delivers packs scans,
 taps the bar, submits. The cover sheet also has a written-log fallback line.
 
 ### E. Card + pack printing: `tools/build_cards.py` (this repo)
@@ -135,9 +155,10 @@ site later if wanted. Nothing to host.
 ## 3. Setup runbook (one afternoon, in order)
 
 1. Create the program Google account; create the Sheet with the three tabs.
-2. Create the **pack form** (fields: first serial, last serial, bar
-   dropdown), link it to the Sheet's `Packs` tab, and grab a pre-filled
-   URL (⋮ → *Get pre-filled link*) to learn the two `entry.NNNN` IDs.
+2. Create the **pack form** (fields: pack serial, first card serial, last
+   card serial, bar dropdown), link it to the Sheet's `Packs` tab, and grab
+   a pre-filled URL (⋮ → *Get pre-filled link*) to learn the three
+   `entry.NNNN` IDs.
 3. Paste the Apps Script above into the Sheet, deploy as web app, copy the
    `/exec` URL.
 4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
