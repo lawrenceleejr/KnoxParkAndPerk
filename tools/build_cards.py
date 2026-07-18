@@ -133,7 +133,7 @@ def main():
     os.makedirs(cards_dir, exist_ok=True)
     os.makedirs(packs_dir, exist_ok=True)
 
-    serials = [f'KPU-{args.year}-{n:06d}' for n in range(args.start, args.start + args.count)]
+    serials = [f'KPU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
     for s in serials:
         open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
 

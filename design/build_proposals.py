@@ -185,6 +185,6 @@ E.append(f'<line x1="240" y1="540" x2="930" y2="540" stroke="{INK}" stroke-width
 # 6. serial / ticket treatment
 E.append(text(inter6, 'SERIAL TREATMENT — every card is numbered, make it a feature', 9, 48, 620, INK2, tracking=0.14)[0])
 E.append(f'<rect x="48" y="638" width="240" height="40" rx="3" fill="none" stroke="{INK}" stroke-width="1.5" stroke-dasharray="6 5"/>')
-E.append(text(inter6, 'Nº KPU-2026-004217', 15, 168, 664, ORANGE_INK, tracking=0.08, anchor='middle')[0])
+E.append(text(inter6, 'Nº KPU-2026-00004217', 15, 168, 664, ORANGE_INK, tracking=0.08, anchor='middle')[0])
 open(f'{OUT}/elements.svg', 'w').write(svg(960, 700, ''.join(E), 'Proposed custom visual elements for Knox Pick-Me-Up'))
 print('proposals built')
