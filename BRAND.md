@@ -1,8 +1,8 @@
-# Knox Park & Perk — Visual Identity
+# Knox Pick-Me-Up — Visual Identity
 
 *Make it home safe. Tomorrow's coffee's on us.*
 
-This is the brand guide for Knox Park & Perk. Everything here is built on one
+This is the brand guide for Knox Pick-Me-Up. Everything here is built on one
 idea: **the journey from a dark night out to a bright morning coffee.** Night
 navy resolves into sunrise orange. The signature **mark** — a coffee cup whose
 inside is a steering wheel, steam rising — says the whole program in one glyph
@@ -18,7 +18,7 @@ print- and web-ready).
 
 | | |
 |---|---|
-| **Name** | Knox Park & Perk |
+| **Name** | Knox Pick-Me-Up |
 | **Tagline** | *Make it home safe. Tomorrow's coffee's on us.* |
 | **Essence** | Road safety made warm and rewarding — not preachy |
 | **Story arc** | Last call → Ride home → Morning → Coffee |
@@ -169,10 +169,10 @@ assets/
   mark.svg          The signature mark (cup + steering wheel); the connective "and"
   logo-mark.svg     The mark sealed in a navy badge (emblem)
   favicon.svg       App icon / favicon (the mark in a rounded square)
-  card.svg          The Morning Perk Card artwork
+  card.svg          The Morning Pick-Me-Up Card artwork
   coaster.svg       The bar coaster artwork
   palette.svg       Color swatch sheet
   ampersand.svg     Alternate calligraphic ampersand glyph (secondary)
 ```
 
-*Contact: hello@knoxparkandperk.org · Knoxville, TN*
+*Contact: hello@knoxpickmeup.org · Knoxville, TN*

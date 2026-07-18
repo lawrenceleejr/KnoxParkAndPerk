@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525 300" role="img" aria-label="Knox Park &amp; Perk — Morning Perk Card">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 525 300" role="img" aria-label="Knox Pick-Me-Up — Morning Pick-Me-Up Card">
   <defs><clipPath id="card-r"><rect x="6" y="6" width="513" height="288" rx="18"/></clipPath></defs>
   <rect x="6" y="6" width="513" height="288" rx="18" fill="#fff7ec" stroke="#d96a00" stroke-width="2"/>
   <g clip-path="url(#card-r)">
@@ -7,9 +7,9 @@
     <path d="M0 0 C1.126308 3.378925 0.747049 4.602945 0 8 C-1.379212 24.789253 5.469781 36.865271 15.0625 50 C25.525879 64.385671 30.612673 79.022361 29 97 C26.856352 109.619452 22.001556 121.626604 12 130 C11.34 130 10.68 130 10 130 C10.072187 129.503711 10.072187 129.503711 10.4375 126.992188 C14.182237 100.177076 9.039285 81.38312 -5.498291 58.773926 C-12.93055 47.015427 -15.838947 34.76872 -12.9375 21.0625 C-10.695111 12.787015 -6.192147 5.879137 0 0 Z " transform="translate(225,171)"/>
     <path d="M0 0 C0.165 0.33 0.165 0.33 1 2 C-23.579613 34.83633 -65.547474 52.570258 -104.664062 60.738281 C-108.089049 61.122017 -111.553583 61 -115 61 C-115 49.78 -115 38.56 -115 27 C-110.813125 26.29875 -106.62625 25.5975 -102.3125 24.875 C-84.559683 21.74468 -68.052339 16.776251 -51.132233 10.68692 C-18.158543 -1.173622 -18.158543 -1.173622 0 0 Z " transform="translate(391,372)"/>
     <path d="M0 0 C6.548106 1.64062 13.119539 3.134948 19.71875 4.554688 C20.620046 4.749255 21.521343 4.943823 22.449951 5.144287 C28.299989 6.396254 34.162268 7.582524 40.03125 8.742188 C41.335305 20.393844 41.127982 32.033123 41.03125 43.742188 C-0.475156 41.875577 -46.890605 24.398216 -75.96875 -6.257812 C-75.96875 -6.917813 -75.96875 -7.577812 -75.96875 -8.257812 C-52.412601 -14.961632 -22.839276 -5.728317 0 0 Z " transform="translate(178.96875,390.2578125)"/></g></g>
-    <text x="86" y="42" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="800" font-size="21" fill="#fff7ec" letter-spacing="1">KNOX PARK <tspan fill="#ff8200">&amp;</tspan> PERK</text>
+    <text x="86" y="42" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="800" font-size="21" fill="#fff7ec" letter-spacing="1">KNOX PICK-ME-UP</text>
     <text x="87" y="66" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-style="italic" font-size="13" fill="#ffb95e">Make it home safe. Tomorrow&#39;s coffee&#39;s on us.</text>
-    <text x="503" y="52" text-anchor="end" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="800" font-size="12" fill="#ffb95e" letter-spacing="2">MORNING PERK CARD</text>
+    <text x="503" y="52" text-anchor="end" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="800" font-size="12" fill="#ffb95e" letter-spacing="2">MORNING PICK-ME-UP CARD</text>
 
     <text x="28" y="132" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="800" font-size="30" fill="#d96a00" letter-spacing=".5">FREE LARGE COFFEE</text>
     <text x="30" y="155" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-style="italic" font-size="14" fill="#3a2a1d">You made the safe call. The morning&#39;s on us.</text>
@@ -27,7 +27,7 @@
 
     <line x1="28" y1="238" x2="392" y2="238" stroke="#d96a00" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
     <text x="28" y="262" font-family='Poppins, "Helvetica Neue", Arial, sans-serif' font-weight="700" font-size="13" fill="#3a2a1d" letter-spacing=".5">VALID FOR ONE DAY FROM <tspan fill="#6b543f">____________</tspan></text>
-    <text x="28" y="284" font-family="'Courier New', monospace" font-size="12" fill="#6b543f">&#8470; KPP-2026-004217</text>
+    <text x="28" y="284" font-family="'Courier New', monospace" font-size="12" fill="#6b543f">&#8470; KPU-2026-004217</text>
     <text x="392" y="284" text-anchor="end" font-family="'Courier New', monospace" font-size="12" fill="#6b543f">BAR ____</text>
   </g>
 </svg>

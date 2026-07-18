@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 250" role="img" aria-label="Knox Park &amp; Perk color palette">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 250" role="img" aria-label="Knox Pick-Me-Up color palette">
   <style>
     .nm { font-family: Poppins, 'Helvetica Neue', Arial, sans-serif; font-weight: 700; font-size: 14px; fill: #3a2a1d; }
     .hx { font-family: 'Courier New', monospace; font-size: 13px; fill: #6b543f; }
@@ -46,5 +46,5 @@
     <text class="hx" x="804" y="192">#D96A00</text>
   </g>
 
-  <text x="20" y="228" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#6b543f">Knox Park &amp; Perk — core palette · night-to-sunrise</text>
+  <text x="20" y="228" font-family="Poppins, 'Helvetica Neue', Arial, sans-serif" font-size="12" fill="#6b543f">Knox Pick-Me-Up — core palette · night-to-sunrise</text>
 </svg>
