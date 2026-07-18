@@ -79,7 +79,7 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
 2. **Create the Sheet** with three tabs and header rows:
    - `Redemptions`: `timestamp | serial | shop | status | bar | pack serial`
    - `Packs`: `timestamp | pack serial | first | last | bar | voided`
-   - `Venues`: `slug | name | type | joined`
+   - `Venues`: `slug | name | type | joined | deactivated`
    Share it with **no one** (partners get the dashboard, not the sheet), and
    right-click the `Redemptions` tab → *Protect sheet* → only you.
 3. **Create the pack check-out Form** (Google Forms): short-answer fields
