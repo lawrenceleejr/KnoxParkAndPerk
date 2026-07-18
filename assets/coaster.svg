@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Knox Park &amp; Perk coaster">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Knox Pick-Me-Up coaster">
   <defs>
     <linearGradient id="sky-k" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#0c1224"/>
@@ -46,7 +46,7 @@
     <path id="top-k" d="M38.7,124.7 A178,178 0 0 1 361.3,124.7"/>
     <path id="bot-k" d="M44,272 A172,172 0 0 0 356,272"/>
   </g>
-  <text font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="26" fill="#ffb95e" letter-spacing="6"><textPath href="#top-k" startOffset="50%" text-anchor="middle">KNOX PARK &amp; PERK</textPath></text>
+  <text font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="26" fill="#ffb95e" letter-spacing="6"><textPath href="#top-k" startOffset="50%" text-anchor="middle">KNOX PICK-ME-UP</textPath></text>
   <text font-family="Avenir Next, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="15.5" fill="#0c1224" letter-spacing="1.5"><textPath href="#bot-k" startOffset="50%" text-anchor="middle">FREE LARGE COFFEE &#183; FREE KAT RIDE</textPath></text>
 
   <!-- center message -->

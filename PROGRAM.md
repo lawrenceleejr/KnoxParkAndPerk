@@ -1,11 +1,11 @@
-# Knox Park & Perk — Program Design
+# Knox Pick-Me-Up — Program Design
 
 **Tagline:** *Make it home safe. Tomorrow's coffee's on us.*
 
 A public-private partnership between the City of Knoxville, the Knoxville Police
 Department, Knoxville Area Transit (KAT), downtown bars, and downtown coffee
 shops. Patrons who drove downtown and choose a safe ride home at the end of the
-night — a rideshare, a taxi, or public transit — receive a **Morning Perk
+night — a rideshare, a taxi, or public transit — receive a **Morning Pick-Me-Up
 Card**: a card good for a **free large coffee** at a participating downtown shop
 (plus a free KAT ride) when they return the next morning to retrieve their car.
 It's framed as Knoxville saying *thanks for keeping the roads safe*.
@@ -33,7 +33,7 @@ more impaired driver stays off the road.
 **The framing:** the card is a **thank-you**, not a coupon. Knoxville thanks the
 patron for the most valuable thing they did all night — getting home without
 driving. Warm and non-preachy, it makes the free coffee feel like recognition,
-and it sets up patron-side funding ("Perk It Forward," below) where tonight's
+and it sets up patron-side funding ("Pick It Forward," below) where tonight's
 crowd stands the coffee for tomorrow's safe riders.
 
 ## 2. How It Works (Mechanics)
@@ -43,7 +43,7 @@ crowd stands the coffee for tomorrow's safe riders.
    a booked rideshare/taxi, or a KAT bus.
 3. Patron **shows proof of the ride** to a bartender at a participating bar: a
    confirmed rideshare screen or an activated transit ticket.
-4. Bartender **date-stamps and hands over one Morning Perk Card** per ride.
+4. Bartender **date-stamps and hands over one Morning Pick-Me-Up Card** per ride.
 5. While the card is valid, it **doubles as a free KAT pass** — the patron can
    ride any bus free, including the morning trip back downtown to the car.
 6. Patron returns in the morning, **claims a free large coffee** at a
@@ -60,7 +60,7 @@ crowd stands the coffee for tomorrow's safe riders.
   card (the booker's). Two rides, two cards.
 - Valid **one day** from date stamp — the card reads "valid for one day from ____"
   (covers the morning-after window; prevents hoarding).
-- Serialized (`KPP-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
+- Serialized (`KPU-YYYY-######`), date-stamped, and marked with the issuing bar's initials.
 
 ### Fraud & abuse controls
 - **Serialization:** every card has a unique number; books of 50 are checked
@@ -90,19 +90,19 @@ operators as sponsors where a garage isn't nearby.
 
 | Element | Spec |
 |---|---|
-| Name | **Knox Park & Perk** ("Park" = your car; "Perk" = the coffee, and the perk) |
+| Name | **Knox Pick-Me-Up** — the morning coffee is the literal pick-me-up; getting home safe is the figurative one |
 | Tagline | *Make it home safe. Tomorrow's coffee's on us.* |
 | Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
 | Story arc | Last call → Ride home → Morning → Coffee |
 | Palette | Midnight navy `#141d33`, cream `#fff7ec`, espresso `#3a2a1d`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color), gold `#ffb95e` |
 | Design | Clean and typographic — lean on type, the palette, and the night-to-morning arc rather than emoji or clip-art |
 | Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "a free large coffee," and don't oversell it. |
-| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Perk Partner"), bartender stamp, and books of Morning Perk Cards |
+| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Pick-Me-Up Partner"), bartender stamp, and books of Morning Pick-Me-Up Cards |
 
 Two distinct pieces of print: **coasters** are the advertising medium — they sit
 under the drink at exactly the decision moment, and bars go through thousands
 anyway, so the program replaces a cost with free branded stock. The **Morning
-Perk Card** is the redeemable item — a simple, wallet-sized card (not a coaster),
+Pick-Me-Up Card** is the redeemable item — a simple, wallet-sized card (not a coaster),
 easy to stamp, carry home, and hand to a barista.
 
 ## 4. Monetization & Sustainability
@@ -123,7 +123,7 @@ redemptions while the model proves out.
 *Con:* asks the smallest businesses to carry the direct cost; needs early
 ticket-size data to keep shops convinced.
 
-### B. Perk It Forward (patron round-up) — the thank-you loop
+### B. Pick It Forward (patron round-up) — the thank-you loop
 An optional $1 line on bar tabs: tonight's patrons stand the coffee for
 tomorrow's safe riders. This is the purest expression of the brand — the
 community literally thanking people for getting home safe — and even modest
@@ -169,7 +169,7 @@ the program — which is what makes it durable.
 | **Total fixed** | **~$18,000** |
 
 The coffee itself is carried by participating shops (Model A) and backstopped by
-Perk It Forward / sponsorship (B/C) if a shop needs it; KAT rides are KAT's
+Pick It Forward / sponsorship (B/C) if a shop needs it; KAT rides are KAT's
 in-kind contribution. So the program's cash budget is essentially the fixed
 costs above, not a per-perk payout.
 
@@ -185,7 +185,7 @@ The ask is a 10-second stamp-and-hand at last call."
   creates FOMO for the second wave.
 - Staff onboarding: one laminated reference behind the bar; 5-minute pre-shift
   brief; small monthly staff perk (e.g., coffee for the crew) to keep buy-in.
-- Perk It Forward: venues that opt in add the $1 round-up line and get
+- Pick It Forward: venues that opt in add the $1 round-up line and get
   "Community" billing.
 
 ### Coffee shops — *the redemption network*
@@ -218,12 +218,12 @@ decision not to drive home impaired — one less risk on the road."
 
 ### Knoxville Area Transit (KAT) — *an accepted ride & a free-ride partner*
 **Pitch:** "Riders already taking the bus home safely should qualify for the
-perk too — and a valid Perk Card should let anyone ride KAT free while it lasts,
+perk too — and a valid Pick-Me-Up Card should let anyone ride KAT free while it lasts,
 including the morning trip back to the car. It puts KAT in front of the exact
 crowd that needs a late ride, wins first-time riders, and drives off-peak
 ridership."
 - Asks: (1) recognize an activated KAT ticket as valid ride proof; (2) accept a
-  valid Perk Card as free fare during its one-day window; help communicate
+  valid Pick-Me-Up Card as free fare during its one-day window; help communicate
   late-night and weekend routes/hours to patrons and bar staff.
 - Structure: the free rides are KAT's in-kind contribution to a shared
   road-safety goal — new riders and goodwill in exchange, not a program payout.
@@ -255,7 +255,7 @@ ridership."
   pilot) — the outcome the program exists to move.
 - **Economic:** average redemption ticket size vs. the cost of a large coffee
   (the number that proves Model A); repeat-customer reports from coffee shops;
-  Perk It Forward uptake; overnight garage stays on program nights.
+  Pick It Forward uptake; overnight garage stays on program nights.
 - **Qualitative:** bartender friction reports, patron surveys via QR on the card.
 - **Pilot success gates:** ≥60% of anchor bars actively issuing by month 2;
   ≥50% redemption rate; average redemption ticket comfortably above the coffee's
@@ -280,7 +280,7 @@ ridership."
 | Perception of promoting drinking | Framing is strictly "safe ride home / safer roads"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
 | Fraud (fake ride screens, duplicates) | One-free-coffee cap, one-per-ride rule, serials, expiry, bartender discretion; accept small leakage as marketing cost |
 | Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
-| Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Perk It Forward / sponsor funds can backstop the coffee cost if Model A underperforms |
+| Coffee shops lose faith in the coupon math | Share ticket-uplift data monthly; Pick It Forward / sponsor funds can backstop the coffee cost if Model A underperforms |
 | Program conflated with enforcement | KPD as endorser only; cards anonymous — no data on individuals is ever collected |
 
 ## 9. Program Philosophy & References
@@ -290,7 +290,7 @@ ridership."
 answer is a **harm-reduction** one. People are going to go out and drink
 downtown whether or not this program exists. Given that, the only question that
 changes outcomes is: *when they've had too much, how do we make the safe choice
-the easy one?* Park & Perk doesn't subsidize the drinking — the perk is
+the easy one?* Pick-Me-Up doesn't subsidize the drinking — the perk is
 explicitly tied to **not driving**, it's claimed the *next morning*, and it's
 capped at a coffee. It buys down the single largest friction that pushes people
 to drive impaired (the parked car). The public-interest math is
@@ -345,7 +345,7 @@ skeptical.
   <https://pubmed.ncbi.nlm.nih.gov/15894161/>
 - **Alcohol-Impaired Driving: Multicomponent Interventions with Community
   Mobilization** — The Community Guide (CPSTF **recommends**, strong evidence).
-  Why Park & Perk should sit inside a multi-part strategy, not stand alone.
+  Why Pick-Me-Up should sit inside a multi-part strategy, not stand alone.
   <https://www.thecommunityguide.org/findings/motor-vehicle-injury-alcohol-impaired-driving-multicomponent-interventions-community.html>
 
 ### Behavioral design (why reward at the decision moment)
@@ -374,4 +374,4 @@ programs share (Section 5) and to publishing an honest evaluation (Section 6).
 injuries and fatalities in area impaired-driving crashes); Knox County Health
 Department (share of deadly crashes involving an impaired driver).*
 
-*Contact: hello@knoxparkandperk.org · Knoxville, TN*
+*Contact: hello@knoxpickmeup.org · Knoxville, TN*

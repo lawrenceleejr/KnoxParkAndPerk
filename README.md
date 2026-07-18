@@ -1,4 +1,4 @@
-# Knox Park & Perk
+# Knox Pick-Me-Up
 
 *Make it home safe. Tomorrow's coffee's on us.*
 
@@ -7,7 +7,7 @@
 A proposed public-private road-safety partnership for downtown Knoxville:
 patrons who drove downtown and take a safe ride home at the end of the night —
 a rideshare, taxi, or public transit — show proof of the ride to their
-bartender and receive a **Morning Perk Card**, good for a **free large coffee**
+bartender and receive a **Morning Pick-Me-Up Card**, good for a **free large coffee**
 at a participating downtown shop when they return the next morning to pick up
 their car. While valid (one day), the card also doubles as a free KAT transit
 pass — including the ride back downtown to the car.
@@ -32,7 +32,7 @@ Market.
   - [`logo-mark.svg`](assets/logo-mark.svg) — the mark sealed in a badge (emblem)
   - [`favicon.svg`](assets/favicon.svg) — app icon / favicon
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
-  - [`card.svg`](assets/card.svg) — the Morning Perk Card (business-card size)
+  - [`card.svg`](assets/card.svg) — the Morning Pick-Me-Up Card (business-card size)
   - [`coaster.svg`](assets/coaster.svg) — the bar coaster (round)
 
 ## Publishing the site

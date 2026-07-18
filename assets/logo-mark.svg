@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Knox Park &amp; Perk emblem">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Knox Pick-Me-Up emblem">
   <defs><linearGradient id="badge-m" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#141d33"/><stop offset="100%" stop-color="#0c1224"/></linearGradient></defs>
   <circle cx="120" cy="120" r="112" fill="url(#badge-m)" stroke="#ffb95e" stroke-width="5"/>
   <circle cx="120" cy="120" r="96" fill="none" stroke="#ffb95e" stroke-width="1" opacity=".4"/>
