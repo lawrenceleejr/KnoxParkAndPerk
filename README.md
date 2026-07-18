@@ -23,6 +23,9 @@ Market.
 - **[`PROGRAM.md`](PROGRAM.md)** — full program design: mechanics, card spec,
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
+- **[`design/LOGGING.md`](design/LOGGING.md)** — the card-tracking system:
+  QR scan-to-log redemptions (`redeem.html`), pack check-out, Google Sheets
+  backend, Looker Studio dashboards — no servers, $0, volunteer-proof.
 - **[`BRAND.md`](BRAND.md)** — the visual identity guide: logo suite, the
   signature mark, color palette, typography, favicon, layout language, and usage.
 - **[`assets/`](assets)** — brand assets as scalable SVG (print- and web-ready;

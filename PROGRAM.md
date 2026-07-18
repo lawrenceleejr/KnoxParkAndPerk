@@ -68,7 +68,12 @@ crowd stands the coffee for tomorrow's safe riders.
 - **One-per-ride rule** is self-limiting: a card requires a distinct booked
   ride shown at the bar, stamped at the moment of proof.
 - **Two-touch validation:** bar stamp at issue, coffee shop log at redemption.
-  Mismatched or duplicate serials are flagged in monthly reconciliation.
+  Redemptions are logged by scanning the card's QR at the register and packs
+  are checked out to bars by scanning the pack sheet — a zero-maintenance,
+  $0 system built on the static site plus Google Sheets, with live
+  dashboards; full architecture and setup runbook in
+  [design/LOGGING.md](design/LOGGING.md). Mismatched or duplicate serials
+  are flagged automatically.
 - **Short expiry** kills secondary-market and stockpiling value.
 - **Low stakes by design:** the worst case of a gamed card is one free coffee.
   Controls are proportionate — the program must stay a 10-second interaction at

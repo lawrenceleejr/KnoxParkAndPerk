@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Knox Pick-Me-Up — Card Scanner</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<style>
+  :root {
+    --paper: #faf5eb; --paper-2: #f2e9d8; --ink: #241a10; --ink-2: #6f5f4c;
+    --night: #101a30; --orange: #ff8200; --orange-ink: #b04e00;
+    --gold: #eda953; --rule: #ddcfb4;
+    --ok: #2e7d32; --warn: #b04e00; --bad: #b3261e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--paper); color: var(--ink);
+    min-height: 100vh; line-height: 1.5;
+  }
+  .wrap { max-width: 30rem; margin: 0 auto; padding: 1rem 1.25rem 3rem; }
+  header { display: flex; align-items: center; gap: .6rem; padding: .9rem 0; border-bottom: 1px solid var(--rule); }
+  header img { width: 1.9rem; height: 1.9rem; }
+  header .name { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.15rem; }
+  header .tool { margin-left: auto; font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--orange-ink); }
+  .shopline { padding: .9rem 0 .2rem; font-size: .8rem; color: var(--ink-2); }
+  .shopline b { color: var(--ink); font-weight: 600; }
+  .badge-demo { display: inline-block; margin-left: .5rem; font-size: .62rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--bad); border: 1px solid var(--bad); border-radius: 2px; padding: .05rem .4rem; }
+
+  #viewport {
+    position: relative; margin-top: 1rem; border-radius: 6px; overflow: hidden;
+    background: var(--night); aspect-ratio: 1 / 1;
+  }
+  #viewport video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #reticle {
+    position: absolute; inset: 14%; border: 2px solid rgba(250,245,235,.85);
+    border-radius: 10px; pointer-events: none;
+  }
+  #camstart {
+    position: absolute; inset: 0; display: flex; flex-direction: column; gap: .8rem;
+    align-items: center; justify-content: center; color: var(--paper);
+    background: var(--night); cursor: pointer; border: 0; width: 100%;
+    font: inherit; text-align: center; padding: 1rem;
+  }
+  #camstart .big { font-family: 'Fraunces', Georgia, serif; font-size: 1.3rem; font-weight: 600; }
+  #camstart .small { font-size: .8rem; color: #b9b3a4; max-width: 24ch; }
+
+  #status {
+    margin-top: 1rem; border-radius: 6px; padding: 1rem 1.1rem;
+    border: 1px solid var(--rule); background: #fff; min-height: 4.4rem;
+  }
+  #status .s-title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.15rem; }
+  #status .s-sub { font-size: .82rem; color: var(--ink-2); margin-top: .15rem; }
+  #status.ok { border-color: var(--ok); background: #f0f7f0; }
+  #status.ok .s-title { color: var(--ok); }
+  #status.warn { border-color: var(--warn); background: #fdf3e7; }
+  #status.warn .s-title { color: var(--warn); }
+  #status.bad { border-color: var(--bad); background: #fdefee; }
+  #status.bad .s-title { color: var(--bad); }
+
+  .manual { margin-top: 1.4rem; }
+  .label { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); display: block; margin-bottom: .5rem; }
+  .manual .row { display: flex; gap: .5rem; }
+  .manual input {
+    flex: 1; font: inherit; font-size: 1rem; padding: .65rem .8rem;
+    border: 1px solid var(--rule); border-radius: 4px; background: #fff; color: var(--ink);
+    text-transform: uppercase;
+  }
+  .manual input:focus { outline: 2px solid var(--orange); border-color: var(--orange); }
+  button.btn {
+    font: inherit; font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+    background: var(--ink); color: var(--paper); border: 0; border-radius: 4px;
+    padding: .65rem 1.1rem; cursor: pointer;
+  }
+  button.btn:active { background: var(--orange-ink); }
+
+  #log { margin-top: 1.6rem; }
+  #log ul { list-style: none; border-top: 1px solid var(--rule); }
+  #log li { display: flex; justify-content: space-between; gap: 1rem; padding: .5rem 0; border-bottom: 1px solid var(--rule); font-size: .85rem; }
+  #log li .st { font-weight: 600; }
+  #log li .st.ok { color: var(--ok); } #log li .st.warn { color: var(--warn); } #log li .st.bad { color: var(--bad); }
+  #queuenote { margin-top: .8rem; font-size: .78rem; color: var(--warn); display: none; }
+
+  .setup { margin-top: 1.2rem; padding: 1rem 1.1rem; border: 1px solid var(--rule); border-radius: 6px; background: var(--paper-2); font-size: .85rem; color: var(--ink-2); }
+  .setup code { background: #fff; padding: .05rem .3rem; border-radius: 3px; font-size: .8rem; }
+  footer { margin-top: 2.5rem; font-size: .72rem; color: var(--ink-2); }
+  footer a { color: var(--orange-ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="assets/logo-mark.svg" alt="">
+    <span class="name">Knox Pick-Me-Up</span>
+    <span class="tool">Card scanner</span>
+  </header>
+
+  <p class="shopline" id="shopline"></p>
+
+  <div id="viewport">
+    <video id="video" playsinline muted hidden></video>
+    <div id="reticle" hidden></div>
+    <button id="camstart" type="button">
+      <span class="big">Tap to start scanning</span>
+      <span class="small">Point the camera at the QR code on the Morning Pick-Me-Up card.</span>
+    </button>
+  </div>
+
+  <div id="status"><div class="s-title">Ready.</div><div class="s-sub">Scan a card, or type its serial below.</div></div>
+  <p id="queuenote"></p>
+
+  <div class="manual">
+    <span class="label">Manual entry (if the code won&rsquo;t scan)</span>
+    <div class="row">
+      <input id="serialbox" placeholder="KPU-2026-004217" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <button class="btn" id="manualgo" type="button">Log it</button>
+    </div>
+  </div>
+
+  <div id="log">
+    <span class="label">This session</span>
+    <ul id="loglist"></ul>
+  </div>
+
+  <div class="setup" id="setupnote" hidden></div>
+
+  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="index.html">knoxpickmeup site</a></footer>
+</div>
+
+<script src="assets/vendor/jsQR.js"></script>
+<script>
+'use strict';
+/* ================= CONFIG =================
+   1. Create the redemption Sheet + Apps Script web app (see design/LOGGING.md).
+   2. Paste the deployed web-app URL below (ends in /exec).
+   3. List participating shops: slug -> display name. Each shop's register QR
+      points to  redeem.html?shop=<slug>
+   Leave SCRIPT_URL empty to run in DEMO mode (nothing leaves the phone). */
+const SCRIPT_URL = '';
+const SHOPS = {
+  'demo-cafe': 'Demo Cafe (testing)',
+  // 'wild-love': 'Wild Love Bakehouse',
+  // 'remedy':    'Remedy Coffee',
+  // 'k-brew':    'K Brew Downtown',
+};
+/* ========================================== */
+
+const SERIAL_RE = /KPU-\d{4}-\d{6}/i;
+const qs = new URLSearchParams(location.search);
+const shopSlug = (qs.get('shop') || '').toLowerCase();
+const shopName = SHOPS[shopSlug] || null;
+const demo = !SCRIPT_URL;
+
+const $ = id => document.getElementById(id);
+const statusEl = $('status'), logList = $('loglist');
+const seen = new Set(JSON.parse(localStorage.getItem('kpu-seen') || '[]'));
+let queue = JSON.parse(localStorage.getItem('kpu-queue') || '[]');
+
+function saveLocal() {
+  localStorage.setItem('kpu-seen', JSON.stringify([...seen].slice(-2000)));
+  localStorage.setItem('kpu-queue', JSON.stringify(queue));
+}
+
+function setStatus(kind, title, sub) {
+  statusEl.className = kind;
+  statusEl.innerHTML = '<div class="s-title"></div><div class="s-sub"></div>';
+  statusEl.children[0].textContent = title;
+  statusEl.children[1].textContent = sub || '';
+  if (kind === 'ok' && navigator.vibrate) navigator.vibrate(80);
+  if (kind === 'bad' && navigator.vibrate) navigator.vibrate([60, 60, 60]);
+}
+
+function addLog(serial, kind, note) {
+  const li = document.createElement('li');
+  const t = new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+  li.innerHTML = '<span></span><span class="st"></span>';
+  li.children[0].textContent = serial + ' · ' + t;
+  li.children[1].textContent = note;
+  li.children[1].classList.add(kind);
+  logList.prepend(li);
+}
+
+function updateQueueNote() {
+  const n = $('queuenote');
+  if (queue.length) {
+    n.style.display = 'block';
+    n.textContent = queue.length + ' scan(s) saved on this phone, waiting for signal — they will retry automatically.';
+  } else n.style.display = 'none';
+}
+
+async function submit(serial) {
+  const rec = { serial, shop: shopSlug, at: new Date().toISOString() };
+  if (demo) return { status: 'ok', demo: true };
+  const u = SCRIPT_URL + '?action=redeem'
+    + '&serial=' + encodeURIComponent(serial)
+    + '&shop=' + encodeURIComponent(shopSlug)
+    + '&at=' + encodeURIComponent(rec.at);
+  const res = await fetch(u, { method: 'GET' });
+  return res.json();
+}
+
+async function flushQueue() {
+  if (demo || !queue.length) return;
+  const pending = queue; queue = []; saveLocal(); updateQueueNote();
+  for (const rec of pending) {
+    try {
+      await fetch(SCRIPT_URL + '?action=redeem&serial=' + encodeURIComponent(rec.serial)
+        + '&shop=' + encodeURIComponent(rec.shop) + '&at=' + encodeURIComponent(rec.at));
+    } catch (e) { queue.push(rec); }
+  }
+  saveLocal(); updateQueueNote();
+}
+window.addEventListener('online', flushQueue);
+
+let busy = false, lastSerial = '', lastAt = 0;
+async function handleSerial(raw, fromCamera) {
+  const m = String(raw).match(SERIAL_RE);
+  if (!m) return false;
+  const serial = m[0].toUpperCase();
+  const now = Date.now();
+  // debounce only camera frames — the same code sits in view for many frames
+  if (fromCamera && serial === lastSerial && now - lastAt < 4000) { lastAt = now; return true; }
+  lastSerial = serial; lastAt = now;
+  if (busy) return true;
+  busy = true;
+
+  if (seen.has(serial)) {
+    setStatus('warn', 'Already scanned on this phone', serial + ' was logged here earlier. One coffee per card.');
+    addLog(serial, 'warn', 'duplicate');
+    busy = false;
+    return true;
+  }
+
+  setStatus('', 'Logging ' + serial + '…', '');
+  try {
+    const out = await submit(serial);
+    seen.add(serial); saveLocal();
+    if (out.status === 'duplicate') {
+      setStatus('bad', 'Card already redeemed', serial + ' was used at ' + (out.firstShop || 'another shop') + ' ' + (out.firstAt ? 'on ' + out.firstAt : 'earlier') + '.');
+      addLog(serial, 'bad', 'already used');
+    } else {
+      setStatus('ok', 'Good to go — coffee’s on Knoxville ☀', serial + (out.demo ? ' (demo mode: not sent anywhere)' : ' logged for ' + (shopName || shopSlug)) + '.');
+      addLog(serial, 'ok', out.demo ? 'demo' : 'logged');
+    }
+  } catch (e) {
+    queue.push({ serial, shop: shopSlug, at: new Date().toISOString() });
+    seen.add(serial); saveLocal(); updateQueueNote();
+    setStatus('warn', 'No signal — saved on this phone', serial + ' will be sent automatically when the connection returns. Hand over the coffee.');
+    addLog(serial, 'warn', 'queued');
+  }
+  busy = false;
+  return true;
+}
+
+/* ---------- camera ---------- */
+const video = $('video');
+let detector = null, canvas, ctx;
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 } }, audio: false
+    });
+    video.srcObject = stream;
+    video.hidden = false; $('reticle').hidden = false; $('camstart').hidden = true;
+    await video.play();
+    if ('BarcodeDetector' in window) {
+      try { detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { detector = null; }
+    }
+    if (!detector) { canvas = document.createElement('canvas'); ctx = canvas.getContext('2d', { willReadFrequently: true }); }
+    scanLoop();
+  } catch (e) {
+    setStatus('bad', 'Camera unavailable', 'Allow camera access in your browser settings, or use manual entry below.');
+  }
+}
+async function scanLoop() {
+  if (!video.srcObject) return;
+  try {
+    if (detector) {
+      const codes = await detector.detect(video);
+      for (const c of codes) if (await handleSerial(c.rawValue, true)) break;
+    } else if (video.readyState >= 2) {
+      const w = 480, h = Math.round(480 * video.videoHeight / video.videoWidth) || 480;
+      canvas.width = w; canvas.height = h;
+      ctx.drawImage(video, 0, 0, w, h);
+      const img = ctx.getImageData(0, 0, w, h);
+      const code = jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' });
+      if (code && code.data) await handleSerial(code.data, true);
+    }
+  } catch (e) { /* keep scanning */ }
+  setTimeout(scanLoop, 220);
+}
+
+/* ---------- wiring ---------- */
+$('camstart').addEventListener('click', startCamera);
+$('manualgo').addEventListener('click', () => {
+  const v = $('serialbox').value.trim();
+  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPU-2026-004217.');
+  $('serialbox').value = '';
+});
+function handleSerialSync(v) { const ok = SERIAL_RE.test(v); if (ok) handleSerial(v); return ok; }
+$('serialbox').addEventListener('keydown', e => { if (e.key === 'Enter') $('manualgo').click(); });
+
+const shopline = $('shopline');
+if (shopName) {
+  shopline.innerHTML = 'Logging redemptions for <b></b>' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
+  shopline.querySelector('b').textContent = shopName;
+} else if (shopSlug) {
+  shopline.innerHTML = 'Unknown shop code &ldquo;<b></b>&rdquo; — scans will be logged under it, but check your register QR.' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
+  shopline.querySelector('b').textContent = shopSlug;
+} else {
+  shopline.textContent = 'No shop selected.';
+  const s = $('setupnote'); s.hidden = false;
+  s.innerHTML = 'This page is for participating coffee shops. It must be opened from your shop’s register QR, which points to <code>redeem.html?shop=your-shop-code</code>. Patrons: you probably want the <a href="index.html">Knox Pick-Me-Up site</a>.';
+}
+updateQueueNote();
+flushQueue();
+</script>
+</body>
+</html>
