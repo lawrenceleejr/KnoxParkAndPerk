@@ -75,7 +75,6 @@ it — this is configuration, not a server you babysit.
 ```javascript
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
 const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
-const STATS_KEY = 'CHOOSE-A-LONG-RANDOM-KEY';   // for dashboard.html#k=...
 
 // serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
@@ -126,16 +125,14 @@ function doGet(e) {
     }
   }
   if (p.action === 'stats') {
-    if (p.key !== STATS_KEY) {
-      out = { status: 'denied' };
-    } else {
-      const ss = SpreadsheetApp.getActive();
-      const red = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1)
-        .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || '')]);
-      const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
-        .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
-      out = { redemptions: red, packs: packs };
-    }
+    // public by design: venue names, timestamps, statuses, and counts only —
+    // card serials and anything else stay out of the payload
+    const ss = SpreadsheetApp.getActive();
+    const red = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1)
+      .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || '')]);
+    const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
+      .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
+    out = { redemptions: red, packs: packs };
   }
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
@@ -179,13 +176,12 @@ voided-pack attempts), redemptions per day/week, ranked **to-shop** and
 **from-bar** charts, a bar → shop flow matrix, and the latest activity —
 with 7/30/90-day/all-time range chips and a 5-minute auto-refresh.
 
-**Access:** open `dashboard.html#k=YOUR-KEY` and bookmark it. The key lives
-in the Apps Script (`STATS_KEY`) and in your bookmark — never in this public
-repository; the fragment (`#…`) is not sent to any server or logged
-anywhere. Honest scope: this is a light gate, not Fort Knox — but the data
-behind it is only venue names, timestamps, and serials (no patron data), so
-the worst case of a leaked key is someone seeing coffee counts. Rotate the
-key by changing `STATS_KEY` and your bookmark. With `SCRIPT_URL` unset the
+**Access: shareable by link, on purpose.** The page isn't linked from the
+public site and carries `noindex`, so the URL travels by word of mouth —
+but anyone you hand it to (the City, KPD, a reporter, a prospective
+partner) can open it and watch the numbers live. That works because the
+payload is venue names, timestamps, statuses, and counts only — card
+serials and patron data never leave the Sheet. With `SCRIPT_URL` unset the
 page renders generated demo data, so you can try it right now.
 
 ### G. Dashboards for partners: Looker Studio (free)
@@ -212,9 +208,7 @@ site later if wanted. Nothing to host.
    `/exec` URL.
 4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
    set `SCRIPT_URL` in `dashboard.html`; set `PACK_FORM_URL` in
-   `tools/build_cards.py`. Pick a long random `STATS_KEY` in the Apps
-   Script and bookmark `dashboard.html#k=THAT-KEY`. Commit, merge — Pages
-   redeploys.
+   `tools/build_cards.py`. Commit, merge — Pages redeploys.
 5. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
    at `https://…/redeem.html?shop=<slug>`; print and laminate.
 6. Run `tools/build_cards.py`, send `print/` to the print shop.

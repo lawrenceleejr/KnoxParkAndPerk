@@ -54,10 +54,6 @@
   .matrix td.cell { text-align: right; border-radius: 3px; }
 
   #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
-  #gate { max-width: 30rem; margin: 4rem auto; text-align: left; }
-  #gate h1 { font-family: 'Fraunces',Georgia,serif; font-size: 1.5rem; margin-bottom: .6rem; }
-  #gate p { color: var(--ink-2); font-size: .9rem; margin-bottom: .8rem; }
-  #gate code { background: var(--paper-2); padding: .1rem .35rem; border-radius: 3px; }
   footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
 </style>
 </head>
@@ -73,15 +69,6 @@
       <button class="btn" id="refresh" type="button">Refresh</button>
     </span>
   </header>
-
-  <div id="gate" hidden>
-    <h1>This page needs its key.</h1>
-    <p>The dashboard is for program admins. Open it with the access key in the
-    address, like <code>dashboard.html#k=YOUR-KEY</code> — bookmark that full
-    address. The key is set in the Apps Script (see <code>design/LOGGING.md</code>)
-    and is never stored in this repository.</p>
-    <p>Looking for the program? <a href="index.html">knoxpickmeup site</a>.</p>
-  </div>
 
   <div id="app" hidden>
     <div class="filters" role="group" aria-label="Time range">
@@ -134,8 +121,9 @@
 'use strict';
 /* ================= CONFIG =================
    Same Apps Script web app as redeem.html (see design/LOGGING.md).
-   The access key is NOT stored here: open the page as dashboard.html#k=KEY.
-   With SCRIPT_URL empty the dashboard renders generated demo data. */
+   This page is shareable by link — it shows venue names, timestamps, and
+   counts only (never patron data). It is noindex'd, so the URL travels by
+   word of mouth. With SCRIPT_URL empty it renders generated demo data. */
 const SCRIPT_URL = '';
 /* ========================================== */
 
@@ -143,7 +131,6 @@ const ACCENT = '#ff8200';
 const RAMP = ['#fbedd8', '#f5c48a', '#ff8200', '#c26200', '#7d3f00'];
 const $ = id => document.getElementById(id);
 const demo = !SCRIPT_URL;
-const key = (location.hash.match(/[#&]k=([^&]+)/) || [])[1] || '';
 let DATA = null;        // { redemptions: [[iso, shop, status, bar]], packs: [[iso, pack, bar, voided]] }
 let rangeDays = 30;
 
@@ -176,8 +163,7 @@ async function load() {
   $('updated').textContent = 'loading…';
   try {
     DATA = demo ? demoData()
-      : await (await fetch(SCRIPT_URL + '?action=stats&key=' + encodeURIComponent(key))).json();
-    if (DATA.status === 'denied') { $('app').hidden = true; $('gate').hidden = false; return; }
+      : await (await fetch(SCRIPT_URL + '?action=stats')).json();
     render();
     $('updated').textContent = 'updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   } catch (e) {
@@ -354,9 +340,9 @@ document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () =
 $('refresh').addEventListener('click', load);
 setInterval(load, 5 * 60 * 1000);
 
-if (demo) { $('demobadge').hidden = false; $('app').hidden = false; load(); }
-else if (!key) { $('gate').hidden = false; }
-else { $('app').hidden = false; load(); }
+if (demo) $('demobadge').hidden = false;
+$('app').hidden = false;
+load();
 </script>
 </body>
 </html>
