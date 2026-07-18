@@ -89,7 +89,9 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    numbers in the generated URL.
 4. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
    into the Sheet (Extensions → Apps Script). Set `BACKUP_KEY` to a long
-   random string. Deploy → New deployment → Web app, *Execute as: me*,
+   random string, and `SERIAL_KEY` to a secret of your own — it's the card
+   checksum key; **save it somewhere safe**, every print run must use the
+   same one. Deploy → New deployment → Web app, *Execute as: me*,
    *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
    authorize it, then add a daily time-driven trigger for it (Triggers → Add).
 5. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
