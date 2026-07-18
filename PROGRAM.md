@@ -77,6 +77,9 @@ crowd stands the coffee for tomorrow's safe riders.
   dashboards; full architecture and setup runbook in
   [design/LOGGING.md](design/LOGGING.md). Mismatched or duplicate serials
   are flagged automatically.
+- **Pack kill switch:** a lost, stolen, or misprinted pack is voided with one
+  cell in the tracking sheet — every card in it immediately fails to scan at
+  every register, and attempted uses are logged with where they turned up.
 - **Short expiry** kills secondary-market and stockpiling value.
 - **Low stakes by design:** the worst case of a gamed card is one free coffee.
   Controls are proportionate — the program must stay a 10-second interaction at

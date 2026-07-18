@@ -47,7 +47,7 @@ this survives any individual volunteer). Three tabs:
 | Tab | Columns | Filled by |
 |---|---|---|
 | `Redemptions` | timestamp · serial · shop · status · **bar** · **pack serial** | Apps Script (below) |
-| `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar | the pack Google Form |
+| `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the pack Google Form (voided: you, by hand) |
 | `Venues` | slug · display name · type (bar/shop) · joined date | you, by hand, rarely |
 
 **Pack serials** are 10 digits (`KPU-YYYY-##########`) — two more than the
@@ -58,6 +58,13 @@ contains it) and writes the issuing bar and pack serial alongside the shop.
 No formulas required for the join; keep a duplicate flag
 (`=COUNTIF(B:B,B2)>1`) as a belt-and-suspenders check.
 
+**Kill switch:** to invalidate an entire pack (lost, stolen, misprinted,
+or a bar leaves the program), type anything in its `voided` cell —
+e.g. `LOST 7/20`. From that moment every card in the pack **fails to scan**
+at every register: the barista sees "not valid," and the attempt is still
+logged with status `void` so the integrity dashboard shows where voided
+cards are turning up. Clearing the cell restores the pack.
+
 ### B. The redemption endpoint: a bound Apps Script web app
 This is the piece that makes scanning *automatic* (a bare Google Form can't
 answer "was this card already used?"). It's ~30 lines pasted **once** into
@@ -67,9 +74,9 @@ it — this is configuration, not a server you babysit.
 
 ```javascript
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
-const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar
+const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
 
-// serial -> { bar, pack } via the Packs tab (which range contains it)
+// serial -> { bar, pack, voided } via the Packs tab (which range contains it)
 function lookupBar(serial) {
   const rows = SpreadsheetApp.getActive().getSheetByName(PACKS).getDataRange().getValues();
   const year = serial.slice(4, 8), n = Number(serial.slice(9));
@@ -77,10 +84,12 @@ function lookupBar(serial) {
     const [, pack, first, last] = rows[i].map(String);
     if (first.slice(4, 8) === year &&
         n >= Number(first.slice(9)) && n <= Number(last.slice(9))) {
-      return { bar: String(rows[i][4] || ''), pack: pack };
+      return { bar: String(rows[i][4] || ''), pack: pack,
+               voided: String(rows[i][5] || '').trim() !== '' };
     }
   }
-  return { bar: '', pack: '' };   // pack never checked out — visible in the dashboard
+  // pack never checked out — visible in the dashboard
+  return { bar: '', pack: '', voided: false };
 }
 
 function doGet(e) {
@@ -93,14 +102,21 @@ function doGet(e) {
     lock.waitLock(5000);                       // serialize concurrent scans
     try {
       const sh = SpreadsheetApp.getActive().getSheetByName(SHEET);
-      const serials = sh.getRange(2, 2, Math.max(sh.getLastRow() - 1, 1), 2).getValues();
-      const hit = serials.find(r => r[0] === serial);
-      if (hit) {
-        out = { status: 'duplicate', firstShop: hit[1] };
+      const src = lookupBar(serial);
+      if (src.voided) {
+        // pack was invalidated — refuse, but keep the attempt for the audit trail
+        sh.appendRow([new Date(), serial, shop, 'void', src.bar, src.pack]);
+        out = { status: 'void' };
       } else {
-        const src = lookupBar(serial);
-        sh.appendRow([new Date(), serial, shop, 'ok', src.bar, src.pack]);
-        out = { status: 'ok', bar: src.bar };
+        // columns B..D: serial | shop | status — only 'ok' rows count as redeemed
+        const rows = sh.getRange(2, 2, Math.max(sh.getLastRow() - 1, 1), 3).getValues();
+        const hit = rows.find(r => r[0] === serial && r[2] === 'ok');
+        if (hit) {
+          out = { status: 'duplicate', firstShop: hit[1] };
+        } else {
+          sh.appendRow([new Date(), serial, shop, 'ok', src.bar, src.pack]);
+          out = { status: 'ok', bar: src.bar };
+        }
       }
     } finally {
       lock.releaseLock();
@@ -145,9 +161,10 @@ Connect it to the Sheet once; it stays live. Suggested pages:
 - **Program**: cards issued vs redeemed, redemption rate, trend by week.
 - **By venue**: redemptions per shop, issuance per bar (via the range
   lookup), busiest nights.
-- **Integrity**: duplicate attempts, unknown-shop scans, packs issued but
-  never redeeming (a pack that never redeems = probably sitting in a
-  storeroom, not fraud).
+- **Integrity**: duplicate attempts, `void` scans (voided-pack cards
+  turning up, and where), unknown-shop scans, packs issued but never
+  redeeming (a pack that never redeems = probably sitting in a storeroom,
+  not fraud).
 
 Share as view-only links with the City, KPD, KAT, and partners; embed on the
 site later if wanted. Nothing to host.
