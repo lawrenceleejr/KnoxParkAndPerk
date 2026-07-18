@@ -64,15 +64,21 @@ No formulas required for the join; keep a duplicate flag
 (`=COUNTIF(B:B,B2)>1`) as a belt-and-suspenders check.
 
 **Serial checksum — the anti-guessing letter.** Every card serial ends in
-one letter (`KPMU-2026-00004217H`) computed as a **keyed** HMAC of the
-digits: `letter = HMAC-SHA256(SERIAL_KEY, "KPMU-2026-00004217")` mapped to a
-24-letter alphabet (no I/O, which read as 1/0). Because the key lives only
-in the Apps Script and in the print-run command — never in this public
-repo — nobody can mint valid serials by counting up from a card in their
-hand: a made-up serial passes only 1 time in 24, and every failure is
-logged (status `bad`) and surfaced on the dashboard, so guessing at scale
-is visible immediately. Cost: one letter on the card, zero extra steps for
-anyone. The stakes stay one coffee; this just makes the lazy attack noisy.
+one letter (`KPMU-2026-00004217T`) that can't be computed without a secret,
+so serials can't be minted by counting up from a card in hand. **There is
+exactly one secret in the whole system** — `PROGRAM_KEY` — and the checksum
+uses a key *derived* from it: `CK_KEY = hex(HMAC-SHA256(PROGRAM_KEY,
+"serial-v1"))`, then `letter = HMAC-SHA256(CK_KEY, digits)` mapped to a
+24-letter alphabet (no I/O, which read as 1/0). The derivation is one-way,
+which is what lets the derived key ride in each shop's **register QR**
+(`redeem.html?shop=slug&k=<derived>`): the scanner verifies every scanned
+serial locally and instantly — including offline and in demo mode — while
+someone who photographs a register QR still can't touch the backup action
+or learn the program key. The server re-checks regardless. A made-up serial
+passes 1 time in 24, every failure is logged (status `bad`) and surfaced on
+the dashboard, and the printed register QRs are the only place the derived
+key lives outside Google — never this repo. Get the derived key for QR
+printing with `python3 tools/ckkey.py 'YOUR-PROGRAM-KEY'`.
 
 **Kill switch:** to invalidate an entire pack (lost, stolen, misprinted,
 or a bar leaves the program), type anything in its `voided` cell —
@@ -91,13 +97,21 @@ it — this is configuration, not a server you babysit.
 ```javascript
 const SHEET = 'Redemptions';   // timestamp | serial | shop | status | bar | pack serial
 const PACKS = 'Packs';         // timestamp | pack serial | first | last | bar | voided
-const BACKUP_KEY = 'CHOOSE-A-LONG-RANDOM-STRING';   // for the GitHub backup job ONLY
-const SERIAL_KEY = 'CHOOSE-A-SECRET-CHECKSUM-KEY';  // MUST match the --key used to print cards
+// THE one program secret: gates the backup action, and every serial's
+// checksum derives from it. Same value goes to GitHub secret PROGRAM_KEY
+// and to tools/build_cards.py --key at print time. Nothing else to remember.
+const PROGRAM_KEY = 'CHOOSE-ONE-LONG-RANDOM-STRING';
 
-// keyed serial checksum: last letter of every serial = HMAC(key, digits part)
+// serial checksum uses a DERIVED key (safe to embed in register QRs so the
+// scanner can verify serials locally — deriving is one-way, so a leaked
+// register QR cannot unlock the backup action)
 const CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';     // 24 letters, no I/O
+function toHex(bytes) {
+  return bytes.map(b => (((b % 256) + 256) % 256).toString(16).padStart(2, '0')).join('');
+}
+const CK_KEY = toHex(Utilities.computeHmacSha256Signature('serial-v1', PROGRAM_KEY));
 function checkLetter(base) {
-  const raw = Utilities.computeHmacSha256Signature(base, SERIAL_KEY);
+  const raw = Utilities.computeHmacSha256Signature(base, CK_KEY);
   return CK_ALPHABET[((raw[0] % 256) + 256) % 256 % 24];
 }
 
@@ -171,9 +185,9 @@ function doGet(e) {
     out = { redemptions: red, packs: packs, venues: venues };
   }
   if (p.action === 'backup') {
-    // full dump (serials included) for the nightly GitHub backup — key-gated,
-    // the key lives here and in a GitHub Actions secret, never in the repo
-    if (p.key !== BACKUP_KEY) {
+    // full dump (serials included) for the nightly GitHub backup — gated by
+    // the program key, which lives here and in a GitHub secret, never in the repo
+    if (p.key !== PROGRAM_KEY) {
       out = { status: 'denied' };
     } else {
       const ss = SpreadsheetApp.getActive();
@@ -342,9 +356,9 @@ the pack form dropdown — that's how the dashboard links them.
    card serial, bar dropdown), link it to the Sheet's `Packs` tab, and grab
    a pre-filled URL (⋮ → *Get pre-filled link*) to learn the three
    `entry.NNNN` IDs.
-3. Paste the Apps Script above into the Sheet; set `SERIAL_KEY` (the card
-   checksum secret — save it somewhere safe, every future print run needs
-   it) and `BACKUP_KEY`; deploy as web app, copy the `/exec` URL.
+3. Paste the Apps Script above into the Sheet; set `PROGRAM_KEY` — the one
+   secret in the whole system (save it somewhere safe: print runs, register
+   QRs, and backups all use it); deploy as web app, copy the `/exec` URL.
 4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
    set `SCRIPT_URL` in `dashboard.html`; set `PACK_FORM_URL` in
    `tools/build_cards.py`. Commit, merge — Pages redeploys.
@@ -352,11 +366,10 @@ the pack form dropdown — that's how the dashboard links them.
    at `https://…/redeem.html?shop=<slug>`; print and laminate.
 6. Run `tools/build_cards.py`, send `print/` to the print shop.
 7. Build the Looker Studio dashboard on the Sheet; share view links.
-8. Backups: in the Apps Script, set `BACKUP_KEY` to a long random string and
-   add the daily `nightlySnapshot` trigger; in this repo's Settings →
-   Secrets → Actions add `BACKUP_URL` (the `/exec` URL) and `BACKUP_KEY`,
-   then run the "Nightly data backup" workflow once by hand to confirm a
-   `data/backup/` commit appears.
+8. Backups: add the daily `nightlySnapshot` trigger in the Apps Script; in
+   this repo's Settings → Secrets → Actions add `BACKUP_URL` (the `/exec`
+   URL) and `PROGRAM_KEY` (the same one secret), then run the "Nightly data
+   backup" workflow once by hand to confirm a `data/backup/` commit appears.
 9. Dry-run with one friendly bar + one shop before the real pilot.
 
 ## 4. What this costs and what can break

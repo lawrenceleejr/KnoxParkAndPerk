@@ -203,6 +203,27 @@ const SHOPS = {
 const SERIAL_RE = /KPMU-\d{4}-\d{8}[A-HJ-NP-Z]/i;   // trailing letter = keyed checksum
 const qs = new URLSearchParams(location.search);
 const shopSlug = (qs.get('shop') || '').toLowerCase();
+
+/* Local serial validation. The register QR carries k=<derived check key>
+   (see design/LOGGING.md) — derived one-way from the program secret, so it
+   can live on printed paper without exposing anything else. With it, the
+   scanner verifies every serial's checksum letter instantly, even offline.
+   The server re-checks regardless. */
+const CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+if (qs.get('k')) localStorage.setItem('kpmu-ck', qs.get('k'));
+const ckHex = qs.get('k') || localStorage.getItem('kpmu-ck') || '';
+let ckKey = null;
+if (ckHex && window.crypto && crypto.subtle) {
+  crypto.subtle.importKey('raw', new TextEncoder().encode(ckHex),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+    .then(k => { ckKey = k; }).catch(() => {});
+}
+async function serialOk(serial) {
+  if (!ckKey) return null;   // no key on this device — server decides
+  const sig = new Uint8Array(await crypto.subtle.sign(
+    'HMAC', ckKey, new TextEncoder().encode(serial.slice(0, -1))));
+  return CK_ALPHABET[sig[0] % 24] === serial.slice(-1);
+}
 const shopName = SHOPS[shopSlug] || null;
 const demo = !SCRIPT_URL;
 
@@ -278,6 +299,17 @@ async function handleSerial(raw, fromCamera) {
   lastSerial = serial; lastAt = now;
   if (busy) return true;
   busy = true;
+
+  const localCheck = await serialOk(serial);
+  if (localCheck === false) {
+    if (fromCamera) flashReticle('bad');
+    setStatus('bad', 'Serial doesn’t check out', serial + ' fails the check letter — mistyped, or not a real card.');
+    addLog(serial, 'bad', 'invalid');
+    // audit on the server when reachable, but never queue or remember it
+    if (!demo && navigator.onLine) submit(serial).catch(() => {});
+    busy = false;
+    return true;
+  }
 
   if (seen.has(serial)) {
     if (fromCamera) flashReticle('warn');
@@ -500,7 +532,7 @@ $('serialbox').addEventListener('keydown', e => { if (e.key === 'Enter') $('manu
 
 const shopline = $('shopline');
 if (shopName) {
-  shopline.innerHTML = 'Logging redemptions for <b></b>' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
+  shopline.innerHTML = 'Logging redemptions for <b></b>' + (ckHex ? ' · serial check on' : '') + (demo ? '<span class="badge-demo">demo mode</span>' : '');
   shopline.querySelector('b').textContent = shopName;
 } else if (shopSlug) {
   shopline.innerHTML = 'Unknown shop code &ldquo;<b></b>&rdquo; — scans will be logged under it, but check your register QR.' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
