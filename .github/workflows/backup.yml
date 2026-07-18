@@ -1,0 +1,60 @@
+# Nightly off-Google backup of the program's Google Sheet.
+#
+# Pulls every tab through the Apps Script's key-gated `backup` action and
+# commits the rows as CSVs under data/backup/. The files are overwritten each
+# night — git history IS the archive, so any past day can be recovered with
+# `git log -- data/backup`.
+#
+# Setup (see README "Set up the program" step 8):
+#   repo Settings → Secrets and variables → Actions → New repository secret
+#     BACKUP_URL  = the Apps Script web-app URL (ends in /exec)
+#     BACKUP_KEY  = the BACKUP_KEY string you set inside the Apps Script
+# Until both secrets exist the job exits quietly. After setup, a failed
+# fetch fails the job, and GitHub emails the repo owner — that email is the
+# only "monitoring" this system needs.
+
+name: Nightly data backup
+on:
+  schedule:
+    - cron: '17 9 * * *'   # 09:17 UTC ≈ 4–5 AM in Knoxville, after the night's scans
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch all tabs from the Sheet
+        env:
+          BACKUP_URL: ${{ secrets.BACKUP_URL }}
+          BACKUP_KEY: ${{ secrets.BACKUP_KEY }}
+        run: |
+          if [ -z "$BACKUP_URL" ] || [ -z "$BACKUP_KEY" ]; then
+            echo "Backup secrets not configured yet — skipping. See README setup step 8."
+            exit 0
+          fi
+          curl -sL --fail "$BACKUP_URL?action=backup&key=$BACKUP_KEY" -o /tmp/backup.json
+          mkdir -p data/backup
+          python3 - <<'PY'
+          import csv, json
+          data = json.load(open('/tmp/backup.json'))
+          assert 'Redemptions' in data, f'unexpected payload: {data}'
+          for tab, rows in data.items():
+              with open(f'data/backup/{tab.lower()}.csv', 'w', newline='') as f:
+                  csv.writer(f).writerows(rows)
+              print(f'{tab}: {max(len(rows) - 1, 0)} rows')
+          PY
+
+      - name: Commit if anything changed
+        run: |
+          [ -d data/backup ] || { echo "Nothing fetched — nothing to commit."; exit 0; }
+          git config user.name "kpu-backup"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/backup
+          git diff --cached --quiet && { echo "No changes since last backup."; exit 0; }
+          git commit -m "Nightly data backup ($(date -u +%F))"
+          git push

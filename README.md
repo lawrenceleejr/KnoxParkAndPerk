@@ -13,13 +13,16 @@ their car. While valid (one day), the card also doubles as a free KAT transit
 pass — including the ride back downtown to the car.
 
 Partners: City of Knoxville · Knoxville Police Department · Knoxville Area
-Transit (KAT) · downtown bars · downtown coffee shops · Market Square Farmers'
-Market.
+Transit (KAT) · downtown bars · downtown coffee shops.
 
 ## Contents
 
 - **[`index.html`](index.html)** — the program website (fully self-contained
   static page; works on GitHub Pages with no build step).
+- **[`redeem.html`](redeem.html)** — the coffee-shop card scanner (opened from
+  a per-shop register QR; camera scan → logged to the Sheet).
+- **[`dashboard.html`](dashboard.html)** — the live program dashboard
+  (unlinked/unindexed; share the URL with partners and press).
 - **[`PROGRAM.md`](PROGRAM.md)** — full program design: mechanics, card spec,
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
@@ -38,6 +41,86 @@ Market.
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
   - [`card.svg`](assets/card.svg) — the Morning Pick-Me-Up Card (business-card size)
   - [`coaster.svg`](assets/coaster.svg) — the bar coaster (round)
+
+## How the data flows
+
+One Google Sheet is the entire database. Who writes what:
+
+| Data | Written by | Human involved? |
+|---|---|---|
+| `Redemptions` (each coffee handed over) | the **Apps Script web app**, when a barista scans a card on [`redeem.html`](redeem.html) | barista points a phone camera; no typing |
+| `Packs` (which bar got which serials) | the **pack check-out Google Form**, opened by the QR on each pack's cover sheet | deliverer picks the bar from a dropdown |
+| `Venues`, `Packs.voided` (kill switch) | **you, by hand** | rarely |
+
+Nothing else ever writes to the Sheet. Full architecture, the Apps Script
+code, and failure-mode analysis: [`design/LOGGING.md`](design/LOGGING.md).
+
+## Set up the program (one afternoon)
+
+Everything below is free and requires no server. Steps 1–3 happen in Google,
+4–6 in this repo, 7–8 back in Google/GitHub.
+
+1. **Create the program Google account** (e.g. `knoxpickmeup@gmail.com`) so
+   nothing is tied to one volunteer. Do all Google steps signed in as it.
+2. **Create the Sheet** with three tabs and header rows:
+   - `Redemptions`: `timestamp | serial | shop | status | bar | pack serial`
+   - `Packs`: `timestamp | pack serial | first | last | bar | voided`
+   - `Venues`: `slug | name | type | joined`
+   Share it with **no one** (partners get the dashboard, not the sheet), and
+   right-click the `Redemptions` tab → *Protect sheet* → only you.
+3. **Create the pack check-out Form** (Google Forms): short-answer fields
+   *Pack serial*, *First card serial*, *Last card serial*, and a *Bar*
+   dropdown. Link responses to the Sheet's `Packs` tab. Then ⋮ → *Get
+   pre-filled link*, fill dummy values, and note the three `entry.NNNNN`
+   numbers in the generated URL.
+4. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
+   into the Sheet (Extensions → Apps Script). Set `BACKUP_KEY` to a long
+   random string. Deploy → New deployment → Web app, *Execute as: me*,
+   *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
+   authorize it, then add a daily time-driven trigger for it (Triggers → Add).
+5. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
+   - [`redeem.html`](redeem.html): `SCRIPT_URL` = the `/exec` URL; fill the
+     `SHOPS` map (slug → display name).
+   - [`dashboard.html`](dashboard.html): the same `SCRIPT_URL`.
+   - [`tools/build_cards.py`](tools/build_cards.py): `PACK_FORM_URL` using
+     the three `entry.NNNNN` IDs from step 3.
+   Commit and merge to `main` — Pages redeploys automatically.
+6. **Print things** — `python3 tools/build_cards.py --year 2026 --start 1
+   --count 500` writes per-serial cards and pack cover sheets to `print/`;
+   send those to a print shop. Make one register QR per coffee shop pointing
+   at `https://…/redeem.html?shop=<slug>`; print and laminate.
+7. **Dashboards** — the built-in one is live immediately at
+   [`dashboard.html`](dashboard.html) (unlinked and unindexed; share the URL
+   freely). Optionally build a Looker Studio view on the Sheet for partners
+   who want to slice data themselves.
+8. **Turn on backups** — repo Settings → Secrets and variables → Actions →
+   add `BACKUP_URL` (the `/exec` URL) and `BACKUP_KEY` (same string as in
+   the script). Run the *Nightly data backup* workflow once by hand
+   (Actions tab → Run workflow) and confirm a commit touching
+   `data/backup/*.csv` appears.
+9. **Dry-run** with one friendly bar and one shop before the pilot:
+   check a pack out, scan a card at a register, watch it land on the
+   dashboard.
+
+## Backups — "what if someone breaks the sheet?"
+
+Four independent layers, detailed in
+[`design/LOGGING.md`](design/LOGGING.md#h-backups--disaster-recovery):
+
+1. **Sheet version history** (built into Google) — one-click restore for bad
+   edits; covers 95% of accidents.
+2. **Nightly Drive snapshots** — the Apps Script copies the whole file into
+   a "KPU Backups" folder daily, keeping 30 dated copies.
+3. **Nightly off-Google backup** — a GitHub Action pulls every tab and
+   commits CSVs to [`data/backup/`](data/backup) in this repo; **git history
+   is the archive**, so any past day is recoverable even if the entire
+   Google account is lost. If the backup breaks, the Action fails and
+   GitHub emails you — that's the whole monitoring system.
+4. **Paper** — pack cover sheets carry a hand-written bar/date line, and
+   every card is physically stamped.
+
+Losing the whole Google account costs under an hour: rebuild the Sheet from
+the repo's CSVs, re-paste the script, update `SCRIPT_URL` in two files.
 
 ## Publishing the site
 
