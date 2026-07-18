@@ -209,7 +209,7 @@ The asks are mostly promotion, not an open-ended budget line."
 
 ### Knoxville Police Department — *credibility & reach*
 **Pitch:** "You get a carrot to pair with the stick. Every card is a documented
-decision not to drive home impaired — one less risk on the road."
+decision to not drive home impaired — one less risk on the road."
 - Asks: public endorsement, program mention at high-risk moments (football
   Saturdays, New Year's, holiday weekends), no enforcement role inside bars.
 - KPD is a *supporter*, not an operator — the program must never feel like
