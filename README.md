@@ -88,10 +88,10 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    pre-filled link*, fill dummy values, and note the three `entry.NNNNN`
    numbers in the generated URL.
 4. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
-   into the Sheet (Extensions → Apps Script). Set `BACKUP_KEY` to a long
-   random string, and `SERIAL_KEY` to a secret of your own — it's the card
-   checksum key; **save it somewhere safe**, every print run must use the
-   same one. Deploy → New deployment → Web app, *Execute as: me*,
+   into the Sheet (Extensions → Apps Script). Set `PROGRAM_KEY` to one long
+   random string — **the only secret in the whole system** (backups, card
+   checksums, and register QRs all derive from it); save it somewhere safe.
+   Deploy → New deployment → Web app, *Execute as: me*,
    *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
    authorize it, then add a daily time-driven trigger for it (Triggers → Add).
 5. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
@@ -110,8 +110,8 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    freely). Optionally build a Looker Studio view on the Sheet for partners
    who want to slice data themselves.
 8. **Turn on backups** — repo Settings → Secrets and variables → Actions →
-   add `BACKUP_URL` (the `/exec` URL) and `BACKUP_KEY` (same string as in
-   the script). Run the *Nightly data backup* workflow once by hand
+   add `BACKUP_URL` (the `/exec` URL) and `PROGRAM_KEY` (the same one
+   secret). Run the *Nightly data backup* workflow once by hand
    (Actions tab → Run workflow) and confirm a commit touching
    `data/backup/*.csv` appears.
 9. **Dry-run** with one friendly bar and one shop before the pilot:

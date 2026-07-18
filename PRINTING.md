@@ -77,13 +77,14 @@ the card backs ("printing donated by ___").
 ```sh
 pip install fonttools brotli uharfbuzz segno
 python3 tools/build_cards.py --year 2026 --start 1 --count 1000 \
-    --key 'THE-SERIAL-KEY'   # same SERIAL_KEY as in the Apps Script
+    --key 'THE-PROGRAM-KEY'   # same PROGRAM_KEY as in the Apps Script
 ```
 
-The `--key` (or env `KPMU_SERIAL_KEY`) computes each serial's checksum
-letter; **it must match `SERIAL_KEY` in the Apps Script** or every card
-will scan as invalid. Without it the script uses a public demo key and
-prints a loud warning — fine for samples, never for a real run.
+The `--key` (or env `KPMU_PROGRAM_KEY`) is the system's one secret; each
+serial's checksum letter derives from it and **must match `PROGRAM_KEY` in
+the Apps Script** or every card will scan as invalid. Without it the script
+uses a public demo key and prints a loud warning — fine for samples, never
+for a real run.
 
 That writes to `print/` (gitignored):
 - `print/cards/card-KPMU-2026-00000001.svg` … — one file per card (front)
@@ -117,11 +118,15 @@ not a redesign).
 Each shop's counter QR opens the scanner pre-set to that shop:
 
 ```sh
+CK=$(python3 tools/ckkey.py 'THE-PROGRAM-KEY')   # derived serial-check key
 python3 -c "import segno; segno.make(
-  'https://lawrenceleejr.github.io/KnoxParkAndPerk/redeem.html?shop=SLUG',
+  'https://lawrenceleejr.github.io/KnoxParkAndPerk/redeem.html?shop=SLUG&k=$CK',
   error='q').save('register-SLUG.png', scale=12, border=2)"
 ```
 
+The `&k=` value is the **derived** check key — safe on printed paper (it
+can't unlock backups or reveal the program key) — and it's what lets the
+scanner verify each scanned serial's checksum instantly, even offline.
 Use the slugs from the `SHOPS` map in [`redeem.html`](redeem.html). Print
 at ~3″, mount on card stock, laminate. Error level `q` keeps them
 scannable when the lamination glares or the corner gets coffee on it.
@@ -131,9 +136,10 @@ scannable when the lamination glares or the corner gets coffee on it.
 1. **Serial continuity** — `--start` must be the next unused number
    (check the highest serial in the `Packs` tab or `data/backup/packs.csv`;
    never reprint a live range).
-1. **Checksum key** — `--key` matches the Apps Script's `SERIAL_KEY`
-   (no demo-key warning in the script output), and the proof card scans
-   as valid, not "serial doesn't check out".
+1. **Program key** — `--key` matches the Apps Script's `PROGRAM_KEY`
+   (no demo-key warning in the script output), register QRs carry the
+   matching `&k=` from `tools/ckkey.py`, and the proof card scans as
+   valid, not "serial doesn't check out".
 2. **`PACK_FORM_URL` configured** so pack sheets carry the check-out QR.
 3. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it

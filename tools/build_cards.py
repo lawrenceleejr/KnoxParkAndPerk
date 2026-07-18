@@ -21,7 +21,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
                               RULE, text, svg, mark, fraunces, fraunces_it,
-                              inter6, inter4, checksum, DEMO_KEY)
+                              inter6, inter4)
+from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
 SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
@@ -165,14 +166,15 @@ def main():
     ap.add_argument('--year', type=int, default=2026)
     ap.add_argument('--start', type=int, default=1, help='first serial number')
     ap.add_argument('--count', type=int, default=PACK_SIZE, help='how many cards')
-    ap.add_argument('--key', default=os.environ.get('KPMU_SERIAL_KEY', ''),
-                    help='serial checksum secret — MUST match SERIAL_KEY in the '
-                         'Apps Script (or set env KPMU_SERIAL_KEY)')
+    ap.add_argument('--key', default=os.environ.get('KPMU_PROGRAM_KEY', ''),
+                    help='the ONE program secret — MUST match PROGRAM_KEY in the '
+                         'Apps Script (or set env KPMU_PROGRAM_KEY)')
     args = ap.parse_args()
     key = args.key or DEMO_KEY
     if key == DEMO_KEY:
-        print('WARNING: using the public demo checksum key — fine for samples, '
-              'NEVER for a real print run. Pass --key or set KPMU_SERIAL_KEY.')
+        print('WARNING: using the public demo key — fine for samples, '
+              'NEVER for a real print run. Pass --key or set KPMU_PROGRAM_KEY.')
+    ck = derive_ck_key(key)
 
     cards_dir = os.path.join(REPO, 'print', 'cards')
     packs_dir = os.path.join(REPO, 'print', 'packs')
@@ -180,7 +182,7 @@ def main():
     os.makedirs(packs_dir, exist_ok=True)
 
     serials = [f'KPMU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
-    serials = [b + checksum(b, key) for b in serials]
+    serials = [b + serial_letter(b, ck) for b in serials]
     for s in serials:
         open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
     open(os.path.join(cards_dir, 'card-back.svg'), 'w').write(card_back_svg())
