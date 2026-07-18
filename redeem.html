@@ -236,8 +236,11 @@ async function handleSerial(raw, fromCamera) {
   setStatus('', 'Logging ' + serial + '…', '');
   try {
     const out = await submit(serial);
-    seen.add(serial); saveLocal();
-    if (out.status === 'duplicate') {
+    if (out.status !== 'void') { seen.add(serial); saveLocal(); }
+    if (out.status === 'void') {
+      setStatus('bad', 'Card not valid', serial + ' belongs to a card pack that was voided (lost or withdrawn). Don’t accept it — the attempt has been logged.');
+      addLog(serial, 'bad', 'voided pack');
+    } else if (out.status === 'duplicate') {
       setStatus('bad', 'Card already redeemed', serial + ' was used at ' + (out.firstShop || 'another shop') + ' ' + (out.firstAt ? 'on ' + out.firstAt : 'earlier') + '.');
       addLog(serial, 'bad', 'already used');
     } else {
