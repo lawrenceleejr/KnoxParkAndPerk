@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up — Program Design
 
-**Tagline:** *Make it home safe. Tomorrow's coffee's on us.*
+**Tagline:** *Ride from last call to first call.*
 
 A public-private partnership between the City of Knoxville, the Knoxville Police
 Department, Knoxville Area Transit (KAT), downtown bars, and downtown coffee
@@ -52,7 +52,7 @@ crowd stands the coffee for tomorrow's safe riders.
 ### Card rules
 - Good for **one free large coffee**; no cash value; not for resale; any
   add-ons beyond the large coffee are on the customer.
-- **Doubles as a free KAT pass while valid** — show the card to board any bus
+- **"Hair of the KAT"** — the card doubles as a free KAT pass while valid: show it to board any bus
   free during its validity window. This closes the loop: a free ride back
   downtown to retrieve the car.
 - **One card per ride** — the ride is the ticket. Accepted proof: a confirmed
@@ -91,7 +91,7 @@ operators as sponsors where a garage isn't nearby.
 | Element | Spec |
 |---|---|
 | Name | **Knox Pick-Me-Up** — the morning coffee is the literal pick-me-up; getting home safe is the figurative one |
-| Tagline | *Make it home safe. Tomorrow's coffee's on us.* |
+| Tagline | *Ride from last call to first call.* |
 | Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
 | Story arc | Last call → Ride home → Morning → Coffee |
 | Palette | Warm paper `#faf5eb`, espresso ink `#241a10`, night navy `#101a30`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color) used sparingly as the single accent — see [BRAND.md](BRAND.md) |
@@ -216,7 +216,7 @@ decision not to drive home impaired — one less risk on the road."
   surveillance or a sobriety checkpoint. Cards are anonymous; no personal data
   is ever collected.
 
-### Knoxville Area Transit (KAT) — *an accepted ride & a free-ride partner*
+### Knoxville Area Transit (KAT) — *"Hair of the KAT": an accepted ride & a free-ride partner*
 **Pitch:** "Riders already taking the bus home safely should qualify for the
 perk too — and a valid Pick-Me-Up Card should let anyone ride KAT free while it lasts,
 including the morning trip back to the car. It puts KAT in front of the exact

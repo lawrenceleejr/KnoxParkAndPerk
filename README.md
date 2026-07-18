@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up
 
-*Make it home safe. Tomorrow's coffee's on us.*
+*Ride from last call to first call.*
 
 **🌐 Live site: <https://lawrenceleejr.github.io/KnoxParkAndPerk/>**
 
