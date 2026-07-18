@@ -78,6 +78,7 @@ def arc_text(face, s, size, cx, cy, R, fill, tracking=0.12, mode='top', center_d
     return ''.join(out)
 
 def svg(vb_w, vb_h, body, label):
+    label = label.replace('&', '&amp;').replace('<', '&lt;').replace('"', '&quot;')
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vb_w} {vb_h}" '
             f'role="img" aria-label="{label}">\n{body}\n</svg>\n')
 
