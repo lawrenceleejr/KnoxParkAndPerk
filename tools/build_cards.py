@@ -19,8 +19,9 @@ import argparse, io, math, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
-from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, RULE,
-                              text, svg, mark, fraunces, fraunces_it, inter6, inter4)
+from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
+                              RULE, text, svg, mark, fraunces, fraunces_it,
+                              inter6, inter4)
 
 # ================= CONFIG =================
 SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
@@ -89,6 +90,35 @@ def card_svg(serial):
                f'Knox Pick-Me-Up — Morning Pick-Me-Up Card {serial}')
 
 
+def card_back_svg():
+    """Static back — identical on every card, so printers run it as one plate.
+    The night side of the story: navy field, the mark, and how it works."""
+    b = []
+    b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{NIGHT}" stroke="{NIGHT}" stroke-width="1.5"/>')
+    b.append(f'<path d="M15 298.25 H510 a13 13 0 0 0 13.25 -13.25 V278 H1.75 v7 A13 13 0 0 0 15 298.25 Z" fill="{ORANGE}"/>')
+    # header: mark + wordmark + tagline
+    b.append(mark(26, 34, 44, dark=PAPER))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 24, 86, 58, PAPER)[0])
+    b.append(text(fraunces_it, 'Ride from last call to first call.', 14.5, 87, 80, GOLD)[0])
+    b.append('<line x1="26" y1="100" x2="499" y2="100" stroke="#2a3550" stroke-width="1"/>')
+    # how it works — three numbered lines
+    steps = [
+        ('1', 'Booked a safe ride home? Show your bartender before you leave.'),
+        ('2', 'Sleep easy — downtown municipal garages are free overnight.'),
+        ('3', 'Ride KAT back free on this card, and coffee’s on Knoxville.'),
+    ]
+    for i, (num, line) in enumerate(steps):
+        y = 132 + i * 34
+        b.append(text(fraunces, num, 22, 30, y, ORANGE)[0])
+        b.append(text(inter4, line, 11.5, 52, y - 3, PAPER)[0])
+    b.append('<line x1="26" y1="232" x2="499" y2="232" stroke="#2a3550" stroke-width="1"/>')
+    # footer: partnership + sponsor slot
+    b.append(text(inter6, 'A ROAD-SAFETY PARTNERSHIP · CITY OF KNOXVILLE · KPD · KAT', 7.5, 26, 254, GOLD, tracking=0.14)[0])
+    b.append(text(inter4, 'knoxpickmeup.org — participating shops, program details, and the fine print', 9.5, 26, 270, '#b9b3a4')[0])
+    return svg(525, 300, ''.join(b),
+               'Knox Pick-Me-Up card back — how it works, partnership line, and website')
+
+
 def pack_serial(year, pack_no):
     # Pack serials carry two more digits than the 8-digit card serials, so a
     # pack is never mistakable for a card (or vice versa) anywhere in the DB.
@@ -145,6 +175,7 @@ def main():
     serials = [f'KPU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
     for s in serials:
         open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
+    open(os.path.join(cards_dir, 'card-back.svg'), 'w').write(card_back_svg())
 
     for i in range(0, len(serials), PACK_SIZE):
         chunk = serials[i:i + PACK_SIZE]
