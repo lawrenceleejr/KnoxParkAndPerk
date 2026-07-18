@@ -34,9 +34,44 @@
     background: var(--night); aspect-ratio: 1 / 1;
   }
   #viewport video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #viewport [hidden] { display: none !important; }
+  #overlay { position: absolute; inset: 0; pointer-events: none; }
   #reticle {
-    position: absolute; inset: 14%; border: 2px solid rgba(250,245,235,.85);
-    border-radius: 10px; pointer-events: none;
+    position: absolute; inset: 12%; pointer-events: none;
+    --ret: rgba(250,245,235,.9);
+    transition: --ret .15s;
+  }
+  #reticle .corner { position: absolute; width: 34px; height: 34px; border: 3px solid var(--ret); transition: border-color .2s ease; }
+  #reticle .c1 { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 10px; }
+  #reticle .c2 { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 10px; }
+  #reticle .c3 { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 10px; }
+  #reticle .c4 { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 10px; }
+  #reticle.ok .corner { border-color: #58c463; }
+  #reticle.warn .corner { border-color: var(--orange); }
+  #reticle.bad .corner { border-color: #ff6b5e; }
+  #scanline {
+    position: absolute; left: 8%; right: 8%; top: 12%; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,130,0,.9), transparent);
+    animation: sweep 2.4s ease-in-out infinite; display: none;
+  }
+  @keyframes sweep { 0%,100% { top: 13%; } 50% { top: 85%; } }
+  @media (prefers-reduced-motion: reduce) { #scanline { animation: none; top: 50%; } }
+  #camhint {
+    position: absolute; left: 0; right: 0; bottom: .7rem; text-align: center;
+    font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(250,245,235,.85); text-shadow: 0 1px 4px rgba(0,0,0,.6); display: none;
+  }
+  #torch {
+    position: absolute; top: .6rem; right: .6rem; display: none;
+    font: inherit; font-size: 1.05rem; line-height: 1;
+    background: rgba(10,16,31,.55); color: var(--paper); border: 1px solid rgba(250,245,235,.35);
+    border-radius: 999px; padding: .45rem .55rem; cursor: pointer;
+  }
+  #torch[aria-pressed="true"] { background: var(--orange); color: var(--night); border-color: var(--orange); }
+  .shoppick { margin-top: .4rem; }
+  .shoppick select {
+    font: inherit; font-size: 1rem; width: 100%; padding: .65rem .8rem;
+    border: 1px solid var(--rule); border-radius: 4px; background: #fff; color: var(--ink);
   }
   #camstart {
     position: absolute; inset: 0; display: flex; flex-direction: column; gap: .8rem;
@@ -99,9 +134,21 @@
 
   <p class="shopline" id="shopline"></p>
 
+  <div class="shoppick" id="shoppick" hidden>
+    <span class="label">Select your shop</span>
+    <select id="shopselect"><option value="">Choose your shop…</option></select>
+  </div>
+
   <div id="viewport">
     <video id="video" playsinline muted hidden></video>
-    <div id="reticle" hidden></div>
+    <canvas id="overlay"></canvas>
+    <div id="scanline"></div>
+    <div id="reticle" hidden>
+      <span class="corner c1"></span><span class="corner c2"></span>
+      <span class="corner c3"></span><span class="corner c4"></span>
+    </div>
+    <p id="camhint">Looking for a card…</p>
+    <button id="torch" type="button" aria-pressed="false" title="Flashlight">&#9889;</button>
     <button id="camstart" type="button">
       <span class="big">Tap to start scanning</span>
       <span class="small">Point the camera at the QR code on the Morning Pick-Me-Up card.</span>
@@ -227,6 +274,7 @@ async function handleSerial(raw, fromCamera) {
   busy = true;
 
   if (seen.has(serial)) {
+    if (fromCamera) flashReticle('warn');
     setStatus('warn', 'Already scanned on this phone', serial + ' was logged here earlier. One coffee per card.');
     addLog(serial, 'warn', 'duplicate');
     busy = false;
@@ -238,12 +286,15 @@ async function handleSerial(raw, fromCamera) {
     const out = await submit(serial);
     if (out.status !== 'void') { seen.add(serial); saveLocal(); }
     if (out.status === 'void') {
+      if (fromCamera) flashReticle('bad');
       setStatus('bad', 'Card not valid', serial + ' belongs to a card pack that was voided (lost or withdrawn). Don’t accept it — the attempt has been logged.');
       addLog(serial, 'bad', 'voided pack');
     } else if (out.status === 'duplicate') {
+      if (fromCamera) flashReticle('bad');
       setStatus('bad', 'Card already redeemed', serial + ' was used at ' + (out.firstShop || 'another shop') + ' ' + (out.firstAt ? 'on ' + out.firstAt : 'earlier') + '.');
       addLog(serial, 'bad', 'already used');
     } else {
+      if (fromCamera) flashReticle('ok');
       const issued = out.bar ? ' Issued by ' + out.bar + '.' : '';
       setStatus('ok', 'Good to go — coffee’s on us ☀', serial + (out.demo ? ' (demo mode: not sent anywhere)' : ' logged for ' + (shopName || shopSlug)) + '.' + issued);
       addLog(serial, 'ok', out.demo ? 'demo' : 'logged');
@@ -251,6 +302,7 @@ async function handleSerial(raw, fromCamera) {
   } catch (e) {
     queue.push({ serial, shop: shopSlug, at: new Date().toISOString() });
     seen.add(serial); saveLocal(); updateQueueNote();
+    if (fromCamera) flashReticle('warn');
     setStatus('warn', 'No signal — saved on this phone', serial + ' will be sent automatically when the connection returns. Hand over the coffee.');
     addLog(serial, 'warn', 'queued');
   }
@@ -258,17 +310,91 @@ async function handleSerial(raw, fromCamera) {
   return true;
 }
 
-/* ---------- camera ---------- */
-const video = $('video');
-let detector = null, canvas, ctx;
+/* ---------- camera + detection feedback ---------- */
+const video = $('video'), overlay = $('overlay'), reticle = $('reticle');
+let detector = null, canvas, ctx, octx, track = null;
+let lastDrawAt = 0, retTimer = null;
+
+// reticle color pulse keyed to the scan outcome
+function flashReticle(kind) {
+  reticle.className = kind || '';
+  clearTimeout(retTimer);
+  retTimer = setTimeout(() => { reticle.className = ''; }, 1400);
+}
+
+// map video-pixel coords -> overlay pixels (video is object-fit: cover)
+function mapPoint(p) {
+  const dw = overlay.width, dh = overlay.height;
+  const vw = video.videoWidth || 1, vh = video.videoHeight || 1;
+  const sc = Math.max(dw / vw, dh / vh);
+  return { x: p.x * sc - (vw * sc - dw) / 2, y: p.y * sc - (vh * sc - dh) / 2 };
+}
+
+// highlight the located code: orange polygon + serial chip above it
+function drawDetection(corners, label) {
+  if (!octx || !corners || corners.length < 4) return;
+  const pts = corners.map(mapPoint);
+  octx.clearRect(0, 0, overlay.width, overlay.height);
+  octx.beginPath();
+  pts.forEach((p, i) => i ? octx.lineTo(p.x, p.y) : octx.moveTo(p.x, p.y));
+  octx.closePath();
+  octx.fillStyle = 'rgba(255,130,0,.16)';
+  octx.strokeStyle = '#ff8200';
+  octx.lineWidth = 3.5;
+  octx.lineJoin = 'round';
+  octx.fill(); octx.stroke();
+  pts.forEach(p => { octx.beginPath(); octx.arc(p.x, p.y, 4.5, 0, 7); octx.fillStyle = '#ff8200'; octx.fill(); });
+  if (label) {
+    const topY = Math.min(...pts.map(p => p.y)), cx = pts.reduce((a, p) => a + p.x, 0) / pts.length;
+    octx.font = '600 15px Inter, sans-serif';
+    const w = octx.measureText(label).width + 18;
+    const bx = Math.min(Math.max(cx - w / 2, 6), overlay.width - w - 6), by = Math.max(topY - 34, 6);
+    octx.fillStyle = 'rgba(10,16,31,.85)';
+    octx.beginPath(); octx.roundRect(bx, by, w, 25, 5); octx.fill();
+    octx.fillStyle = '#faf5eb';
+    octx.fillText(label, bx + 9, by + 17.5);
+  }
+  lastDrawAt = Date.now();
+  $('camhint').textContent = 'Card found';
+}
+
+function clearDetection() {
+  if (octx && lastDrawAt && Date.now() - lastDrawAt > 600) {
+    octx.clearRect(0, 0, overlay.width, overlay.height);
+    lastDrawAt = 0;
+    $('camhint').textContent = 'Looking for a card…';
+  }
+}
+
 async function startCamera() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment', width: { ideal: 1280 } }, audio: false
     });
     video.srcObject = stream;
-    video.hidden = false; $('reticle').hidden = false; $('camstart').hidden = true;
+    track = stream.getVideoTracks()[0];
+    video.hidden = false; reticle.hidden = false; $('camstart').hidden = true;
+    $('scanline').style.display = 'block';
+    $('camhint').style.display = 'block';
     await video.play();
+    // overlay canvas at device-pixel resolution
+    const r = $('viewport').getBoundingClientRect();
+    overlay.width = Math.round(r.width * devicePixelRatio);
+    overlay.height = Math.round(r.height * devicePixelRatio);
+    overlay.style.width = r.width + 'px'; overlay.style.height = r.height + 'px';
+    octx = overlay.getContext('2d');
+    // torch button, where the hardware supports it
+    try {
+      if (track.getCapabilities && track.getCapabilities().torch) {
+        const t = $('torch');
+        t.style.display = 'block';
+        t.addEventListener('click', async () => {
+          const on = t.getAttribute('aria-pressed') !== 'true';
+          await track.applyConstraints({ advanced: [{ torch: on }] });
+          t.setAttribute('aria-pressed', String(on));
+        });
+      }
+    } catch (e) { /* no torch — fine */ }
     if ('BarcodeDetector' in window) {
       try { detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { detector = null; }
     }
@@ -278,22 +404,36 @@ async function startCamera() {
     setStatus('bad', 'Camera unavailable', 'Allow camera access in your browser settings, or use manual entry below.');
   }
 }
+
 async function scanLoop() {
   if (!video.srcObject) return;
+  const dpr = devicePixelRatio;
   try {
     if (detector) {
       const codes = await detector.detect(video);
-      for (const c of codes) if (await handleSerial(c.rawValue, true)) break;
+      for (const c of codes) {
+        const m = String(c.rawValue).match(SERIAL_RE);
+        drawDetection(c.cornerPoints.map(p => ({ x: p.x, y: p.y })), m ? m[0].toUpperCase() : 'Not a card QR');
+        if (await handleSerial(c.rawValue, true)) break;
+      }
+      if (!codes.length) clearDetection();
     } else if (video.readyState >= 2) {
       const w = 480, h = Math.round(480 * video.videoHeight / video.videoWidth) || 480;
       canvas.width = w; canvas.height = h;
       ctx.drawImage(video, 0, 0, w, h);
       const img = ctx.getImageData(0, 0, w, h);
       const code = jsQR(img.data, w, h, { inversionAttempts: 'dontInvert' });
-      if (code && code.data) await handleSerial(code.data, true);
+      if (code && code.data) {
+        const k = (video.videoWidth || w) / w;   // scale jsQR coords back to video pixels
+        const L = code.location;
+        const m = String(code.data).match(SERIAL_RE);
+        drawDetection([L.topLeftCorner, L.topRightCorner, L.bottomRightCorner, L.bottomLeftCorner]
+          .map(p => ({ x: p.x * k, y: p.y * k })), m ? m[0].toUpperCase() : 'Not a card QR');
+        await handleSerial(code.data, true);
+      } else clearDetection();
     }
   } catch (e) { /* keep scanning */ }
-  setTimeout(scanLoop, 220);
+  setTimeout(scanLoop, 200);
 }
 
 /* ---------- wiring ---------- */
@@ -314,9 +454,19 @@ if (shopName) {
   shopline.innerHTML = 'Unknown shop code &ldquo;<b></b>&rdquo; — scans will be logged under it, but check your register QR.' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
   shopline.querySelector('b').textContent = shopSlug;
 } else {
-  shopline.textContent = 'No shop selected.';
+  shopline.textContent = 'No shop selected — pick yours below, or open this page from your register QR.';
+  const pick = $('shoppick'), sel = $('shopselect');
+  pick.hidden = false;
+  for (const [slug, name] of Object.entries(SHOPS)) {
+    const o = document.createElement('option');
+    o.value = slug; o.textContent = name;
+    sel.appendChild(o);
+  }
+  sel.addEventListener('change', () => {
+    if (sel.value) location.replace('redeem.html?shop=' + encodeURIComponent(sel.value));
+  });
   const s = $('setupnote'); s.hidden = false;
-  s.innerHTML = 'This page is for participating coffee shops. It must be opened from your shop’s register QR, which points to <code>redeem.html?shop=your-shop-code</code>. Patrons: you probably want the <a href="index.html">Knox Pick-Me-Up site</a>.';
+  s.innerHTML = 'Shops normally open this page from their register QR (<code>redeem.html?shop=your-shop-code</code>) so the shop is preset. Patrons: you probably want the <a href="index.html">Knox Pick-Me-Up site</a>.';
 }
 updateQueueNote();
 flushQueue();
