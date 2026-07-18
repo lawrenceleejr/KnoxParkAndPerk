@@ -114,7 +114,7 @@
   <div class="manual">
     <span class="label">Manual entry (if the code won&rsquo;t scan)</span>
     <div class="row">
-      <input id="serialbox" placeholder="KPU-2026-004217" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <input id="serialbox" placeholder="KPU-2026-00004217" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="manualgo" type="button">Log it</button>
     </div>
   </div>
@@ -147,7 +147,7 @@ const SHOPS = {
 };
 /* ========================================== */
 
-const SERIAL_RE = /KPU-\d{4}-\d{6}/i;
+const SERIAL_RE = /KPU-\d{4}-\d{8}/i;
 const qs = new URLSearchParams(location.search);
 const shopSlug = (qs.get('shop') || '').toLowerCase();
 const shopName = SHOPS[shopSlug] || null;
@@ -296,7 +296,7 @@ async function scanLoop() {
 $('camstart').addEventListener('click', startCamera);
 $('manualgo').addEventListener('click', () => {
   const v = $('serialbox').value.trim();
-  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPU-2026-004217.');
+  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPU-2026-00004217.');
   $('serialbox').value = '';
 });
 function handleSerialSync(v) { const ok = SERIAL_RE.test(v); if (ok) handleSerial(v); return ok; }

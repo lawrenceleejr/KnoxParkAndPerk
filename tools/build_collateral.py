@@ -148,7 +148,7 @@ b.append(text(inter6, 'BUSINESSES', 6.8, 449, 233, INK2, tracking=0.16, anchor='
 b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
 b.append(text(inter6, 'VALID FOR ONE DAY FROM', 9.5, 26, 274, INK, tracking=0.14)[0])
 b.append(f'<line x1="190" y1="276" x2="310" y2="276" stroke="{INK2}" stroke-width="1"/>')
-b.append(text(inter4, 'Nº KPU-2026-004217', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
+b.append(text(inter4, 'Nº KPU-2026-00004217', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
 open(f'{REPO}/assets/card.svg', 'w').write(
     svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
 

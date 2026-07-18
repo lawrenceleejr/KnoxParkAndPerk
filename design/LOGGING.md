@@ -22,7 +22,7 @@ site URL with serial     dropdown]" — 10 sec    phone camera → serial      L
 ```
 
 **The one clever trick — the card QR is dual-use.** Every card's QR encodes
-`https://…/?c=KPU-2026-004217#partners` — a plain link to the public site:
+`https://…/?c=KPU-2026-00004217#partners` — a plain link to the public site:
 
 - A **patron** who scans it just lands on the participating-businesses
   section of the website. No login walls, nothing weird.
@@ -67,7 +67,7 @@ const SHEET = 'Redemptions';
 function doGet(e) {
   const p = e.parameter;
   let out = { status: 'error' };
-  if (p.action === 'redeem' && /^KPU-\d{4}-\d{6}$/i.test(p.serial || '')) {
+  if (p.action === 'redeem' && /^KPU-\d{4}-\d{8}$/i.test(p.serial || '')) {
     const serial = p.serial.toUpperCase();
     const shop = String(p.shop || 'unknown').slice(0, 40);
     const lock = LockService.getScriptLock();
