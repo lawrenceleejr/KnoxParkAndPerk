@@ -40,6 +40,12 @@
 
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
   @media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; }
+  @media (max-width: 800px) { .grid3 { grid-template-columns: 1fr; } }
+  #adminsec { border-top: 2px solid var(--rule); padding-top: 1rem; margin-top: .4rem; }
+  #adminsec .aslabel { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: .6rem; }
+  button.btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--rule); }
+  button.btn.ghost[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem 1.2rem; margin-bottom: .8rem; }
   .panel h2 { font-family: 'Fraunces',Georgia,serif; font-weight: 600; font-size: 1.05rem; margin-bottom: .15rem; }
   .panel .sub { font-size: .72rem; color: var(--ink-2); margin-bottom: .8rem; }
@@ -74,6 +80,7 @@
     <span class="right">
       <span class="badge-demo" id="demobadge" hidden>demo data</span>
       <span id="updated"></span>
+      <button class="btn ghost" id="admintoggle" type="button" aria-pressed="false">Admin info</button>
       <button class="btn" id="refresh" type="button">Refresh</button>
     </span>
   </header>
@@ -88,6 +95,28 @@
     </div>
 
     <div class="tiles" id="tiles"></div>
+
+    <div id="adminsec" hidden>
+      <p class="aslabel">Admin info — integrity</p>
+      <div class="tiles" id="admintiles"></div>
+      <div class="grid3">
+        <div class="panel">
+          <h2>Duplicate scans</h2>
+          <p class="sub">Already-used cards shown again, per <span class="bucket-unit"></span></p>
+          <div id="plot-dup"></div>
+        </div>
+        <div class="panel">
+          <h2>Voided-pack attempts</h2>
+          <p class="sub">Cards from voided packs refused, per <span class="bucket-unit"></span></p>
+          <div id="plot-void"></div>
+        </div>
+        <div class="panel">
+          <h2>Bad serials</h2>
+          <p class="sub">Failed the check letter, per <span class="bucket-unit"></span></p>
+          <div id="plot-bad"></div>
+        </div>
+      </div>
+    </div>
 
     <div class="panel">
       <h2>Redemptions over time</h2>
@@ -214,14 +243,16 @@ function hover(node, html) {
 }
 
 /* Column chart: buckets = [{label, value}] */
-function columns(host, buckets, unit) {
+function columns(host, buckets, unit, opts) {
+  const color = (opts && opts.color) || ACCENT;
+  const name = (opts && opts.name) || 'Redemptions';
   host.innerHTML = '';
   if (!buckets.length) { host.innerHTML = '<p class="empty">Nothing in this range yet.</p>'; return; }
-  const W = 920, H = 220, padL = 34, padB = 24, padT = 12;
+  const W = 920, H = (opts && opts.h) || 220, padL = 34, padB = 24, padT = 12;
   const max = Math.max(1, ...buckets.map(b => b.value));
   const step = Math.max(1, Math.ceil(max / 3));
   const top = step * 3 >= max ? step * 3 : step * 4;
-  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Redemptions per ' + unit });
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': name + ' per ' + unit });
   for (let g = 0; g <= 3; g++) {
     const y = padT + (H - padB - padT) * (1 - g / 3);
     el('line', { x1: padL, x2: W - 4, y1: y, y2: y, stroke: g === 0 ? '#ddcfb4' : '#efe6d2', 'stroke-width': 1 }, svg);
@@ -235,8 +266,8 @@ function columns(host, buckets, unit) {
     const r = Math.min(4, bw / 2, h);
     const bar = el('path', {
       d: `M${x} ${H - padB} v${-(h - r)} a${r} ${r} 0 0 1 ${r} ${-r} h${bw - 2 * r} a${r} ${r} 0 0 1 ${r} ${r} v${h - r} Z`,
-      fill: ACCENT }, svg);
-    hover(bar, `${b.label}: ${b.value} redemption${b.value === 1 ? '' : 's'}`);
+      fill: color }, svg);
+    hover(bar, `${b.label}: ${b.value}`);
     if (b.value === max && b.value > 0)
       txt(el('text', { x: x + bw / 2, y: y - 5, 'text-anchor': 'middle', 'font-size': 11, 'font-weight': 600, fill: '#241a10' }, svg), b.value);
     if (buckets.length <= 16 || i % Math.ceil(buckets.length / 12) === 0)
@@ -287,7 +318,7 @@ function barInfo(name) {
   const v = venueList().find(x => x.name === name);
   return { name, off: !!(v && v.off) };
 }
-const INOTE = '<p class="inote">Greyed venues are deactivated — no longer in the program; their history stays.</p>';
+const INOTE = '<p class="inote">Greyed venues are deactivated — no longer in the program.</p>';
 
 function tile(label, value, detail, cls) {
   return `<div class="tile ${cls || ''}"><div class="tl">${label}</div><div class="tv">${value}</div><div class="td">${detail || ''}</div></div>`;
@@ -309,26 +340,37 @@ function render() {
     tile('Cards issued to bars', issued.toLocaleString(), DATA.packs.length + ' packs checked out, all time') +
     tile('Coffees redeemed', ok.length.toLocaleString(), 'in range') +
     tile('Redemption rate', rate === null ? '—' : rate + '%', 'redeemed ÷ issued, all time') +
-    tile('Last 7 days', last7.toLocaleString(), 'coffees redeemed') +
+    tile('Last 7 days', last7.toLocaleString(), 'coffees redeemed');
+
+  $('admintiles').innerHTML =
     tile('Duplicate attempts', dups.toLocaleString(), 'already-used cards shown again', dups ? 'warn' : '') +
     tile('Voided-pack attempts', voids.toLocaleString(), 'refused at the register', voids ? 'alert' : '') +
     tile('Bad-serial attempts', bads.toLocaleString(), 'failed the check letter', bads ? 'alert' : '');
 
-  // trend: daily <=31 buckets, else weekly
+  // shared bucketing: daily for <=31-day ranges, else weekly
   const days = rangeDays || Math.ceil((Date.now() - Math.min(...DATA.redemptions.map(r => +new Date(r[0])), Date.now())) / 86400000);
   const byDay = days <= 31;
   const nb = byDay ? days : Math.ceil(days / 7);
-  const buckets = [];
-  for (let i = nb - 1; i >= 0; i--) {
-    const start = new Date(Date.now() - (i + 1) * (byDay ? 1 : 7) * 86400000);
-    const end = new Date(Date.now() - i * (byDay ? 1 : 7) * 86400000);
-    buckets.push({
-      label: (byDay ? end : start).toLocaleDateString([], { month: 'short', day: 'numeric' }),
-      value: count(ok, r => { const t = new Date(r[0]); return t > start && t <= end; })
-    });
-  }
-  $('trend-sub').textContent = 'Coffees redeemed per ' + (byDay ? 'day' : 'week');
-  columns($('trend'), buckets, byDay ? 'day' : 'week');
+  const bucketize = rows => {
+    const buckets = [];
+    for (let i = nb - 1; i >= 0; i--) {
+      const start = new Date(Date.now() - (i + 1) * (byDay ? 1 : 7) * 86400000);
+      const end = new Date(Date.now() - i * (byDay ? 1 : 7) * 86400000);
+      buckets.push({
+        label: (byDay ? end : start).toLocaleDateString([], { month: 'short', day: 'numeric' }),
+        value: count(rows, r => { const t = new Date(r[0]); return t > start && t <= end; })
+      });
+    }
+    return buckets;
+  };
+  const unit = byDay ? 'day' : 'week';
+  $('trend-sub').textContent = 'Coffees redeemed per ' + unit;
+  columns($('trend'), bucketize(ok), unit);
+  // admin spike plots, one per integrity status
+  document.querySelectorAll('.bucket-unit').forEach(e => e.textContent = unit);
+  columns($('plot-dup'), bucketize(reds.filter(r => r[2] === 'dup')), unit, { color: '#b04e00', name: 'Duplicate scans', h: 170 });
+  columns($('plot-void'), bucketize(reds.filter(r => r[2] === 'void')), unit, { color: '#b3261e', name: 'Voided-pack attempts', h: 170 });
+  columns($('plot-bad'), bucketize(reds.filter(r => r[2] === 'bad')), unit, { color: '#b3261e', name: 'Bad serials', h: 170 });
 
   const tally = (rows, idx, fallback) => {
     const m = new Map();
@@ -370,8 +412,11 @@ function render() {
     $('matrix').querySelectorAll('td.cell').forEach(td => hover(td, td.dataset.t));
   }
 
-  // latest table
-  const latest = [...reds].sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 20);
+  // latest table — public view shows redemptions only; admin view shows all statuses
+  const latestSrc = adminOn ? reds : reds.filter(r => r[2] === 'ok');
+  document.querySelector('#latest').previousElementSibling.textContent =
+    adminOn ? 'Most recent 20 scans in range (all statuses)' : 'Most recent 20 redemptions in range';
+  const latest = [...latestSrc].sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 20);
   const vcell = info => info.off
     ? `<span class="inactive" title="deactivated">${info.name} †</span>` : info.name;
   $('latest').innerHTML = '<table><tr><th>When</th><th>Shop</th><th>Issuing bar</th><th>Status</th></tr>' +
@@ -382,6 +427,19 @@ function render() {
 }
 
 /* ---------- wiring ---------- */
+let adminOn = localStorage.getItem('kpmu-admin') === '1';
+function applyAdmin() {
+  $('adminsec').hidden = !adminOn;
+  $('admintoggle').setAttribute('aria-pressed', String(adminOn));
+}
+$('admintoggle').addEventListener('click', () => {
+  adminOn = !adminOn;
+  localStorage.setItem('kpmu-admin', adminOn ? '1' : '0');
+  applyAdmin();
+  if (DATA) render();
+});
+applyAdmin();
+
 document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
   document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', 'false'));
   c.setAttribute('aria-pressed', 'true');
