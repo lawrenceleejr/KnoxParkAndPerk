@@ -168,7 +168,7 @@
   <div class="manual">
     <span class="label">Manual entry (if the code won&rsquo;t scan)</span>
     <div class="row">
-      <input id="serialbox" placeholder="KPMU-2026-00004217H" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <input id="serialbox" placeholder="KPMU-2026-00004217T" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="manualgo" type="button">Log it</button>
     </div>
   </div>
@@ -180,7 +180,7 @@
 
   <div class="setup" id="setupnote" hidden></div>
 
-  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="index.html">knoxpickmeup site</a> · scanner build <span id="build">2026-07-19b</span></footer>
+  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="index.html">knoxpickmeup site</a> · scanner build <span id="build">2026-07-19c</span> <a href="#" id="resetmem" hidden>· reset this device&rsquo;s scanner memory</a></footer>
 </div>
 
 <script>
@@ -210,8 +210,12 @@ const shopSlug = (qs.get('shop') || '').toLowerCase();
    scanner verifies every serial's checksum letter instantly, even offline.
    The server re-checks regardless. */
 const CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+// derived from the public 'demo-key' — demo mode self-arms with it so the
+// checksum flow is testable with no setup; real deployments use the register
+// QR's k (derived from the real PROGRAM_KEY)
+const DEMO_CK = 'd85164dc312ec63fb188843046ef0995449e64ddeeb9cb29950cc75fb1af8866';
 if (qs.get('k')) localStorage.setItem('kpmu-ck', qs.get('k'));
-const ckHex = qs.get('k') || localStorage.getItem('kpmu-ck') || '';
+const ckHex = qs.get('k') || localStorage.getItem('kpmu-ck') || (!SCRIPT_URL ? DEMO_CK : '');
 const ckKeyReady = (ckHex && window.crypto && crypto.subtle)
   ? crypto.subtle.importKey('raw', new TextEncoder().encode(ckHex),
       { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']).catch(() => null)
@@ -523,7 +527,7 @@ async function scanLoop() {
 $('camstart').addEventListener('click', startCamera);
 $('manualgo').addEventListener('click', () => {
   const v = $('serialbox').value.trim();
-  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217H — including the letter at the end.');
+  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217T — including the letter at the end.');
   $('serialbox').value = '';
 });
 function handleSerialSync(v) { const ok = SERIAL_RE.test(v); if (ok) handleSerial(v); return ok; }
@@ -531,7 +535,7 @@ $('serialbox').addEventListener('keydown', e => { if (e.key === 'Enter') $('manu
 
 const shopline = $('shopline');
 if (shopName) {
-  shopline.innerHTML = 'Logging redemptions for <b></b>' + (ckHex ? ' · serial check on' : '') + (demo ? '<span class="badge-demo">demo mode</span>' : '');
+  shopline.innerHTML = 'Logging redemptions for <b></b>' + (ckHex ? ' · serial check on' : ' · <span style="color:var(--warn)">serial check off — open from your register QR</span>') + (demo ? '<span class="badge-demo">demo mode</span>' : '');
   shopline.querySelector('b').textContent = shopName;
 } else if (shopSlug) {
   shopline.innerHTML = 'Unknown shop code &ldquo;<b></b>&rdquo; — scans will be logged under it, but check your register QR.' + (demo ? '<span class="badge-demo">demo mode</span>' : '');
@@ -550,6 +554,15 @@ if (shopName) {
   });
   const s = $('setupnote'); s.hidden = false;
   s.innerHTML = 'Shops normally open this page from their register QR (<code>redeem.html?shop=your-shop-code</code>) so the shop is preset. Patrons: you probably want the <a href="index.html">Knox Pick-Me-Up site</a>.';
+}
+if (demo) {
+  const rm = $('resetmem');
+  rm.hidden = false;
+  rm.addEventListener('click', e => {
+    e.preventDefault();
+    ['kpu-seen', 'kpu-queue', 'kpmu-ck'].forEach(k => localStorage.removeItem(k));
+    location.reload();
+  });
 }
 updateQueueNote();
 flushQueue();
