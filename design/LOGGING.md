@@ -176,7 +176,7 @@ function doGet(e) {
     // card serials and anything else stay out of the payload
     const ss = SpreadsheetApp.getActive();
     const red = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1)
-      .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || '')]);
+      .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || ''), String(r[5] || '')]);
     const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
       .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
     const vsheet = ss.getSheetByName('Venues');
