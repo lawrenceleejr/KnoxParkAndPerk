@@ -180,7 +180,7 @@
 
   <div class="setup" id="setupnote" hidden></div>
 
-  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="index.html">knoxpickmeup site</a></footer>
+  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="index.html">knoxpickmeup site</a> · scanner build <span id="build">2026-07-19b</span></footer>
 </div>
 
 <script>
@@ -212,14 +212,13 @@ const shopSlug = (qs.get('shop') || '').toLowerCase();
 const CK_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 if (qs.get('k')) localStorage.setItem('kpmu-ck', qs.get('k'));
 const ckHex = qs.get('k') || localStorage.getItem('kpmu-ck') || '';
-let ckKey = null;
-if (ckHex && window.crypto && crypto.subtle) {
-  crypto.subtle.importKey('raw', new TextEncoder().encode(ckHex),
-    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
-    .then(k => { ckKey = k; }).catch(() => {});
-}
+const ckKeyReady = (ckHex && window.crypto && crypto.subtle)
+  ? crypto.subtle.importKey('raw', new TextEncoder().encode(ckHex),
+      { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']).catch(() => null)
+  : Promise.resolve(null);
 async function serialOk(serial) {
-  if (!ckKey) return null;   // no key on this device — server decides
+  const ckKey = await ckKeyReady;   // never race the key import
+  if (!ckKey) return null;          // no key on this device — server decides
   const sig = new Uint8Array(await crypto.subtle.sign(
     'HMAC', ckKey, new TextEncoder().encode(serial.slice(0, -1))));
   return CK_ALPHABET[sig[0] % 24] === serial.slice(-1);
