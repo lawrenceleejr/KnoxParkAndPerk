@@ -44,9 +44,13 @@
   @media (max-width: 800px) { .grid3 { grid-template-columns: 1fr; } }
   #adminsec { border-top: 2px solid var(--rule); padding-top: 1rem; margin-top: .4rem; }
   #adminsec .aslabel { font-size: .68rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: .6rem; }
-  #lastpackwarn { border: 1px solid var(--bad); background: #fdefee; border-radius: 6px; padding: .8rem 1rem; margin-bottom: .8rem; font-size: .9rem; }
+  #lastpackwarn, #dormantwarn { border-radius: 6px; padding: .8rem 1rem; margin-bottom: .8rem; font-size: .9rem; }
+  #lastpackwarn { border: 1px solid var(--bad); background: #fdefee; }
   #lastpackwarn b { color: var(--bad); }
-  #lastpackwarn .who { font-weight: 600; }
+  #dormantwarn { border: 1px solid var(--warn); background: #fdf4e7; }
+  #dormantwarn b { color: var(--warn); }
+  #lastpackwarn .who, #dormantwarn .who { font-weight: 600; }
+  .matrix.hm th, .matrix.hm td { padding: .28rem .3rem; font-size: .7rem; }
   button.btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--rule); }
   button.btn.ghost[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 6px; padding: 1rem 1.1rem 1.2rem; margin-bottom: .8rem; }
@@ -102,7 +106,20 @@
     <div id="adminsec" hidden>
       <p class="aslabel">Admin info — integrity</p>
       <div id="lastpackwarn" hidden></div>
+      <div id="dormantwarn" hidden></div>
       <div class="tiles" id="admintiles"></div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Days of cards left</h2>
+          <p class="sub">Cards remaining (at most) &divide; redemptions per day over the last two weeks, per active bar &mdash; shortest first</p>
+          <div id="supply"></div>
+        </div>
+        <div class="panel">
+          <h2>Monthly shop caps</h2>
+          <p class="sub">This calendar month&rsquo;s redemptions against each shop&rsquo;s agreed cap</p>
+          <div id="caps"></div>
+        </div>
+      </div>
       <div class="grid3">
         <div class="panel">
           <h2>Duplicate scans</h2>
@@ -120,10 +137,17 @@
           <div id="plot-bad"></div>
         </div>
       </div>
-      <div class="panel">
-        <h2>Redemption rate by bar</h2>
-        <p class="sub">Share of each bar&rsquo;s assigned cards that have been redeemed (all time; voided packs excluded)</p>
-        <div id="barrate"></div>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Redemption rate by bar</h2>
+          <p class="sub">Share of each bar&rsquo;s assigned cards that have been redeemed (all time; voided packs excluded)</p>
+          <div id="barrate"></div>
+        </div>
+        <div class="panel">
+          <h2>Duplicate forensics</h2>
+          <p class="sub">Refused duplicate scans in range, grouped by card serial</p>
+          <div id="dupserials"></div>
+        </div>
       </div>
     </div>
 
@@ -131,6 +155,12 @@
       <h2>Redemptions over time</h2>
       <p class="sub" id="trend-sub"></p>
       <div id="trend"></div>
+    </div>
+
+    <div class="panel">
+      <h2>When coffees get claimed</h2>
+      <p class="sub">Redemptions in range by day of week and hour</p>
+      <div id="heatmap"></div>
     </div>
 
     <div class="grid2">
@@ -174,12 +204,22 @@ const SCRIPT_URL = '';
 /* ========================================== */
 
 const ACCENT = '#ff8200';
-const PACK_SIZE = 50;   // cards per checked-out pack
+const PACK_SIZE = 50;   // default cards per pack (used when a feed lacks the serial range)
 const RAMP = ['#fbedd8', '#f5c48a', '#ff8200', '#c26200', '#7d3f00'];
 const $ = id => document.getElementById(id);
 const demo = !SCRIPT_URL;
-let DATA = null;        // { redemptions: [[iso, shop, status, bar, packSerial]], packs: [[iso, pack, bar, voided]] }
+// DATA shapes (trailing fields are optional — older Apps Script deployments omit them):
+//   redemptions: [iso, shop, status, bar, packSerial, serial]  (serial only on refused scans)
+//   packs:       [iso, packSerial, bar, voided, firstCardSerial, lastCardSerial]
+//   venues:      [slug, name, type, deactivated, monthlyCap]
+let DATA = null;
 let rangeDays = 30;
+
+// pack size derived from its first/last card serials (8 digits at offset 10)
+function packCards(p) {
+  const a = Number(String(p[4] || '').slice(10, 18)), b = Number(String(p[5] || '').slice(10, 18));
+  return a && b && b >= a ? b - a + 1 : PACK_SIZE;
+}
 
 /* ---------- demo data (deterministic) ---------- */
 function demoData() {
@@ -187,40 +227,50 @@ function demoData() {
   const shops = ['remedy', 'wild-love', 'k-brew', 'honeybee'];
   const bars = ['Preservation Pub', 'Barley’s', 'Suttree’s', 'Peter Kern Library'];
   const packSerial = n => 'KPMU-2026-' + String(n).padStart(10, '0');
+  const cardSerial = n => 'KPMU-2026-' + String(n).padStart(8, '0');
   // pack check-outs sized to each bar's demand so the data stays consistent
-  // (a pack holds PACK_SIZE cards; each arrives before the previous runs out)
-  const schedule = [   // [days ago, bar], oldest first
+  // (each pack arrives before the previous one runs out)
+  const schedule = [   // [days ago, bar, size?], oldest first
     [76, 'Preservation Pub'], [76, 'Barley’s'], [76, 'Suttree’s'], [76, 'Peter Kern Library'],
     [46, 'Preservation Pub'], [31, 'Preservation Pub'], [28, 'Barley’s'],
+    [24, 'Boyd’s Jig & Reel'],   // new partner, slow to start issuing — stays dormant
     [23, 'Peter Kern Library'], [18, 'Suttree’s'], [17, 'Preservation Pub'],
-    [3, 'Barley’s'],
+    [3, 'Barley’s', 25],         // a half-size pack
   ];
-  const packs = schedule.map(([d, bar], i) =>
-    [new Date(Date.now() - 86400000 * d).toISOString(), packSerial(81 + i), bar, '']);
+  let card = 1;
+  const packs = schedule.map(([d, bar, size], i) => {
+    const n = size || PACK_SIZE;
+    const row = [new Date(Date.now() - 86400000 * d).toISOString(), packSerial(81 + i), bar, '',
+                 cardSerial(card), cardSerial(card + n - 1)];
+    card += n;
+    return row;
+  });
   // a fresh, still-unopened pack for Suttree's (dated after the data window),
   // so it demonstrates a bar that is NOT running out
-  packs.push([new Date(Date.now() + 86400000).toISOString(), packSerial(200), 'Suttree’s', '']);
+  packs.push([new Date(Date.now() + 86400000).toISOString(), packSerial(200), 'Suttree’s', '',
+              cardSerial(card), cardSerial(card + PACK_SIZE - 1)]);
   // each redeemed card comes out of the bar's oldest checked-out pack that
-  // still has cards left, so no pack ever redeems more than PACK_SIZE
+  // still has cards left, so no pack ever redeems more than its size
   const packFill = new Map();
   const drawFrom = (bar, t) => {
     const open = packs
       .filter(p => p[2] === bar && !String(p[3]).trim() && new Date(p[0]) <= t)
       .sort((a, b) => (a[1] > b[1] ? 1 : -1))
-      .find(p => (packFill.get(p[1]) || 0) < PACK_SIZE);
+      .find(p => (packFill.get(p[1]) || 0) < packCards(p));
     if (!open) return '';
     packFill.set(open[1], (packFill.get(open[1]) || 0) + 1);
     return open[1];
   };
   const venues = [
-    ['remedy', 'Remedy Coffee', 'shop', ''],
-    ['wild-love', 'Wild Love Bakehouse', 'shop', ''],
-    ['k-brew', 'K Brew Downtown', 'shop', ''],
-    ['honeybee', 'Honeybee Coffee', 'shop', 'left 7/1'],
-    ['', 'Preservation Pub', 'bar', ''],
-    ['', 'Barley’s', 'bar', ''],
-    ['', 'Suttree’s', 'bar', ''],
-    ['', 'Peter Kern Library', 'bar', 'left 7/10'],
+    ['remedy', 'Remedy Coffee', 'shop', '', 80],
+    ['wild-love', 'Wild Love Bakehouse', 'shop', '', 60],
+    ['k-brew', 'K Brew Downtown', 'shop', '', 40],
+    ['honeybee', 'Honeybee Coffee', 'shop', 'left 7/1', ''],
+    ['', 'Preservation Pub', 'bar', '', ''],
+    ['', 'Barley’s', 'bar', '', ''],
+    ['', 'Suttree’s', 'bar', '', ''],
+    ['', 'Peter Kern Library', 'bar', 'left 7/10', ''],
+    ['', 'Boyd’s Jig & Reel', 'bar', '', ''],
   ];
   const reds = [];
   for (let d = 75; d >= 0; d--) {
@@ -232,8 +282,22 @@ function demoData() {
       const status = rnd() < 0.045 ? 'dup' : (rnd() < 0.012 ? 'void' : (rnd() < 0.008 ? 'bad' : 'ok'));
       const bar = bars[Math.floor(Math.pow(rnd(), 1.4) * bars.length)];
       reds.push([t.toISOString(), shops[Math.floor(rnd() * shops.length)], status,
-                 bar, status === 'ok' ? drawFrom(bar, t) : '']);
+                 bar, status === 'ok' ? drawFrom(bar, t) : '', '']);
     }
+  }
+  // refused duplicates carry their (already-burned) card serial; craft the
+  // archetypes the forensics panel tells apart, in the recent-data window
+  const dups = reds.filter(r => r[2] === 'dup');
+  dups.forEach((r, i) => { r[5] = cardSerial(4100 + i) + 'K'; });
+  const L = dups.length;
+  if (L >= 8) {
+    // a photographed card turning up at three different shops (suspicious)
+    [dups[L - 1], dups[L - 3], dups[L - 5]].forEach((r, i) => { r[5] = dups[L - 1][5]; r[1] = shops[i]; });
+    // the same card tried again days later at one shop (worth a look)
+    dups[L - 7][5] = dups[L - 2][5]; dups[L - 7][1] = dups[L - 2][1];
+    // a register double-scan: same shop, minutes apart (benign)
+    dups[L - 6][5] = dups[L - 4][5]; dups[L - 6][1] = dups[L - 4][1];
+    dups[L - 6][0] = new Date(new Date(dups[L - 4][0]).getTime() + 4 * 60000).toISOString();
   }
   return { redemptions: reds, packs, venues };
 }
@@ -342,7 +406,8 @@ function hbars(host, rows, opts) {
 function venueList() {
   return (DATA.venues || []).map(v => ({
     slug: String(v[0] || '').toLowerCase(), name: String(v[1] || ''),
-    type: String(v[2] || '').toLowerCase(), off: String(v[3] || '').trim() !== ''
+    type: String(v[2] || '').toLowerCase(), off: String(v[3] || '').trim() !== '',
+    cap: Number(v[4]) || 0
   }));
 }
 function shopInfo(slug) {
@@ -366,7 +431,7 @@ function render() {
   const dups = count(reds, r => r[2] === 'dup');
   const voids = count(reds, r => r[2] === 'void');
   const bads = count(reds, r => r[2] === 'bad');
-  const issued = DATA.packs.length * PACK_SIZE;
+  const issued = DATA.packs.reduce((n, p) => n + packCards(p), 0);
   const okAll = count(DATA.redemptions, r => r[2] === 'ok');
   const rate = issued ? Math.round(okAll / issued * 100) : null;
   const last7 = count(DATA.redemptions, r => r[2] === 'ok' && (Date.now() - new Date(r[0])) <= 7 * 86400000);
@@ -401,6 +466,33 @@ function render() {
   const unit = byDay ? 'day' : 'week';
   $('trend-sub').textContent = 'Coffees redeemed per ' + unit;
   columns($('trend'), bucketize(ok), unit);
+
+  // day-of-week × hour heatmap of redemptions
+  {
+    const DOWL = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const grid = Array.from({ length: 7 }, () => new Array(24).fill(0));
+    let hmax = 0;
+    ok.forEach(r => {
+      const t = new Date(r[0]);
+      hmax = Math.max(hmax, ++grid[(t.getDay() + 6) % 7][t.getHours()]);
+    });
+    if (!hmax) $('heatmap').innerHTML = '<p class="empty">Nothing in this range yet.</p>';
+    else {
+      const hlab = h => (h % 12 || 12) + (h % 24 < 12 ? 'a' : 'p');
+      let h = '<div class="matrixwrap"><table class="matrix hm"><tr><th></th>' +
+        Array.from({ length: 24 }, (_, i) => `<th class="num">${i % 3 === 0 ? hlab(i) : ''}</th>`).join('') + '</tr>';
+      grid.forEach((row, d) => {
+        h += `<tr><td>${DOWL[d]}</td>` + row.map((v, hr) => {
+          const step = v === 0 ? -1 : Math.min(4, Math.floor(v / hmax * 4.999));
+          const bg = step < 0 ? 'transparent' : RAMP[step];
+          const fg = step >= 2 ? '#fffdf7' : '#241a10';
+          return `<td class="cell" data-t="${DOWL[d]} ${hlab(hr)}–${hlab((hr + 1) % 24)}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
+        }).join('') + '</tr>';
+      });
+      $('heatmap').innerHTML = h + '</table></div>';
+      $('heatmap').querySelectorAll('td.cell').forEach(td => hover(td, td.dataset.t));
+    }
+  }
   // admin spike plots, one per integrity status
   document.querySelectorAll('.bucket-unit').forEach(e => e.textContent = unit);
   columns($('plot-dup'), bucketize(reds.filter(r => r[2] === 'dup')), unit, { color: '#b04e00', name: 'Duplicate scans', h: 170 });
@@ -419,52 +511,93 @@ function render() {
     const v = barInfo(r.label); return { label: v.name, value: r.value, inactive: v.off };
   }));
 
-  // "running out" — more than half of the bar's newest non-voided pack has
-  // already been REDEEMED. Each ok redemption consumes a distinct card, so
-  // this is a hard lower bound on depletion: the bar is guaranteed >50%
-  // through its last assigned pack (hand-outs run ahead of redemptions).
+  // ----- admin: supply outlook, integrity forensics, caps -----
   if (adminOn) {
-    const latestPack = new Map();   // bar -> highest non-voided pack serial
-    (DATA.packs || []).forEach(p => {
-      const bar = String(p[2] || ''), pk = String(p[1] || '');
-      if (bar && String(p[3] || '').trim() === '' &&
-          (!latestPack.has(bar) || pk > latestPack.get(bar))) latestPack.set(bar, pk);
-    });
-    const packUsed = new Map();     // bar|pack -> ok redemptions from that pack
+    const packOk = new Map();       // pack serial -> ok redemptions, all time
     DATA.redemptions.forEach(r => {
-      if (r[2] === 'ok' && r[3] && r[4]) {
-        const k = r[3] + '|' + r[4];
-        packUsed.set(k, (packUsed.get(k) || 0) + 1);
-      }
+      if (r[2] === 'ok' && r[4]) packOk.set(r[4], (packOk.get(r[4]) || 0) + 1);
     });
-    const onLast = [...latestPack.entries()]
-      .map(([bar, pk]) => ({ ...barInfo(bar), used: packUsed.get(bar + '|' + pk) || 0 }))
-      .filter(v => !v.off && v.used > PACK_SIZE / 2)
-      .sort((a, b) => b.used - a.used);
+    const livePacks = (DATA.packs || [])
+      .filter(p => String(p[2] || '') && String(p[3] || '').trim() === '');
+
+    // resupply — more than half of the bar's newest pack has already been
+    // REDEEMED. Each ok redemption consumes a distinct card, so this is a
+    // hard lower bound on depletion: the bar is guaranteed >50% through its
+    // last assigned pack (hand-outs run ahead of redemptions).
+    const latestPack = new Map();   // bar -> newest non-voided pack row
+    livePacks.forEach(p => {
+      const bar = String(p[2]);
+      if (!latestPack.has(bar) || String(p[1]) > String(latestPack.get(bar)[1])) latestPack.set(bar, p);
+    });
+    const onLast = [...latestPack.values()]
+      .map(p => ({ ...barInfo(String(p[2])), used: packOk.get(String(p[1])) || 0, size: packCards(p) }))
+      .filter(v => !v.off && v.used > v.size / 2)
+      .sort((a, b) => b.used / b.size - a.used / a.size);
     const w = $('lastpackwarn');
     if (onLast.length) {
       w.hidden = false;
       const names = onLast.map(v =>
-        '<span class="who">' + v.name + '</span> (' + v.used + ' of ' + PACK_SIZE + ' redeemed)').join(', ');
+        '<span class="who">' + v.name + '</span> (' + v.used + ' of ' + v.size + ' redeemed)').join(', ');
       w.innerHTML = '<b>⚠ Resupply needed.</b> More than half of the last assigned pack is'
         + ' provably used up for ' + names + ' — and hand-outs run ahead of redemptions,'
         + ' so they are even further along. Check a new pack out to them soon.';
     } else {
       w.hidden = true;
     }
-  }
 
-  // redemption rate by bar (admin) — redeemed / non-voided assigned cards, all time
-  if (adminOn) {
-    const assigned = new Map();   // bar -> cards out there (non-voided packs x 50)
-    (DATA.packs || []).forEach(p => {
-      const bar = String(p[2] || ''), voided = String(p[3] || '').trim() !== '';
-      if (bar && !voided) assigned.set(bar, (assigned.get(bar) || 0) + PACK_SIZE);
+    // dormant packs — checked out 3+ weeks ago, zero redemptions so far:
+    // probably in a storeroom, lost, or the bar has stopped issuing
+    const dormant = livePacks
+      .map(p => ({ p, bar: barInfo(String(p[2])),
+                   age: Math.floor((Date.now() - new Date(p[0])) / 86400000) }))
+      .filter(x => !x.bar.off && x.age >= 21 && !(packOk.get(String(x.p[1])) || 0))
+      .sort((a, b) => b.age - a.age);
+    const dw = $('dormantwarn');
+    if (dormant.length) {
+      dw.hidden = false;
+      dw.innerHTML = '<b>Dormant packs.</b> ' + dormant.map(x =>
+        '<span class="who">' + x.bar.name + '</span> — pack …' + String(x.p[1]).slice(-4)
+        + ' checked out ' + x.age + ' days ago, no redemptions yet').join('; ')
+        + '. It may be sitting in a storeroom, lost, or the bar stopped issuing — worth a check-in.';
+    } else {
+      dw.hidden = true;
+    }
+
+    // per-bar all-time totals shared by the supply and rate charts
+    const assigned = new Map();     // bar -> non-voided cards out there
+    livePacks.forEach(p => {
+      const bar = String(p[2]);
+      assigned.set(bar, (assigned.get(bar) || 0) + packCards(p));
     });
     const redeemedAll = new Map();
     DATA.redemptions.forEach(r => {
       if (r[2] === 'ok' && r[3]) redeemedAll.set(r[3], (redeemedAll.get(r[3]) || 0) + 1);
     });
+
+    // days of cards left — (assigned − redeemed) is the MOST a bar can have
+    // in hand; burn rate is trailing-two-week redemptions per day
+    const burn = new Map();
+    DATA.redemptions.forEach(r => {
+      if (r[2] === 'ok' && r[3] && (Date.now() - new Date(r[0])) <= 14 * 86400000)
+        burn.set(r[3], (burn.get(r[3]) || 0) + 1 / 14);
+    });
+    const supplyRows = [], quiet = [];
+    for (const [bar, cards] of assigned) {
+      const v = barInfo(bar);
+      if (v.off) continue;
+      const left = Math.max(0, cards - (redeemedAll.get(bar) || 0));
+      const b = burn.get(bar) || 0;
+      if (!b) { quiet.push(v.name); continue; }
+      const days = Math.round(left / b);
+      supplyRows.push({ label: v.name, value: days,
+        hint: '≈' + days + ' days — at most ' + left + ' cards left, ' + b.toFixed(1) + ' redeemed/day' });
+    }
+    supplyRows.sort((a, b) => a.value - b.value);
+    hbars($('supply'), supplyRows, { fmt: v => '≈' + v + 'd' });
+    if (quiet.length) $('supply').insertAdjacentHTML('beforeend',
+      '<p class="inote">No redemptions in the last two weeks (no estimate): ' + quiet.join(', ') + '</p>');
+
+    // redemption rate by bar — redeemed / non-voided assigned cards, all time
     const rateRows = [...assigned.entries()].map(([bar, cards]) => {
       const red = redeemedAll.get(bar) || 0;
       const v = barInfo(bar);
@@ -472,6 +605,65 @@ function render() {
                hint: red + ' of ' + cards + ' cards (' + Math.round(red / cards * 100) + '%)' };
     }).sort((a, b) => b.value - a.value);
     hbars($('barrate'), rateRows, { max: 100, fmt: v => v + '%' });
+
+    // monthly shop caps — this calendar month's redemptions vs the agreed cap
+    const m0 = new Date(); m0.setDate(1); m0.setHours(0, 0, 0, 0);
+    const monthOk = new Map();
+    DATA.redemptions.forEach(r => {
+      if (r[2] === 'ok' && new Date(r[0]) >= m0) monthOk.set(r[1], (monthOk.get(r[1]) || 0) + 1);
+    });
+    const capRows = [], uncapped = [];
+    venueList().filter(v => v.type === 'shop' && !v.off).forEach(v => {
+      const used = monthOk.get(v.slug) || 0;
+      if (!v.cap) { uncapped.push(v.name); return; }
+      const pct = Math.round(used / v.cap * 100);
+      capRows.push({ label: v.name, value: pct,
+        hint: used + ' of ' + v.cap + ' this month (' + pct + '%)' });
+    });
+    capRows.sort((a, b) => b.value - a.value);
+    hbars($('caps'), capRows, { max: 100, fmt: v => v + '%' });
+    if (uncapped.length) $('caps').insertAdjacentHTML('beforeend',
+      '<p class="inote">No cap set: ' + uncapped.join(', ') + '</p>');
+
+    // duplicate forensics — the same refused serial at several shops means a
+    // copied or photographed card is circulating; quick same-shop repeats are
+    // just a register double-scan
+    const dupRows = reds.filter(r => r[2] === 'dup');
+    const withSerial = dupRows.filter(r => r[5]);
+    const host = $('dupserials');
+    if (!dupRows.length) host.innerHTML = '<p class="empty">No duplicate scans in this range.</p>';
+    else if (!withSerial.length) host.innerHTML =
+      '<p class="empty">The data feed doesn&rsquo;t carry serials for refused scans yet — redeploy the Apps Script (design/LOGGING.md) to enable this.</p>';
+    else {
+      const bySerial = new Map();
+      withSerial.forEach(r => {
+        if (!bySerial.has(r[5])) bySerial.set(r[5], []);
+        bySerial.get(r[5]).push(r);
+      });
+      const sus = []; let benign = 0;
+      for (const [serial, rows] of bySerial) {
+        const shopsHit = [...new Set(rows.map(r => r[1]))];
+        const ts = rows.map(r => +new Date(r[0]));
+        const spanMin = (Math.max(...ts) - Math.min(...ts)) / 60000;
+        if (shopsHit.length > 1)
+          sus.push({ serial, rows, shopsHit, bad: true,
+                     note: 'tried at ' + shopsHit.length + ' different shops — a copied or photographed card' });
+        else if (rows.length > 1 && spanMin > 60)
+          sus.push({ serial, rows, shopsHit, bad: false,
+                     note: 'tried ' + rows.length + ' times, ' + (spanMin > 2880
+                       ? Math.round(spanMin / 1440) + ' days' : Math.round(spanMin / 60) + ' h') + ' apart, at one shop' });
+        else benign += rows.length;
+      }
+      sus.sort((a, b) => (b.bad - a.bad) || (b.rows.length - a.rows.length));
+      host.innerHTML = (sus.length
+        ? '<table><tr><th>Serial</th><th class="num">Attempts</th><th>Where</th><th>Reading</th></tr>' +
+          sus.map(x => `<tr><td>…${x.serial.slice(-9)}</td><td class="num">${x.rows.length}</td>` +
+            `<td>${x.shopsHit.map(sl => shopInfo(sl).name).join(', ')}</td>` +
+            `<td class="st ${x.bad ? 'bad' : 'dup'}">${x.note}</td></tr>`).join('') + '</table>'
+        : '<p class="empty">No suspicious duplicates in this range.</p>')
+        + (benign ? '<p class="inote">' + benign + ' other duplicate scan' + (benign === 1 ? '' : 's')
+                    + ' look like register double-scans (same shop, within the hour).</p>' : '');
+    }
   }
 
   // bar -> shop matrix — every business, sorted by volume; the wrapper scrolls

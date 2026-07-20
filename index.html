@@ -254,6 +254,13 @@
     gap: 0 clamp(2rem, 5vw, 4.5rem);
   }
   @media (max-width: 760px) { .partners-grid { grid-template-columns: 1fr; } }
+  /* greeting shown when the page is opened from a card's QR (?c=serial) */
+  .card-note {
+    border: 1px solid var(--orange); background: #fff6e8; border-radius: 6px;
+    padding: 1.1rem 1.3rem; margin: 0 0 2.5rem; font-size: 1rem; max-width: 62ch;
+  }
+  .card-note strong { font-family: var(--f-serif); font-weight: 600; }
+  .card-note a { color: var(--orange-ink); text-underline-offset: 3px; }
   .partner { border-top: 2px solid var(--ink); padding: 1.6rem 0 2.8rem; }
   .partner .label { color: var(--orange-ink); display: block; margin-bottom: .9rem; }
   .partner h3 { font-size: var(--f2); margin-bottom: 1rem; }
@@ -509,5 +516,27 @@
   </div>
 </footer>
 
+<script>
+'use strict';
+/* Every card's QR lands here as /?c=KPMU-…#partners (design/LOGGING.md).
+   Greet the cardholder with what the card gets them, and — once a survey
+   form exists — invite the feedback PROGRAM.md §6 promises to collect. */
+(function () {
+  const SURVEY_URL = '';   // optional: a Google Form link for the patron survey
+  const c = new URLSearchParams(location.search).get('c') || '';
+  if (!/^KPMU-\d{4}-\d{8}[A-Z]?$/i.test(c)) return;
+  const host = document.querySelector('#partners .wrap');
+  if (!host) return;
+  const note = document.createElement('div');
+  note.className = 'card-note';
+  note.setAttribute('role', 'note');
+  note.innerHTML = '<strong>Good call last night.</strong> The card in your hand is good for'
+    + ' one free large coffee at any participating shop — and while it&rsquo;s valid it&rsquo;s'
+    + ' also your fare on any <a href="https://www.katbus.com/" target="_blank" rel="noopener">KAT</a>'
+    + ' bus, including the trip back to your car.'
+    + (SURVEY_URL ? ' Two minutes to spare? <a href="' + SURVEY_URL + '">Tell us how it went</a>.' : '');
+  host.prepend(note);
+})();
+</script>
 </body>
 </html>
