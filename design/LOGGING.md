@@ -53,7 +53,7 @@ else ever writes to the file. Three tabs:
 |---|---|---|
 | `Redemptions` | timestamp · serial · shop · status · **bar** · **pack serial** | Apps Script (below) |
 | `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the pack Google Form (voided: you, by hand) |
-| `Venues` | slug · display name · type (bar/shop) · joined date · **deactivated** | you, by hand, rarely |
+| `Venues` | slug · display name · type (bar/shop) · joined date · **deactivated** · **monthly cap** (shops, optional) | you, by hand, rarely |
 
 **Pack serials** are 10 digits (`KPMU-YYYY-##########`) — two more than the
 8-digit card serials, so a pack can never be mistaken for a card anywhere in
@@ -172,16 +172,21 @@ function doGet(e) {
     }
   }
   if (p.action === 'stats') {
-    // public by design: venue names, timestamps, statuses, and counts only —
-    // card serials and anything else stay out of the payload
+    // public by design: venue names, timestamps, statuses, and counts only.
+    // REDEEMED card serials stay out of the payload; refused scans (dup/void/
+    // bad) DO include theirs — those serials are already burned or invalid,
+    // so exposing them grants nothing, and they power duplicate forensics.
     const ss = SpreadsheetApp.getActive();
     const red = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1)
-      .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || ''), String(r[5] || '')]);
+      .map(r => [new Date(r[0]).toISOString(), String(r[2]), String(r[3]), String(r[4] || ''), String(r[5] || ''),
+                 String(r[3]) === 'ok' ? '' : String(r[1] || '')]);
+    // first/last card serials let the dashboard size each pack (25s vs 50s)
     const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1)
-      .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || '')]);
+      .map(r => [new Date(r[0]).toISOString(), String(r[1]), String(r[4] || ''), String(r[5] || ''),
+                 String(r[2] || ''), String(r[3] || '')]);
     const vsheet = ss.getSheetByName('Venues');
     const venues = !vsheet ? [] : vsheet.getDataRange().getValues().slice(1)
-      .map(r => [String(r[0] || ''), String(r[1] || ''), String(r[2] || ''), String(r[4] || '')]);
+      .map(r => [String(r[0] || ''), String(r[1] || ''), String(r[2] || ''), String(r[4] || ''), String(r[5] || '')]);
     out = { redemptions: red, packs: packs, venues: venues };
   }
   if (p.action === 'backup') {
@@ -216,6 +221,48 @@ function nightlySnapshot() {
   while (it.hasNext()) copies.push(it.next());
   copies.sort((a, b) => b.getDateCreated() - a.getDateCreated())
         .slice(KEEP).forEach(f => f.setTrashed(true));
+}
+
+// Weekly coordinator digest: Monday-morning email with last week's numbers
+// plus anything needing attention (resupply, dormant packs) — the dashboard
+// comes to you instead of you remembering to open it. After pasting, add a
+// time-driven trigger: weeklyDigest, week timer, every Monday, 7–8 AM.
+function weeklyDigest() {
+  const ss = SpreadsheetApp.getActive();
+  const reds = ss.getSheetByName(SHEET).getDataRange().getValues().slice(1);
+  const packs = ss.getSheetByName(PACKS).getDataRange().getValues().slice(1);
+  const now = Date.now(), inWeek = r => now - new Date(r[0]).getTime() <= 7 * 86400000;
+  const n = s => reds.filter(r => inWeek(r) && String(r[3]) === s).length;
+  // pack size from its card-serial range (defaults to 50)
+  const size = p => { const a = Number(String(p[2]).slice(10, 18)), b = Number(String(p[3]).slice(10, 18));
+                      return a && b && b >= a ? b - a + 1 : 50; };
+  const okByPack = {};
+  reds.forEach(r => { if (String(r[3]) === 'ok' && r[5]) okByPack[String(r[5])] = (okByPack[String(r[5])] || 0) + 1; });
+  const latest = {};   // bar -> newest non-voided pack row
+  packs.forEach(p => { const bar = String(p[4] || '');
+    if (bar && !String(p[5] || '').trim() &&
+        (!latest[bar] || String(p[1]) > String(latest[bar][1]))) latest[bar] = p; });
+  const attn = [];
+  for (const bar in latest) {   // provably >50% through the last pack
+    const p = latest[bar], used = okByPack[String(p[1])] || 0;
+    if (used > size(p) / 2)
+      attn.push('RESUPPLY ' + bar + ' — ' + used + ' of ' + size(p) + ' cards from their last pack already redeemed');
+  }
+  packs.forEach(p => {          // checked out 3+ weeks ago, never redeemed from
+    const age = (now - new Date(p[0]).getTime()) / 86400000;
+    if (age >= 21 && !String(p[5] || '').trim() && !okByPack[String(p[1])])
+      attn.push('DORMANT pack ' + String(p[1]) + ' at ' + String(p[4]) + ' — checked out ' +
+                Math.round(age) + ' days ago, no redemptions yet');
+  });
+  const body = 'Knox Pick-Me-Up — week in review\n\n' +
+    'Coffees redeemed: ' + n('ok') + '\nDuplicates refused: ' + n('dup') +
+    '\nVoided-pack attempts: ' + n('void') + '\nBad serials: ' + n('bad') +
+    '\nPacks checked out: ' + packs.filter(inWeek).length + '\n\n' +
+    (attn.length ? 'Needs attention:\n- ' + attn.join('\n- ') : 'Nothing needs attention.') +
+    '\n\nDashboard: <your GitHub Pages URL>/dashboard.html';
+  MailApp.sendEmail(Session.getEffectiveUser().getEmail(),
+    'Pick-Me-Up weekly: ' + n('ok') + ' coffees' + (attn.length ? ' — ' + attn.length + ' item(s) need attention' : ''),
+    body);
 }
 ```
 
@@ -254,18 +301,28 @@ Unique QR per card is what makes scan-to-log possible.
 ### F. The admin dashboard: `dashboard.html` (this repo, GitHub Pages)
 A brand-styled, self-contained dashboard on the same static site, fed live
 from the Sheet through the Apps Script's `stats` action. It shows a KPI row
-(issued, redeemed, redemption rate, last 7 days, duplicate attempts,
-voided-pack attempts), redemptions per day/week, ranked **to-shop** and
-**from-bar** charts, a bar → shop flow matrix, and the latest activity —
-with 7/30/90-day/all-time range chips and a 5-minute auto-refresh.
+(issued, redeemed, redemption rate, last 7 days), redemptions per day/week,
+a day-of-week × hour heatmap of when coffees get claimed, ranked
+**to-shop** and **from-bar** charts, a bar → shop flow matrix, and the
+latest activity — with 7/30/90-day/all-time range chips and a 5-minute
+auto-refresh. An **Admin info** toggle adds the coordinator's view:
+integrity tiles and spike plots (duplicates, voided-pack attempts, bad
+serials), a **resupply warning** when a bar is provably more than halfway
+through its last pack, a **dormant-pack warning** for packs three-plus
+weeks old with no redemptions, **days of cards left** per bar (stock ÷
+trailing burn rate), **redemption rate by bar**, **monthly cap tracking**
+per shop, and **duplicate forensics** that separates a copied card
+circulating between shops from a harmless register double-scan.
 
 **Access: shareable by link, on purpose.** The page isn't linked from the
 public site and carries `noindex`, so the URL travels by word of mouth —
 but anyone you hand it to (the City, KPD, a reporter, a prospective
 partner) can open it and watch the numbers live. That works because the
-payload is venue names, timestamps, statuses, and counts only — card
-serials and patron data never leave the Sheet. With `SCRIPT_URL` unset the
-page renders generated demo data, so you can try it right now.
+payload is venue names, timestamps, statuses, and counts only — patron
+data never exists, and the only card serials that leave the Sheet are
+those of *refused* scans (already redeemed, voided, or invalid), which
+grant nothing and power the duplicate forensics. With `SCRIPT_URL` unset
+the page renders generated demo data, so you can try it right now.
 
 ### G. Dashboards for partners: Looker Studio (free)
 Connect it to the Sheet once; it stays live. Suggested pages:
@@ -323,7 +380,8 @@ The system is designed so the roster can churn without touching any data:
 
 **A coffee shop joins:** add one line to the `SHOPS` map in `redeem.html`
 (slug → display name), merge, print their register QR, and add them to the
-`Venues` tab. Their name appears in the dashboard automatically with their
+`Venues` tab — including their agreed monthly redemption cap in the cap
+column, if they set one (the dashboard tracks month-to-date against it). Their name appears in the dashboard automatically with their
 first scan — every chart and the flow matrix build their axes from the
 data, uncapped, and the matrix scrolls as the roster grows.
 
@@ -370,6 +428,8 @@ the pack form dropdown — that's how the dashboard links them.
    this repo's Settings → Secrets → Actions add `BACKUP_URL` (the `/exec`
    URL) and `PROGRAM_KEY` (the same one secret), then run the "Nightly data
    backup" workflow once by hand to confirm a `data/backup/` commit appears.
+   While you're in the trigger screen, add the weekly `weeklyDigest` trigger
+   (Monday 7–8 AM) so the coordinator gets the week-in-review email.
 9. Dry-run with one friendly bar + one shop before the real pilot.
 
 ## 4. What this costs and what can break
