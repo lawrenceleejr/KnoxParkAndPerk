@@ -174,6 +174,7 @@ const SCRIPT_URL = '';
 /* ========================================== */
 
 const ACCENT = '#ff8200';
+const PACK_SIZE = 50;   // cards per checked-out pack
 const RAMP = ['#fbedd8', '#f5c48a', '#ff8200', '#c26200', '#7d3f00'];
 const $ = id => document.getElementById(id);
 const demo = !SCRIPT_URL;
@@ -186,18 +187,30 @@ function demoData() {
   const shops = ['remedy', 'wild-love', 'k-brew', 'honeybee'];
   const bars = ['Preservation Pub', 'Barley’s', 'Suttree’s', 'Peter Kern Library'];
   const packSerial = n => 'KPMU-2026-' + String(n).padStart(10, '0');
-  const packs = [];
-  for (let i = 0; i < 12; i++)
-    packs.push([new Date(Date.now() - 86400000 * (70 - i * 5)).toISOString(),
-                packSerial(81 + i), bars[i % bars.length], '']);
+  // pack check-outs sized to each bar's demand so the data stays consistent
+  // (a pack holds PACK_SIZE cards; each arrives before the previous runs out)
+  const schedule = [   // [days ago, bar], oldest first
+    [76, 'Preservation Pub'], [76, 'Barley’s'], [76, 'Suttree’s'], [76, 'Peter Kern Library'],
+    [46, 'Preservation Pub'], [31, 'Preservation Pub'], [28, 'Barley’s'],
+    [23, 'Peter Kern Library'], [18, 'Suttree’s'], [17, 'Preservation Pub'],
+    [3, 'Barley’s'],
+  ];
+  const packs = schedule.map(([d, bar], i) =>
+    [new Date(Date.now() - 86400000 * d).toISOString(), packSerial(81 + i), bar, '']);
   // a fresh, still-unopened pack for Suttree's (dated after the data window),
-  // so it demonstrates a bar that is NOT on its last pack
+  // so it demonstrates a bar that is NOT running out
   packs.push([new Date(Date.now() + 86400000).toISOString(), packSerial(200), 'Suttree’s', '']);
-  // newest non-voided pack per bar, for assigning redemptions to a pack
-  const latestPackBefore = (bar, t) => {
-    const cand = packs.filter(p => p[2] === bar && !String(p[3]).trim() && new Date(p[0]) <= t)
-                      .sort((a, b) => (a[1] < b[1] ? 1 : -1));
-    return cand.length ? cand[0][1] : '';
+  // each redeemed card comes out of the bar's oldest checked-out pack that
+  // still has cards left, so no pack ever redeems more than PACK_SIZE
+  const packFill = new Map();
+  const drawFrom = (bar, t) => {
+    const open = packs
+      .filter(p => p[2] === bar && !String(p[3]).trim() && new Date(p[0]) <= t)
+      .sort((a, b) => (a[1] > b[1] ? 1 : -1))
+      .find(p => (packFill.get(p[1]) || 0) < PACK_SIZE);
+    if (!open) return '';
+    packFill.set(open[1], (packFill.get(open[1]) || 0) + 1);
+    return open[1];
   };
   const venues = [
     ['remedy', 'Remedy Coffee', 'shop', ''],
@@ -219,7 +232,7 @@ function demoData() {
       const status = rnd() < 0.045 ? 'dup' : (rnd() < 0.012 ? 'void' : (rnd() < 0.008 ? 'bad' : 'ok'));
       const bar = bars[Math.floor(Math.pow(rnd(), 1.4) * bars.length)];
       reds.push([t.toISOString(), shops[Math.floor(rnd() * shops.length)], status,
-                 bar, status === 'ok' ? latestPackBefore(bar, t) : '']);
+                 bar, status === 'ok' ? drawFrom(bar, t) : '']);
     }
   }
   return { redemptions: reds, packs, venues };
@@ -353,7 +366,7 @@ function render() {
   const dups = count(reds, r => r[2] === 'dup');
   const voids = count(reds, r => r[2] === 'void');
   const bads = count(reds, r => r[2] === 'bad');
-  const issued = DATA.packs.length * 50;
+  const issued = DATA.packs.length * PACK_SIZE;
   const okAll = count(DATA.redemptions, r => r[2] === 'ok');
   const rate = issued ? Math.round(okAll / issued * 100) : null;
   const last7 = count(DATA.redemptions, r => r[2] === 'ok' && (Date.now() - new Date(r[0])) <= 7 * 86400000);
@@ -406,8 +419,10 @@ function render() {
     const v = barInfo(r.label); return { label: v.name, value: r.value, inactive: v.off };
   }));
 
-  // "on their last pack" — the bar's newest non-voided pack already has
-  // redemptions coming from it, so they've broken into their final pack
+  // "running out" — more than half of the bar's newest non-voided pack has
+  // already been REDEEMED. Each ok redemption consumes a distinct card, so
+  // this is a hard lower bound on depletion: the bar is guaranteed >50%
+  // through its last assigned pack (hand-outs run ahead of redemptions).
   if (adminOn) {
     const latestPack = new Map();   // bar -> highest non-voided pack serial
     (DATA.packs || []).forEach(p => {
@@ -415,17 +430,25 @@ function render() {
       if (bar && String(p[3] || '').trim() === '' &&
           (!latestPack.has(bar) || pk > latestPack.get(bar))) latestPack.set(bar, pk);
     });
-    const openedPacks = new Set();  // bar|pack seen in an ok redemption
-    DATA.redemptions.forEach(r => { if (r[2] === 'ok' && r[3] && r[4]) openedPacks.add(r[3] + '|' + r[4]); });
+    const packUsed = new Map();     // bar|pack -> ok redemptions from that pack
+    DATA.redemptions.forEach(r => {
+      if (r[2] === 'ok' && r[3] && r[4]) {
+        const k = r[3] + '|' + r[4];
+        packUsed.set(k, (packUsed.get(k) || 0) + 1);
+      }
+    });
     const onLast = [...latestPack.entries()]
-      .filter(([bar, pk]) => openedPacks.has(bar + '|' + pk))
-      .map(([bar]) => barInfo(bar)).filter(v => !v.off);
+      .map(([bar, pk]) => ({ ...barInfo(bar), used: packUsed.get(bar + '|' + pk) || 0 }))
+      .filter(v => !v.off && v.used > PACK_SIZE / 2)
+      .sort((a, b) => b.used - a.used);
     const w = $('lastpackwarn');
     if (onLast.length) {
       w.hidden = false;
-      const names = onLast.map(v => '<span class="who">' + v.name + '</span>').join(', ');
-      w.innerHTML = '<b>⚠ Resupply needed.</b> Cards from the most recent pack are already'
-        + ' being redeemed for ' + names + ' — they are on their last assigned pack. Check one out to them soon.';
+      const names = onLast.map(v =>
+        '<span class="who">' + v.name + '</span> (' + v.used + ' of ' + PACK_SIZE + ' redeemed)').join(', ');
+      w.innerHTML = '<b>⚠ Resupply needed.</b> More than half of the last assigned pack is'
+        + ' provably used up for ' + names + ' — and hand-outs run ahead of redemptions,'
+        + ' so they are even further along. Check a new pack out to them soon.';
     } else {
       w.hidden = true;
     }
@@ -436,7 +459,7 @@ function render() {
     const assigned = new Map();   // bar -> cards out there (non-voided packs x 50)
     (DATA.packs || []).forEach(p => {
       const bar = String(p[2] || ''), voided = String(p[3] || '').trim() !== '';
-      if (bar && !voided) assigned.set(bar, (assigned.get(bar) || 0) + 50);
+      if (bar && !voided) assigned.set(bar, (assigned.get(bar) || 0) + PACK_SIZE);
     });
     const redeemedAll = new Map();
     DATA.redemptions.forEach(r => {
