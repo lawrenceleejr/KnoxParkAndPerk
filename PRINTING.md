@@ -14,7 +14,7 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Card books** (the main event) | `tools/build_cards.py` → `print/cards/` (unique front per card + one static back) | 50 cards/book; 20 books per 1,000 cards |
 | **Pack cover sheets** | same script → `print/packs/` (one per book, with pack serial + check-out QR) | 1 per book |
 | **Register QRs** (one per coffee shop) | generate per shop, see §5 | 1–2 per shop, laminated |
-| **Coasters** | [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
+| **Coasters** (two-sided) | `tools/build_coasters.py` → `print/coasters/` (night side: bars + the three steps; day side: shops + QR) · single-sided spot design: [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
 | Later: table tents, mirror clings, window decals | from `assets/` lockups | per venue |
 
 ## 2. The card books — what to ask a printer for
@@ -67,8 +67,9 @@ the card backs ("printing donated by ___").
 - **Online, VDP-capable:** Smartpress (accepts supplied variable-data
   files, does custom perforation and padding); raffle-ticket specialists
   (TicketPrinting.com, Admit One) if they'll take per-card QR art.
-- **Coasters:** any custom-coaster house (pulpboard, 3.5–4″ round,
-  1–2 color is fine — the artwork is already flat color).
+- **Coasters:** any custom-coaster house (pulpboard, 4″ round, two-sided
+  4/4 — the artwork is flat color). The night side floods navy, so ask for
+  a printed sample to check show-through on the board weight.
 - **Avoid** pure-template services (Vistaprint-style): generally no
   per-card QR + perforation + books.
 
@@ -90,6 +91,21 @@ That writes to `print/` (gitignored):
 - `print/cards/card-KPMU-2026-00000001.svg` … — one file per card (front)
 - `print/cards/card-back.svg` — the static back, once
 - `print/packs/pack-KPMU-2026-0000000001.svg` … — one cover sheet per 50
+
+The two-sided coaster is its own generator — venue rosters, the day-side QR
+target, and the center logo are flags (defaults build a demo pair with the
+brand mark):
+
+```sh
+python3 tools/build_coasters.py \
+    --bars "Preservation Pub, Barley's Taproom, …" \
+    --shops "Remedy Coffee, Wild Love Bakehouse, …" \
+    --logo path/to/logo.svg            # optional; default: the brand mark
+# -> print/coasters/coaster-night.svg + coaster-day.svg
+```
+
+Rerun it when the roster changes — the rim names auto-shrink to fit, and the
+night/day pair is regenerated in one shot.
 
 Everything is SVG with **all type converted to outlines** — no font
 substitution surprises at the shop. Most shops prefer PDF; convert with:
