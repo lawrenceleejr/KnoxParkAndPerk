@@ -82,6 +82,19 @@ def logo(cx, top_y, h, logo_path, on_dark):
     return mark(cx - mark_w(h) / 2, top_y, h, dark=(PAPER if on_dark else INK))
 
 
+def chord(y, pad=16):
+    """Usable line width inside the inner ring at baseline y."""
+    dy = y - CY
+    return 2 * math.sqrt(max(R_INNER * R_INNER - dy * dy, 0)) - pad
+
+
+def fit(face, s, size, max_w, tracking=0.0, min_size=8):
+    """Largest size <= the requested one at which s fits in max_w."""
+    while size > min_size and face.shape(s, size, letterspacing=tracking)[1] > max_w:
+        size -= 0.25
+    return size
+
+
 NAME_TRACK = 0.18  # letterspacing for rim names (em fraction, matches labels)
 
 
@@ -136,18 +149,22 @@ def night_side(bars, logo_path):
     b.append(f'<circle cx="{CX}" cy="{CY}" r="{R_INNER}" fill="none" stroke="{NIGHT_RULE}" stroke-width="1"/>')
     b.append(ring_names(bars, inter6, 13, GOLD, ORANGE))
     b.append(logo(CX, 72, 46, logo_path, on_dark=True))
-    b.append(text(fraunces, 'Drove downtown tonight?', 23, CX, 152, PAPER, anchor='middle')[0])
+    hsz = fit(fraunces, 'Drove downtown tonight?', 23, chord(148))
+    b.append(text(fraunces, 'Drove downtown tonight?', hsz, CX, 152, PAPER, anchor='middle')[0])
     steps = [
-        'Leave the car — garages are free overnight.',
+        'Leave the car — municipal garages are free overnight.',
         'Book a ride home. Show your bartender.',
         'Free coffee when you’re back in the morning.',
     ]
-    widths = [text(inter4, s, 11.5, 0, 0, PAPER)[1] for s in steps]
-    x0 = CX - (max(widths) + 20) / 2
+    # the whole block fits the tightest of its three rows, numeral included
+    indent, ssz = 20, 11.5
+    row_w = min(chord(186 + i * 28) for i in range(len(steps)))
+    ssz = min(fit(inter4, s, ssz, row_w - indent) for s in steps)
+    x0 = CX - (max(inter4.shape(s, ssz)[1] for s in steps) + indent) / 2
     for i, s in enumerate(steps):
         y = 186 + i * 28
         b.append(text(fraunces, str(i + 1), 19, x0, y, ORANGE)[0])
-        b.append(text(inter4, s, 11.5, x0 + 20, y - 2, PAPER)[0])
+        b.append(text(inter4, s, ssz, x0 + indent, y - 2, PAPER)[0])
     b.append(text(fraunces_it, 'Ride from last call to first call.', 14, CX, 292, GOLD, anchor='middle')[0])
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, night side — leave the car overnight, '
@@ -164,15 +181,17 @@ def day_side(shops, logo_path, qr_url):
     b.append(ring_names(shops, inter6, 13, INK, ORANGE))
     b.append(logo(CX, 70, 40, logo_path, on_dark=False))
     b.append(text(fraunces, 'Back for your car?', 23, CX, 142, INK, anchor='middle')[0])
-    b.append(text(fraunces_it, 'That card is a free large coffee — and your KAT fare.', 12.5, CX, 164, ORANGE_INK, anchor='middle')[0])
+    sub = 'That card is a free large coffee — and your KAT fare.'
+    b.append(text(fraunces_it, sub, fit(fraunces_it, sub, 12.5, chord(160)), CX, 164, ORANGE_INK, anchor='middle')[0])
     if qr_url:
         b.append(f'<rect x="{CX - 48}" y="182" width="96" height="96" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
         b.append(qr_group(qr_url, CX - 40, 190, 80))
-        b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 298, INK2, tracking=0.16, anchor='middle')[0])
+        # 9 units ≈ 6.5pt at 4in — the floor for print legibility
+        b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 9, CX, 299, INK2, tracking=0.16, anchor='middle')[0])
     else:
         b.append(text(fraunces, 'knoxpickmeup.org', 20, CX, 234, INK, anchor='middle')[0])
-        b.append(text(inter6, 'SHOPS, HOURS + THE PROGRAM', 8.5, CX, 262, INK2, tracking=0.16, anchor='middle')[0])
-    b.append(text(inter4, 'knoxpickmeup.org', 10, CX, 316, INK2, anchor='middle')[0])
+        b.append(text(inter6, 'SHOPS, HOURS + THE PROGRAM', 9, CX, 262, INK2, tracking=0.16, anchor='middle')[0])
+    b.append(text(inter4, 'knoxpickmeup.org', 10, CX, 317, INK2, anchor='middle')[0])
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, day side — free large coffee with your card; '
                'participating coffee shops around the rim, QR to the program site')

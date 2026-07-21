@@ -379,7 +379,8 @@ the GitHub Action, and GitHub emails the repo owner. No pager, no service.
 The system is designed so the roster can churn without touching any data:
 
 **A coffee shop joins:** add one line to the `SHOPS` map in `redeem.html`
-(slug → display name), merge, print their register QR, and add them to the
+(slug → display name) and one to the `SHOPS` roster in `index.html`'s map
+(name + lat/lon pin), merge, print their register QR, and add them to the
 `Venues` tab — including their agreed monthly redemption cap in the cap
 column, if they set one (the dashboard tracks month-to-date against it). Their name appears in the dashboard automatically with their
 first scan — every chart and the flow matrix build their axes from the
@@ -396,7 +397,8 @@ it. Don't delete the Venues row — the row is what keeps the display name
 and the grey-out working for historical data.
 
 **A bar joins:** add it to the pack form's Bar dropdown (a one-minute
-Google Forms edit) and the `Venues` tab, then check packs out to it as
+Google Forms edit), the `Venues` tab, and the `BARS` roster in
+`index.html`'s map (name + lat/lon pin), then check packs out to it as
 usual. Attribution flows from the pack records — nothing else to update.
 
 **A bar leaves (deactivation):** mark it `deactivated` on the `Venues` tab
