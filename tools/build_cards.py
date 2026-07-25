@@ -84,8 +84,10 @@ def card_svg(serial):
     b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
     b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
     b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
-    b.append(text(inter6, 'VALID FOR ONE DAY FROM', 9.5, 26, 274, INK, tracking=0.14)[0])
-    b.append(f'<line x1="190" y1="276" x2="310" y2="276" stroke="{INK2}" stroke-width="1"/>')
+    # blank line is where the server writes today's date at hand-out — that
+    # date is both the issue date and the start of the one-day validity window
+    b.append(text(inter6, 'DATE ISSUED · VALID ONE DAY', 9.5, 26, 274, INK, tracking=0.14)[0])
+    b.append(f'<line x1="211" y1="276" x2="345" y2="276" stroke="{INK2}" stroke-width="1"/>')
     b.append(text(inter4, f'Nº {serial}', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
     return svg(525, 300, ''.join(b),
                f'Knox Pick-Me-Up — Morning Pick-Me-Up Card {serial}')
