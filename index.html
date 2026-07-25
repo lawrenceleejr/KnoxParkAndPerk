@@ -256,8 +256,24 @@
   @media (max-width: 760px) { .partners-grid { grid-template-columns: 1fr; } }
 
   /* ---------- Find us (map) ---------- */
-  .map-panel { background: #fffdf7; border: 1px solid #ddcfb4; border-radius: 6px; padding: clamp(.5rem, 1.5vw, 1rem); }
-  .map-panel svg { display: block; width: 100%; height: auto; }
+  .map-panel { background: #fffdf7; border: 1px solid #ddcfb4; border-radius: 6px; padding: clamp(.4rem, 1vw, .6rem); }
+  #kmap { height: clamp(24rem, 62vh, 36rem); border-radius: 3px; background: var(--paper-2); }
+  #kmap .fallback { padding: 1.4rem 1.5rem; font-size: .9rem; color: var(--ink-2); }
+  #kmap .fallback strong { display: block; font-family: var(--f-sans); font-size: .72rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); margin: 0 0 .5rem; }
+  #kmap .fallback ul { margin: 0 0 1.1rem 1.1rem; }
+  /* OSM raster tiles, warmed slightly so the map sits inside the palette
+     instead of fighting it. Markers/labels are drawn above, unfiltered. */
+  #kmap .leaflet-tile-pane { filter: sepia(.22) saturate(.78) brightness(1.04) contrast(.96); }
+  .leaflet-container { font-family: var(--f-sans); background: var(--paper-2); }
+  .leaflet-container a { color: var(--orange-ink); }
+  .leaflet-popup-content-wrapper { border-radius: 4px; box-shadow: 0 2px 10px rgba(36,26,16,.18); }
+  .leaflet-popup-content { margin: .7rem .9rem; font-size: .86rem; color: var(--ink-2); line-height: 1.45; }
+  .leaflet-popup-content b { display: block; font-family: var(--f-serif); font-weight: 600;
+    font-size: 1rem; color: var(--ink); margin-bottom: .15rem; }
+  .leaflet-control-attribution { font-size: .66rem !important; background: rgba(255,253,247,.86) !important; }
+  .leaflet-bar a { color: var(--ink) !important; }
+  .kpin { background: none; border: 0; }
   .map-legend { margin-top: 1.8rem; display: grid; gap: .75rem; padding: 0; }
   .map-legend li { list-style: none; display: flex; align-items: center; gap: .7rem; font-size: .88rem; color: var(--ink-2); }
   .map-legend svg { width: 24px; height: 26px; flex: none; }
@@ -450,8 +466,28 @@
       <p id="locate-status" role="status"></p>
     </div>
     <div class="map-panel">
-      <svg id="kmap" viewBox="0 0 640 688" role="img"
-           aria-label="Stylized map of downtown Knoxville showing participating bars, coffee shops, and municipal garages"></svg>
+      <!-- The roster below is the no-JS / no-tiles fallback; the OpenStreetMap
+           map replaces it once Leaflet loads (see the script at page end). -->
+      <div id="kmap" role="region"
+           aria-label="Map of downtown Knoxville showing participating bars, coffee shops, and municipal garages">
+        <div class="fallback">
+          <strong>Free coffee in the morning</strong>
+          <ul>
+            <li>Remedy Coffee &mdash; Old City</li>
+            <li>K Brew Downtown &mdash; South Gay Street</li>
+            <li>Wild Love Bakehouse &mdash; North Central</li>
+            <li>Honeybee Coffee &mdash; Downtown South</li>
+          </ul>
+          <strong>Card-issuing bars</strong>
+          <ul>
+            <li>Preservation Pub &mdash; Market Square</li>
+            <li>Peter Kern Library &mdash; Union Avenue</li>
+            <li>Suttree&rsquo;s High Gravity Tavern &mdash; South Gay Street</li>
+            <li>Barley&rsquo;s Taproom &mdash; Old City</li>
+            <li>Boyd&rsquo;s Jig &amp; Reel &mdash; Central Street</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -523,6 +559,7 @@
       <details><summary>The card gets me free transit too?</summary><p>Yes — we call it &ldquo;Hair of the KAT.&rdquo; While your Pick-Me-Up card is valid, show it to board any <a href="https://www.katbus.com/" target="_blank" rel="noopener">Knoxville Area Transit (KAT)</a> bus and ride free, including your morning trip back downtown to pick up your car. One card, coffee <em>and</em> the ride to go get it.</p></details>
       <details><summary>What if I didn&rsquo;t drive downtown?</summary><p>The program is designed for people whose car is parked downtown — that&rsquo;s the moment the risky decision happens. But bartenders have discretion; the goal is safe rides home, not paperwork.</p></details>
       <details><summary>Who pays for the coffee?</summary><p>The funding model is being designed right now with our partners, drawing on sponsorships (rideshare companies, insurers, hospitals, parking operators), partner venues, and a &ldquo;Pick It Forward&rdquo; option that lets tonight&rsquo;s patrons chip in a dollar toward tomorrow&rsquo;s tips. What&rsquo;s already fixed: the perk is always free for the person who took the safe ride home.</p></details>
+      <details><summary>Does the map track me?</summary><p>No. The map is <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, and it only loads if you scroll down to it. If you tap &ldquo;find the coffee near me,&rdquo; your browser asks your permission first, and your location is used right there on your phone to work out which shop is closest &mdash; it isn&rsquo;t sent to us or stored anywhere. Same as the cards themselves: this program collects nothing about you.</p></details>
       <details><summary>Is this a City of Knoxville program?</summary><p>Knox Pick-Me-Up is a proposed public-private partnership, currently in the pilot design phase, seeking partnership with the City of Knoxville, the Knoxville Police Department, and downtown businesses.</p></details>
     </div>
   </div>
@@ -570,137 +607,187 @@
   host.prepend(note);
 })();
 
-/* The downtown map (#findus). Hand-drawn from real geography, in brand —
-   no tile servers, no map library, nothing external. Venue pins and garage
-   marks come from the rosters below; when a business joins or leaves,
-   edit one line (keep names in step with the Venues tab / SHOPS map). */
-(function () {
-  const map = document.getElementById('kmap');
-  if (!map) return;
-  const INK = '#241a10', INK2 = '#6f5f4c', NIGHT = '#101a30',
-        ORANGE = '#ff8200', ORANGE_INK = '#b04e00', HAIR = '#ddcfb4';
+/* The downtown map (#findus) — a real OpenStreetMap map, drawn by Leaflet
+   (vendored in assets/vendor/, like the scanner's jsQR — no CDN). Map tiles
+   are the one thing on this site fetched from a third party at view time:
+   they come from openstreetmap.org, so OSM sees the visitor's IP the way any
+   embedded map does. Nothing about a patron or a card is ever sent.
 
-  // pins: label side/offset is per-venue so names never collide
+   Both the library and the tiles load lazily, only once the section is near
+   the viewport (or the locate button is pressed), so the rest of the page
+   stays an instant load and a visitor who never scrolls here costs OSM
+   nothing. Until then — and if the library or the network fails — the
+   roster markup already in #kmap stands in.
+
+   Rosters: one line per venue. Coordinates are pilot placeholders, to be
+   confirmed with each business as it signs; keep names in step with the
+   Venues tab and redeem.html's SHOPS map (design/LOGGING.md). */
+(function () {
+  const host = document.getElementById('kmap');
+  if (!host) return;
+  const NIGHT = '#101a30', ORANGE = '#ff8200', ORANGE_INK = '#b04e00',
+        INK = '#241a10', PAPER = '#fffdf7';
+
   const SHOPS = [
-    { name: 'Remedy Coffee',       lat: 35.9662, lon: -83.9158, dx: 10,  dy: -18 },
-    { name: 'K Brew Downtown',     lat: 35.9690, lon: -83.9165, dx: 12,  dy: -8 },
-    { name: 'Wild Love Bakehouse', lat: 35.9705, lon: -83.9199, dx: -12, dy: -8, anchor: 'end' },
-    { name: 'Honeybee Coffee',     lat: 35.9610, lon: -83.9186, dx: 12,  dy: -6 },
+    { name: 'Remedy Coffee',       where: 'Old City',           lat: 35.96966, lon: -83.92115 },
+    { name: 'K Brew Downtown',     where: 'South Gay Street',   lat: 35.96339, lon: -83.91829 },
+    { name: 'Wild Love Bakehouse', where: 'North Central',      lat: 35.98215, lon: -83.92430 },
+    { name: 'Honeybee Coffee',     where: 'Downtown South',     lat: 35.96060, lon: -83.91760 },
   ];
   const BARS = [
-    { name: 'Preservation Pub',   lat: 35.9650, lon: -83.9199, dx: -11, dy: -10, anchor: 'end' },
-    { name: 'Peter Kern Library', lat: 35.9640, lon: -83.9205, dx: -11, dy: 4,   anchor: 'end' },
-    { name: 'Suttree’s',          lat: 35.9643, lon: -83.9174, dx: 11,  dy: 3 },
-    { name: 'Barley’s Taproom',   lat: 35.9664, lon: -83.9128, dx: -4,  dy: 16, anchor: 'end' },
-    { name: 'Boyd’s Jig & Reel',  lat: 35.9673, lon: -83.9146, dx: 10,  dy: -10 },
+    { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985 },
+    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996 },
+    { name: 'Suttree’s High Gravity Tavern', where: 'South Gay Street',  lat: 35.96355, lon: -83.91856 },
+    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745 },
+    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800 },
   ];
   const GARAGES = [
-    { name: 'Market Square Garage', lat: 35.9656, lon: -83.9214 },
-    { name: 'State Street Garage',  lat: 35.9645, lon: -83.9152 },
-    { name: 'Locust Street Garage', lat: 35.9628, lon: -83.9222 },
+    { name: 'Market Square Garage', lat: 35.96606, lon: -83.92108 },
+    { name: 'State Street Garage',  lat: 35.96479, lon: -83.91630 },
+    { name: 'Locust Street Garage', lat: 35.96345, lon: -83.92143 },
   ];
 
-  const BB = { n: 35.9725, s: 35.9585, w: -83.9250, e: -83.9090 };
-  const MW = 640, MH = 688;
-  const X = lon => (lon - BB.w) / (BB.e - BB.w) * MW;
-  const Y = lat => (BB.n - lat) / (BB.n - BB.s) * MH;
-  const P = pts => pts.map((p, i) => (i ? 'L' : 'M') + X(p[1]).toFixed(1) + ' ' + Y(p[0]).toFixed(1)).join('');
+  // marker art matches the printed legend: teardrop = coffee, dot = bar,
+  // P square = garage. Shape carries the meaning, not color alone.
+  const PINS = {
+    shop: { html: '<svg viewBox="-13 -28 26 30" width="26" height="30">'
+              + `<path d="M0 0 C-6.5 -9 -10.5 -13 -10.5 -19.5 a10.5 10.5 0 1 1 21 0 C10.5 -13 6.5 -9 0 0 Z" fill="${ORANGE}" stroke="${ORANGE_INK}" stroke-width="1"/>`
+              + `<circle cy="-19" r="3.6" fill="${PAPER}"/></svg>`,
+            size: [26, 30], anchor: [13, 30], pop: [0, -28] },
+    bar:  { html: '<svg viewBox="-8 -8 16 16" width="16" height="16">'
+              + `<circle r="6" fill="${NIGHT}"/><circle r="2" fill="${PAPER}"/></svg>`,
+            size: [16, 16], anchor: [8, 8], pop: [0, -8] },
+    // heavier border + size than OSM's own blue parking glyphs, so the three
+    // free municipal garages stand apart from every other lot on the map
+    gar:  { html: '<svg viewBox="-9 -9 18 18" width="18" height="18">'
+              + `<rect x="-7.5" y="-7.5" width="15" height="15" rx="2.5" fill="${PAPER}" stroke="${INK}" stroke-width="1.7"/>`
+              + `<text y="3.8" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10.5" font-weight="600" fill="${INK}">P</text></svg>`,
+            size: [18, 18], anchor: [9, 9], pop: [0, -9] },
+  };
 
-  const STREETS = [
-    { pts: [[35.9585, -83.9245], [35.9645, -83.9237], [35.9663, -83.9235]], w: 3.5 },                       // Henley
-    { pts: [[35.9589, -83.9184], [35.9660, -83.9172], [35.9725, -83.9170]], w: 2.6 },                       // Gay
-    { pts: [[35.9598, -83.9128], [35.9660, -83.9143], [35.9725, -83.9150]], w: 2 },                         // Central
-    { pts: [[35.9605, -83.9163], [35.9650, -83.9155], [35.9668, -83.9150]], w: 1.2 },                       // State
-    { pts: [[35.9605, -83.9212], [35.9650, -83.9205], [35.9660, -83.9202]], w: 1.2 },                       // Walnut
-    { pts: [[35.9605, -83.9227], [35.9645, -83.9220]], w: 1.2 },                                            // Locust
-    { pts: [[35.9676, -83.9205], [35.9700, -83.9200], [35.9725, -83.9203]], w: 2.6 },                       // Broadway
-    { pts: [[35.9600, -83.9250], [35.9608, -83.9195], [35.9613, -83.9150], [35.9617, -83.9090]], w: 2.6 },  // Cumberland
-    { pts: [[35.9613, -83.9250], [35.9620, -83.9195], [35.9625, -83.9155]], w: 1.2 },                       // Church
-    { pts: [[35.9625, -83.9250], [35.9632, -83.9195], [35.9636, -83.9165]], w: 1.2 },                       // Clinch
-    { pts: [[35.9635, -83.9235], [35.9641, -83.9195], [35.9645, -83.9175]], w: 1.2 },                       // Union
-    { pts: [[35.9646, -83.9225], [35.9651, -83.9195], [35.9654, -83.9175]], w: 1.2 },                       // Wall
-    { pts: [[35.9660, -83.9250], [35.9670, -83.9210], [35.9676, -83.9175], [35.9670, -83.9130], [35.9665, -83.9100]], w: 3.5 }, // Summit Hill
-    { pts: [[35.9655, -83.9195], [35.9663, -83.9160], [35.9668, -83.9120], [35.9672, -83.9095]], w: 2 },    // Jackson
-    { pts: [[35.9673, -83.9160], [35.9678, -83.9120], [35.9681, -83.9095]], w: 1.2 },                       // Depot
-  ];
-  const LABELS = [
-    ['GAY ST', 35.9700, -83.9161, 83],
-    ['CENTRAL ST', 35.9702, -83.9146, 84],
-    ['BROADWAY', 35.9706, -83.9207, 96],
-    ['SUMMIT HILL DR', 35.9673, -83.9227, -8],
-    ['JACKSON AVE', 35.9670, -83.9110, -4],
-    ['CUMBERLAND AVE', 35.9605, -83.9227, -5],
-    ['HENLEY ST', 35.9612, -83.9243, 85],
-    ['OLD CITY', 35.9682, -83.9137, 0, true],
-    ['MARKET SQUARE', 35.9636, -83.9199, 0, true],
-  ];
+  let ready = null;   // promise: Leaflet + map are up
+  let map = null, you = null, line = null;
 
-  let s = '';
-  // the river across the bottom
-  s += `<path d="${P([[35.9601, -83.9250], [35.9593, -83.9210], [35.9586, -83.9160], [35.9589, -83.9115], [35.9594, -83.9090]])}L${MW} ${MH}L0 ${MH}Z" fill="rgba(16,26,48,.08)"/>`;
-  s += `<text x="${X(-83.9222)}" y="${Y(35.9589)}" font-size="11.5" font-style="italic" font-family="Fraunces,Georgia,serif" fill="#8a93a8">Tennessee River</text>`;
-  for (const st of STREETS)
-    s += `<path d="${P(st.pts)}" fill="none" stroke="${HAIR}" stroke-width="${st.w}" stroke-linecap="round"/>`;
-  // Market Square plaza
-  s += `<rect x="${X(-83.9204).toFixed(1)}" y="${Y(35.9655).toFixed(1)}" width="${(X(-83.9196) - X(-83.9204)).toFixed(1)}" height="${(Y(35.9641) - Y(35.9655)).toFixed(1)}" rx="2" fill="rgba(255,130,0,.08)" stroke="${HAIR}"/>`;
-  for (const [t, la, lo, rot, area] of LABELS) {
-    const x = X(lo).toFixed(1), y = Y(la).toFixed(1);
-    s += `<text x="${x}" y="${y}" font-size="${area ? 9.5 : 8.5}" font-weight="600" letter-spacing="1.5" ` +
-         `font-family="Inter,Arial,sans-serif" fill="${area ? '#a3937d' : '#c4b696'}" text-anchor="middle"` +
-         (rot ? ` transform="rotate(${rot} ${x} ${y})"` : '') + `>${t}</text>`;
+  function asset(tag, attrs) {
+    return new Promise((resolve, reject) => {
+      const el = document.createElement(tag);
+      Object.assign(el, attrs);
+      el.onload = resolve;
+      el.onerror = () => reject(new Error('could not load ' + (attrs.src || attrs.href)));
+      document.head.appendChild(el);
+    });
   }
-  for (const g of GARAGES) {
-    const x = X(g.lon), y = Y(g.lat);
-    s += `<g><title>${g.name} — free evenings &amp; weekends</title>` +
-         `<rect x="${(x - 6.5).toFixed(1)}" y="${(y - 6.5).toFixed(1)}" width="13" height="13" rx="2" fill="#fffdf7" stroke="${INK}"/>` +
-         `<text x="${x.toFixed(1)}" y="${(y + 3.4).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="600" font-family="Inter,Arial,sans-serif" fill="${INK}">P</text></g>`;
-  }
-  for (const v of BARS) {
-    const x = X(v.lon), y = Y(v.lat);
-    s += `<g><title>${v.name} — pick up your card here tonight</title>` +
-         `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="6" fill="${NIGHT}"/>` +
-         `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2" fill="#fffdf7"/>` +
-         `<text x="${(x + v.dx).toFixed(1)}" y="${(y + v.dy + 4).toFixed(1)}" font-size="11" font-family="Inter,Arial,sans-serif" fill="${INK2}"${v.anchor ? ' text-anchor="end"' : ''}>${v.name}</text></g>`;
-  }
-  for (const v of SHOPS) {
-    const x = X(v.lon), y = Y(v.lat);
-    s += `<g><title>${v.name} — free large coffee with your card</title>` +
-         `<g transform="translate(${x.toFixed(1)},${y.toFixed(1)})">` +
-         `<path d="M0 0 C-6.5 -9 -10.5 -13 -10.5 -19.5 a10.5 10.5 0 1 1 21 0 C10.5 -13 6.5 -9 0 0 Z" fill="${ORANGE}" stroke="${ORANGE_INK}" stroke-width="1"/>` +
-         `<circle cy="-19" r="3.6" fill="#fffdf7"/></g>` +
-         `<text x="${(x + v.dx).toFixed(1)}" y="${(y + v.dy).toFixed(1)}" font-size="11.5" font-weight="600" font-family="Inter,Arial,sans-serif" fill="${INK}"${v.anchor ? ' text-anchor="end"' : ''}>${v.name}</text></g>`;
-  }
-  map.innerHTML = s;
 
-  /* "near me": locate, mark the spot, and name the closest coffee shop */
+  function icon(kind, title) {
+    const p = PINS[kind];
+    return L.divIcon({ html: p.html, className: 'kpin', iconSize: p.size,
+                       iconAnchor: p.anchor, popupAnchor: p.pop, title: title });
+  }
+  function pin(v, kind, blurb) {
+    L.marker([v.lat, v.lon], { icon: icon(kind, v.name), alt: v.name, riseOnHover: true })
+      .addTo(map)
+      .bindPopup('<b>' + v.name + '</b>' + (v.where ? v.where + ' — ' : '') + blurb);
+  }
+
+  function build() {
+    host.innerHTML = '';
+    map = L.map(host, {
+      scrollWheelZoom: false,          // the page scrolls past this; click to zoom
+      zoomControl: true,
+      attributionControl: true,
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, minZoom: 11,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    SHOPS.forEach(v => pin(v, 'shop', 'free large coffee with your card'));
+    BARS.forEach(v => pin(v, 'bar', 'pick up your card here tonight'));
+    GARAGES.forEach(v => pin(v, 'gar', 'municipal garage — free evenings &amp; weekends'));
+    // open on the downtown core — the bars and the garages the car sits in —
+    // so street names read and pins separate. A shop further out (say up
+    // North Central) is still on the map, and "near me" re-frames to include
+    // whichever shop is actually closest to the visitor.
+    map.fitBounds(L.latLngBounds(BARS.concat(GARAGES).map(v => [v.lat, v.lon])).pad(0.35));
+    // wheel-zoom only while the map has focus, so the page still scrolls past
+    map.on('focus', () => map.scrollWheelZoom.enable());
+    map.on('blur', () => map.scrollWheelZoom.disable());
+  }
+
+  function ensureMap() {
+    if (!ready) {
+      ready = Promise.all([
+        asset('link', { rel: 'stylesheet', href: 'assets/vendor/leaflet.css' }),
+        asset('script', { src: 'assets/vendor/leaflet.min.js', async: false }),
+      ]).then(build);
+    }
+    return ready;
+  }
+
+  // load when the section comes into reach (or right away on old browsers)
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => {
+      if (es.some(e => e.isIntersecting)) { io.disconnect(); ensureMap().catch(() => {}); }
+    }, { rootMargin: '320px' });
+    io.observe(host);
+  } else {
+    ensureMap().catch(() => {});
+  }
+
+  /* "near me": locate, mark the spot, name the closest coffee shop */
   const btn = document.getElementById('locate'), status = document.getElementById('locate-status');
   const meters = (la1, lo1, la2, lo2) => Math.hypot(
     (lo2 - lo1) * 111320 * Math.cos(la1 * Math.PI / 180), (la2 - la1) * 110570);
+
+  let pending = false;
   btn.addEventListener('click', () => {
     if (!navigator.geolocation) {
       status.textContent = 'This browser doesn’t share location — no matter, everything on the map is a few blocks apart.';
       return;
     }
+    if (pending) return;
+    pending = true;
     status.textContent = 'Finding you…';
+    /* Our own watchdog: a visitor who leaves the permission prompt sitting
+       there gets neither callback — and the `timeout` option below doesn't
+       cover that — so never leave the button stuck on "Finding you…". */
+    let settled = false;
+    const giveUp = setTimeout(() => {
+      if (settled) return;
+      settled = true; pending = false;
+      status.textContent = 'Still no location — your browser may be waiting on permission. '
+        + 'Everything on the map is within a few blocks anyway.';
+    }, 9000);
+    const done = () => {
+      if (settled) return false;
+      settled = true; pending = false; clearTimeout(giveUp);
+      return true;
+    };
     navigator.geolocation.getCurrentPosition(pos => {
+      if (!done()) return;
       const la = pos.coords.latitude, lo = pos.coords.longitude;
       const near = SHOPS.map(v => ({ v, d: meters(la, lo, v.lat, v.lon) })).sort((a, b) => a.d - b.d)[0];
       const mins = Math.max(1, Math.round(near.d / 80));   // ~80 m per walking minute
-      const inside = la < BB.n && la > BB.s && lo > BB.w && lo < BB.e;
-      if (inside) {
-        map.querySelectorAll('.you').forEach(e => e.remove());
-        const x = X(lo), y = Y(la), nx = X(near.v.lon), ny = Y(near.v.lat);
-        let u = `<line class="you" x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="${ORANGE_INK}" stroke-width="1.2" stroke-dasharray="3 4"/>`;
-        u += `<g class="you"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7.5" fill="none" stroke="${INK}" stroke-width="1.2" stroke-dasharray="2.5 3"/>` +
-             `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.4" fill="${ORANGE}" stroke="${ORANGE_INK}"/></g>`;
-        map.insertAdjacentHTML('beforeend', u);
-        status.innerHTML = 'You’re on the map. Nearest morning coffee: <strong>' + near.v.name +
-          '</strong> — about a ' + mins + '-minute walk.';
-      } else {
-        status.innerHTML = 'You’re outside the downtown map right now. Closest shop to you is <strong>' +
-          near.v.name + '</strong>; everything here sits within a few blocks of the garages.';
-      }
+      const far = near.d > 3000;
+      status.innerHTML = (far
+        ? 'You’re a way out from downtown right now. Closest shop to you is <strong>' + near.v.name + '</strong>'
+          + ' — everything on the map sits within a few blocks of the garages.'
+        : 'Nearest morning coffee: <strong>' + near.v.name + '</strong> — about a ' + mins + '-minute walk.');
+      ensureMap().then(() => {
+        if (you) { map.removeLayer(you); map.removeLayer(line); }
+        // dashed ring + core, so "you" never reads as another coffee pin
+        you = L.layerGroup([
+          L.circleMarker([la, lo], { radius: 9, color: INK, weight: 1.4, dashArray: '2.5 3', fill: false }),
+          L.circleMarker([la, lo], { radius: 3.6, color: ORANGE_INK, weight: 1,
+                                     fillColor: ORANGE, fillOpacity: 1 })
+            .bindPopup('<b>You’re here</b>' + (far ? 'the map is downtown, a way off from you'
+              : 'about a ' + mins + '-minute walk from ' + near.v.name)),
+        ]).addTo(map);
+        line = L.polyline([[la, lo], [near.v.lat, near.v.lon]],
+                          { color: ORANGE_INK, weight: 2, dashArray: '4 5' }).addTo(map);
+        map.fitBounds(line.getBounds().pad(0.35), { maxZoom: 17 });
+      }).catch(() => {});
     }, () => {
+      if (!done()) return;
       status.textContent = 'Couldn’t get a location — no matter, everything on the map is a few blocks apart.';
     }, { timeout: 8000, maximumAge: 300000 });
   });
