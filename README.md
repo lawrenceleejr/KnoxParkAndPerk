@@ -36,7 +36,9 @@ bar from a dropdown).
   static files, no build step. Libraries are vendored in
   [`assets/vendor/`](assets/vendor) (Leaflet for the map, jsQR for the
   scanner), so the only thing fetched from a third party at view time is the
-  map's OpenStreetMap tiles — and only once a visitor scrolls to the map.
+  map's basemap tiles — OpenStreetMap data in CARTO's minimal rendering,
+  retina where the screen supports it — and only once a visitor scrolls to
+  the map.
 - **[`PROGRAM.md`](PROGRAM.md)** — full program design: mechanics, card spec,
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
