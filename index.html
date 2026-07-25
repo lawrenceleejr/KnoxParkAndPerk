@@ -256,24 +256,45 @@
   @media (max-width: 760px) { .partners-grid { grid-template-columns: 1fr; } }
 
   /* ---------- Find us (map) ---------- */
-  .map-panel { background: #fffdf7; border: 1px solid #ddcfb4; border-radius: 6px; padding: clamp(.4rem, 1vw, .6rem); }
-  #kmap { height: clamp(24rem, 62vh, 36rem); border-radius: 3px; background: var(--paper-2); }
+  .map-panel { border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--paper-2); }
+  #kmap { height: clamp(24rem, 62vh, 36rem); background: var(--paper-2); }
   #kmap .fallback { padding: 1.4rem 1.5rem; font-size: .9rem; color: var(--ink-2); }
   #kmap .fallback strong { display: block; font-family: var(--f-sans); font-size: .72rem; font-weight: 600;
     letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); margin: 0 0 .5rem; }
   #kmap .fallback ul { margin: 0 0 1.1rem 1.1rem; }
-  /* OSM raster tiles, warmed slightly so the map sits inside the palette
-     instead of fighting it. Markers/labels are drawn above, unfiltered. */
-  #kmap .leaflet-tile-pane { filter: sepia(.22) saturate(.78) brightness(1.04) contrast(.96); }
+  /* OSM raster tiles, pulled down to a warm near-monochrome so the basemap
+     reads as paper and the program's own pins are the only saturated thing
+     on it. Markers and controls sit in other panes, unfiltered. */
+  #kmap .leaflet-tile-pane {
+    filter: grayscale(1) sepia(.16) brightness(1.07) contrast(.88);
+  }
   .leaflet-container { font-family: var(--f-sans); background: var(--paper-2); }
   .leaflet-container a { color: var(--orange-ink); }
-  .leaflet-popup-content-wrapper { border-radius: 4px; box-shadow: 0 2px 10px rgba(36,26,16,.18); }
-  .leaflet-popup-content { margin: .7rem .9rem; font-size: .86rem; color: var(--ink-2); line-height: 1.45; }
-  .leaflet-popup-content b { display: block; font-family: var(--f-serif); font-weight: 600;
-    font-size: 1rem; color: var(--ink); margin-bottom: .15rem; }
-  .leaflet-control-attribution { font-size: .66rem !important; background: rgba(255,253,247,.86) !important; }
-  .leaflet-bar a { color: var(--ink) !important; }
+  /* pins: a soft shadow lifts them off the map at any zoom */
   .kpin { background: none; border: 0; }
+  .kpin svg { filter: drop-shadow(0 1px 1.5px rgba(36,26,16,.4)); }
+  /* controls + credit, quieted to hairlines */
+  .leaflet-bar { border: 0 !important; box-shadow: none !important; }
+  .leaflet-bar a {
+    width: 26px !important; height: 26px !important; line-height: 26px !important;
+    color: var(--ink) !important; background: rgba(255,253,247,.94) !important;
+    border: 1px solid var(--rule) !important; font-size: 1rem !important;
+  }
+  .leaflet-bar a:first-child { border-radius: 3px 3px 0 0 !important; }
+  .leaflet-bar a:last-child { border-radius: 0 0 3px 3px !important; border-top: 0 !important; }
+  .leaflet-bar a:hover { background: #fff !important; color: var(--orange-ink) !important; }
+  .leaflet-control-attribution {
+    font-size: .62rem !important; padding: 0 .45em !important; color: var(--ink-2);
+    background: rgba(250,245,235,.8) !important; border-radius: 3px 0 0 0;
+  }
+  .leaflet-popup-content-wrapper {
+    border-radius: 4px; background: #fffdf7; border: 1px solid var(--rule);
+    box-shadow: 0 3px 14px rgba(36,26,16,.16);
+  }
+  .leaflet-popup-tip { background: #fffdf7; border: 1px solid var(--rule); box-shadow: none; }
+  .leaflet-popup-content { margin: .6rem .85rem; font-size: .82rem; color: var(--ink-2); line-height: 1.45; }
+  .leaflet-popup-content b { display: block; font-family: var(--f-serif); font-weight: 600;
+    font-size: .98rem; color: var(--ink); margin-bottom: .1rem; }
   .map-legend { margin-top: 1.8rem; display: grid; gap: .75rem; padding: 0; }
   .map-legend li { list-style: none; display: flex; align-items: center; gap: .7rem; font-size: .88rem; color: var(--ink-2); }
   .map-legend svg { width: 24px; height: 26px; flex: none; }
@@ -460,7 +481,7 @@
       <ul class="map-legend" aria-hidden="true">
         <li><svg viewBox="-13 -28 26 30"><path d="M0 0 C-6.5 -9 -10.5 -13 -10.5 -19.5 a10.5 10.5 0 1 1 21 0 C10.5 -13 6.5 -9 0 0 Z" fill="#ff8200" stroke="#b04e00" stroke-width="1"/><circle cx="0" cy="-19" r="3.6" fill="#fffdf7"/></svg>Free large coffee here in the morning</li>
         <li><svg viewBox="-13 -28 26 30"><circle cx="0" cy="-13" r="6" fill="#101a30"/><circle cx="0" cy="-13" r="2" fill="#fffdf7"/></svg>Card-issuing bar</li>
-        <li><svg viewBox="-13 -28 26 30"><rect x="-6.5" y="-19.5" width="13" height="13" rx="2" fill="#fffdf7" stroke="#241a10" stroke-width="1"/><text x="0" y="-9.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="9.5" font-weight="600" fill="#241a10">P</text></svg>Municipal garage &mdash; free evenings &amp; weekends</li>
+        <li><svg viewBox="-13 -28 26 30"><rect x="-6.6" y="-19.6" width="13.2" height="13.2" rx="2.5" fill="#fffdf7" stroke="#101a30" stroke-width="1.3"/><text x="0" y="-9.5" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="9.5" font-weight="600" fill="#101a30">P</text></svg>Municipal garage &mdash; free evenings &amp; weekends</li>
       </ul>
       <button class="btn" id="locate" type="button">Find the coffee near me</button>
       <p id="locate-status" role="status"></p>
@@ -475,7 +496,6 @@
           <ul>
             <li>Remedy Coffee &mdash; Old City</li>
             <li>K Brew Downtown &mdash; South Gay Street</li>
-            <li>Wild Love Bakehouse &mdash; North Central</li>
             <li>Honeybee Coffee &mdash; Downtown South</li>
           </ul>
           <strong>Card-issuing bars</strong>
@@ -626,13 +646,16 @@
   const host = document.getElementById('kmap');
   if (!host) return;
   const NIGHT = '#101a30', ORANGE = '#ff8200', ORANGE_INK = '#b04e00',
-        INK = '#241a10', PAPER = '#fffdf7';
+        INK = '#241a10', INK2 = '#6f5f4c', PAPER = '#fffdf7';
 
+  /* Downtown only, on purpose: this is a downtown program (PROGRAM.md §2) and
+     the map's job is "your coffee is a few blocks from your car." A shop out
+     in another neighborhood would drag the frame wide enough that downtown
+     stops being legible — list those on the partners section instead. */
   const SHOPS = [
-    { name: 'Remedy Coffee',       where: 'Old City',           lat: 35.96966, lon: -83.92115 },
-    { name: 'K Brew Downtown',     where: 'South Gay Street',   lat: 35.96339, lon: -83.91829 },
-    { name: 'Wild Love Bakehouse', where: 'North Central',      lat: 35.98215, lon: -83.92430 },
-    { name: 'Honeybee Coffee',     where: 'Downtown South',     lat: 35.96060, lon: -83.91760 },
+    { name: 'Remedy Coffee',   where: 'Old City',          lat: 35.96966, lon: -83.92115 },
+    { name: 'K Brew Downtown', where: 'South Gay Street',  lat: 35.96339, lon: -83.91829 },
+    { name: 'Honeybee Coffee', where: 'Downtown South',    lat: 35.96060, lon: -83.91760 },
   ];
   const BARS = [
     { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985 },
@@ -650,23 +673,32 @@
   // marker art matches the printed legend: teardrop = coffee, dot = bar,
   // P square = garage. Shape carries the meaning, not color alone.
   const PINS = {
-    shop: { html: '<svg viewBox="-13 -28 26 30" width="26" height="30">'
-              + `<path d="M0 0 C-6.5 -9 -10.5 -13 -10.5 -19.5 a10.5 10.5 0 1 1 21 0 C10.5 -13 6.5 -9 0 0 Z" fill="${ORANGE}" stroke="${ORANGE_INK}" stroke-width="1"/>`
-              + `<circle cy="-19" r="3.6" fill="${PAPER}"/></svg>`,
-            size: [26, 30], anchor: [13, 30], pop: [0, -28] },
+    // coffee leads the hierarchy — it's what a visitor is here to find
+    shop: { html: '<svg viewBox="-11 -26 22 28" width="22" height="28">'
+              + `<path d="M0 0 C-5.6 -8 -9 -11.4 -9 -17 a9 9 0 1 1 18 0 C9 -11.4 5.6 -8 0 0 Z" fill="${ORANGE}" stroke="${ORANGE_INK}" stroke-width=".9"/>`
+              + `<circle cy="-17" r="3.1" fill="${PAPER}"/></svg>`,
+            size: [22, 28], anchor: [11, 28], pop: [0, -26] },
+    // bars second: a navy dot, ringed in paper so it holds on dark tiles
     bar:  { html: '<svg viewBox="-8 -8 16 16" width="16" height="16">'
-              + `<circle r="6" fill="${NIGHT}"/><circle r="2" fill="${PAPER}"/></svg>`,
+              + `<circle r="6.2" fill="${NIGHT}" stroke="${PAPER}" stroke-width="1.2"/>`
+              + `<circle r="1.9" fill="${PAPER}"/></svg>`,
             size: [16, 16], anchor: [8, 8], pop: [0, -8] },
-    // heavier border + size than OSM's own blue parking glyphs, so the three
-    // free municipal garages stand apart from every other lot on the map
-    gar:  { html: '<svg viewBox="-9 -9 18 18" width="18" height="18">'
-              + `<rect x="-7.5" y="-7.5" width="15" height="15" rx="2.5" fill="${PAPER}" stroke="${INK}" stroke-width="1.7"/>`
-              + `<text y="3.8" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="10.5" font-weight="600" fill="${INK}">P</text></svg>`,
-            size: [18, 18], anchor: [9, 9], pop: [0, -9] },
+    // garages are supporting information — quiet, and only once zoomed in
+    // navy on paper, so the three *free* garages read as ours against the
+    // basemap's own grey parking glyphs — quieter than the coffee pins, but
+    // never mistakable for background detail
+    gar:  { html: '<svg viewBox="-8 -8 16 16" width="16" height="16">'
+              + `<rect x="-6.6" y="-6.6" width="13.2" height="13.2" rx="2.5" fill="${PAPER}" stroke="${NIGHT}" stroke-width="1.3"/>`
+              + `<text y="3.4" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="9.5" font-weight="600" fill="${NIGHT}">P</text></svg>`,
+            size: [16, 16], anchor: [8, 8], pop: [0, -8] },
   };
+  const GARAGE_ZOOM = 15;   // below this the P marks are clutter, not help
 
   let ready = null;   // promise: Leaflet + map are up
   let map = null, you = null, line = null;
+  const PAD = { paddingTopLeft: [34, 40], paddingBottomRight: [34, 34] };
+  const fitAll = () => map.fitBounds(
+    L.latLngBounds(SHOPS.concat(BARS).map(v => [v.lat, v.lon])), PAD);
 
   function asset(tag, attrs) {
     return new Promise((resolve, reject) => {
@@ -683,10 +715,13 @@
     return L.divIcon({ html: p.html, className: 'kpin', iconSize: p.size,
                        iconAnchor: p.anchor, popupAnchor: p.pop, title: title });
   }
-  function pin(v, kind, blurb) {
-    L.marker([v.lat, v.lon], { icon: icon(kind, v.name), alt: v.name, riseOnHover: true })
-      .addTo(map)
-      .bindPopup('<b>' + v.name + '</b>' + (v.where ? v.where + ' — ' : '') + blurb);
+  function pin(v, kind, blurb, into) {
+    return L.marker([v.lat, v.lon], { icon: icon(kind, v.name), alt: v.name, riseOnHover: true })
+      .addTo(into || map)
+      .bindPopup('<b>' + v.name + '</b>' + (v.where ? v.where + ' — ' : '') + blurb,
+                 // pan a popup clear of the zoom control and the credit line
+                 { closeButton: false, offset: [0, 2],
+                   autoPanPaddingTopLeft: [48, 58], autoPanPaddingBottomRight: [24, 30] });
   }
 
   function build() {
@@ -695,19 +730,29 @@
       scrollWheelZoom: false,          // the page scrolls past this; click to zoom
       zoomControl: true,
       attributionControl: true,
+      zoomSnap: 0.25,                  // finer fit, so pins aren't crowded to the edge
     });
+    map.attributionControl.setPrefix('');   // OSM's credit stays; the flag goes
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, minZoom: 11,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
     }).addTo(map);
     SHOPS.forEach(v => pin(v, 'shop', 'free large coffee with your card'));
     BARS.forEach(v => pin(v, 'bar', 'pick up your card here tonight'));
-    GARAGES.forEach(v => pin(v, 'gar', 'municipal garage — free evenings &amp; weekends'));
-    // open on the downtown core — the bars and the garages the car sits in —
-    // so street names read and pins separate. A shop further out (say up
-    // North Central) is still on the map, and "near me" re-frames to include
-    // whichever shop is actually closest to the visitor.
-    map.fitBounds(L.latLngBounds(BARS.concat(GARAGES).map(v => [v.lat, v.lon])).pad(0.35));
+    const garages = L.layerGroup();
+    GARAGES.forEach(v => pin(v, 'gar', 'municipal garage — free evenings &amp; weekends', garages));
+    const garageFit = () => {
+      const show = map.getZoom() >= GARAGE_ZOOM;
+      if (show && !map.hasLayer(garages)) garages.addTo(map);
+      else if (!show && map.hasLayer(garages)) map.removeLayer(garages);
+    };
+    map.on('zoomend', garageFit);
+
+    // open on every venue, with pixel padding so no pin is clipped by an edge
+    // (a teardrop is 28px tall and anchored at its point) and the credit line
+    // never sits under a marker
+    fitAll();
+    garageFit();
     // wheel-zoom only while the map has focus, so the page still scrolls past
     map.on('focus', () => map.scrollWheelZoom.enable());
     map.on('blur', () => map.scrollWheelZoom.disable());
