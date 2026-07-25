@@ -90,13 +90,15 @@ crowd stands the coffee for tomorrow's safe riders.
 
 ### Overnight parking
 Leaving the car overnight has to feel free and safe, or the program falls apart.
-Fortunately Knoxville already provides this: **parking in the City's municipal
-garages is free on evenings and weekends.** The program doesn't need to
-negotiate a parking policy — it just needs to *advertise* the free-parking
-reality loudly (on coasters, cards, and signage) so patrons stop treating "but
-my car" as a reason to drive. Coordinate messaging with the City so posted
-garage hours and any move-out times are stated accurately; recruit private lot
-operators as sponsors where a garage isn't nearby.
+Fortunately Knoxville already provides this: **downtown's public parking —
+municipal garages and surface lots alike — is free after 6 pm on weeknights
+and all weekend.** The program doesn't need to negotiate a parking policy — it
+just needs to *advertise* the free-parking reality loudly (on coasters, cards,
+and signage) so patrons stop treating "but my car" as a reason to drive.
+Coordinate messaging with the City so posted hours and any move-out times are
+stated accurately (a couple of sites price Saturday daytime or special events
+differently); recruit private lot operators as sponsors where a public facility
+isn't nearby.
 
 ## 3. Branding
 
@@ -215,7 +217,7 @@ with a monthly cap while we prove the ticket math together."
 **Pitch:** "A positive-incentive complement to enforcement. One prevented
 impaired-driving crash costs the city far more than this program's entire pilot.
 The asks are mostly promotion, not an open-ended budget line."
-- Asks: co-promote the already-free evening/weekend municipal garage parking,
+- Asks: co-promote the already-free evening/weekend municipal garage and lot parking,
   inclusion in city communications, optional one-time seed for launch costs.
 - Offer: full transparency — quarterly issuance/redemption data by venue.
 
@@ -288,7 +290,7 @@ ridership."
 | Risk | Mitigation |
 |---|---|
 | Bartenders skip it on busy nights | 10-second workflow, staff perks, coasters do the marketing passively |
-| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages are free evenings/weekends; confirm garage hours with the City; print them on signage; hotline on the card |
+| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages and lots are free evenings/weekends; confirm hours with the City; print them on signage; hotline on the card |
 | Perception of promoting drinking | Framing is strictly "safe ride home / safer roads"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
 | Fraud (fake ride screens, duplicates) | One-free-coffee cap, one-per-ride rule, serials, expiry, bartender discretion; accept small leakage as marketing cost |
 | Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
