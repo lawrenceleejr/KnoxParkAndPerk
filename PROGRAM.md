@@ -57,14 +57,22 @@ crowd stands the coffee for tomorrow's safe riders.
   downtown to retrieve the car.
 - **One card per ride** — the ride is the ticket. Accepted proof: a confirmed
   rideshare/taxi, or an activated KAT ticket. A group sharing one Uber gets one
-  card (the booker's). Two rides, two cards.
-- Valid **one day** from date stamp — the card reads "valid for one day from ____"
-  (covers the morning-after window; prevents hoarding).
+  card (the booker's). Two rides, two cards. Cards are handed out **while
+  supplies last** — a bar out for the night says so, no confrontation needed.
+- **Designated-driver exception, bartender's call:** a sober designated driver
+  taking everyone else home hasn't shown a "ride," but is the exact behavior
+  the program exists to reward — a bartender may hand them a card as a
+  thanks, entirely at their discretion. Not a patron entitlement; a tool for
+  staff to use when they see the safe choice being made.
+- Valid **one day** from issue — the card reads "date issued · valid one day,"
+  with a blank line the server fills in at hand-out. That written date is both
+  the record of issue and the start of the validity window (covers the
+  morning-after trip; prevents hoarding).
 - Serialized (`KPMU-YYYY-########` plus a one-letter keyed checksum, e.g.
-  `…00004217H`, so serials can't be invented by counting), date-stamped, and
-  marked with the issuing bar's initials. Packs of 50 carry their own 10-digit serial
-  (`KPMU-YYYY-##########`); the pack check-out record ties every card serial
-  to its issuing bar, and each redemption is stored with that bar attached.
+  `…00004217H`, so serials can't be invented by counting). Packs of 50 carry
+  their own 10-digit serial (`KPMU-YYYY-##########`); the pack check-out
+  record ties every card serial to its issuing bar, and each redemption is
+  stored with that bar attached — so no per-card bar mark is needed.
 
 ### Fraud & abuse controls
 - **Serialization:** every card has a unique number; books of 50 are checked
