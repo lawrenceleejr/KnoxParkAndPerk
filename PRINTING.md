@@ -136,7 +136,7 @@ Each shop's counter QR opens the scanner pre-set to that shop:
 ```sh
 CK=$(python3 tools/ckkey.py 'THE-PROGRAM-KEY')   # derived serial-check key
 python3 -c "import segno; segno.make(
-  'https://lawrenceleejr.github.io/KnoxParkAndPerk/redeem.html?shop=SLUG&k=$CK',
+  'https://knoxpickmeup.org/redeem.html?shop=SLUG&k=$CK',
   error='q').save('register-SLUG.png', scale=12, border=2)"
 ```
 

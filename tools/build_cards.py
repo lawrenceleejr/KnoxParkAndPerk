@@ -25,7 +25,7 @@ from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
 from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
-SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
+SITE = 'https://knoxpickmeup.org/'
 # Pack check-out Google Form (see design/LOGGING.md step 2). Template gets
 # .format(pack=..., first=..., last=...). Leave empty until the form exists.
 PACK_FORM_URL = ''
