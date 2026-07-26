@@ -79,7 +79,9 @@ def logo(cx, top_y, h, logo_path, on_dark):
     in the side's ink (paper silhouette on night, ink on paper)."""
     if logo_path:
         return embed_svg(logo_path, cx, top_y, h)
-    return mark(cx - mark_w(h) / 2, top_y, h, dark=(PAPER if on_dark else INK))
+    return mark(cx - mark_w(h) / 2, top_y, h,
+                shield=(PAPER if on_dark else INK),
+                cup=(NIGHT if on_dark else PAPER))
 
 
 def chord(y, pad=16):

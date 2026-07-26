@@ -1,0 +1,59 @@
+# Generate the two-sided bar coaster (night side = bars, day side = shops + QR).
+#
+# Output lands in print/coasters/ (gitignored), so this workflow packages it as
+# a downloadable artifact — grab the zip from the run's summary page, no
+# terminal required. Leave the venue lists at their defaults to build a sample
+# pair from the demo roster.
+name: Build print coasters
+
+on:
+  workflow_dispatch:
+    inputs:
+      bars:
+        description: 'Bars for the night side (comma-separated)'
+        required: false
+        default: 'Preservation Pub, Barley’s Taproom, Suttree’s'
+      shops:
+        description: 'Coffee shops for the day side (comma-separated)'
+        required: false
+        default: 'Remedy Coffee, Wild Love Bakehouse, K Brew'
+      qr_url:
+        description: 'QR target on the day side'
+        required: false
+        default: 'https://knoxpickmeup.org/#partners'
+      logo:
+        description: 'Optional path to a center logo SVG in the repo (blank = brand mark)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6
+
+      - name: Build coasters
+        run: |
+          python3 tools/build_coasters.py \
+            --bars "${{ inputs.bars }}" \
+            --shops "${{ inputs.shops }}" \
+            --qr-url "${{ inputs.qr_url }}" \
+            --logo "${{ inputs.logo }}"
+          echo "Built coaster-night.svg and coaster-day.svg." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload coasters
+        uses: actions/upload-artifact@v4
+        with:
+          name: coasters
+          path: print/coasters/
+          if-no-files-found: error

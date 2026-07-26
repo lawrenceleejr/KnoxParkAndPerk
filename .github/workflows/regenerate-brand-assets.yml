@@ -1,0 +1,48 @@
+# Regenerate the brand collateral in assets/ (logo lockups, mark, favicon,
+# emblem, card, coaster, palette) from tools/build_collateral.py.
+#
+# These SVGs are version-controlled, so this workflow commits any changes back
+# to the branch it was run on. Run it from the Actions tab after editing the
+# generator, the source mark (assets/mark.svg), or the brand fonts — no
+# terminal required.
+name: Regenerate brand assets
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6
+
+      - name: Build collateral
+        run: python3 tools/build_collateral.py
+
+      - name: Commit regenerated assets if anything changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets
+          if git diff --cached --quiet; then
+            echo "Assets already up to date — nothing to commit." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git commit -m "Regenerate brand assets (manual run)"
+          git push
+          {
+            echo "Regenerated and committed brand assets:"
+            echo '```'
+            git show --stat --oneline HEAD | sed '1d'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
