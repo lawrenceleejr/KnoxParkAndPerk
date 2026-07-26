@@ -148,8 +148,21 @@
     color: var(--ink-2);
   }
   .hero .actions { margin-top: 2.6rem; display: flex; gap: 2.2rem; align-items: center; flex-wrap: wrap; }
-  .hero-mark { justify-self: center; width: 100%; max-width: 21rem; }
-  .hero-mark svg { display: block; width: 100%; height: auto; color: var(--ink); }
+  .hero-mark { justify-self: center; width: 100%; max-width: 21rem; position: relative; }
+  .hero-mark svg { display: block; width: 100%; height: auto; color: var(--ink); position: relative; z-index: 1; }
+  /* soft contact shadow beneath the pin tip — sells the mark as a pin resting on the page */
+  .hero-mark::after {
+    content: "";
+    position: absolute;
+    left: 50%; bottom: -2%;
+    transform: translateX(-50%);
+    width: 44%;
+    aspect-ratio: 5 / 1;
+    background: radial-gradient(ellipse at center, rgba(16, 26, 48, .26), rgba(16, 26, 48, 0) 70%);
+    filter: blur(7px);
+    z-index: 0;
+    pointer-events: none;
+  }
   @media (max-width: 860px) {
     .hero .wrap { grid-template-columns: 1fr; }
     .hero-mark { grid-row: 1; max-width: 8.5rem; justify-self: start; margin-bottom: 1rem; }
