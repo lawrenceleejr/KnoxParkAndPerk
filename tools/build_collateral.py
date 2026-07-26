@@ -117,7 +117,7 @@ open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', d
 # the public site URL with this sample's serial embedded.
 import io, segno
 from serials import DEMO_KEY, derive_ck_key, serial_letter
-SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
+SITE = 'https://knoxpickmeup.org/'
 
 SAMPLE_SERIAL = 'KPMU-2026-00004217' + serial_letter('KPMU-2026-00004217',
                                                      derive_ck_key(DEMO_KEY))

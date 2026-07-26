@@ -2,7 +2,7 @@
 
 *Ride from last call to first cup.*
 
-**🌐 Live site: <https://lawrenceleejr.github.io/KnoxParkAndPerk/>**
+**🌐 Live site: <https://knoxpickmeup.org/>**
 
 A proposed public-private road-safety partnership for downtown Knoxville:
 patrons who drove downtown and take a safe ride home at the end of the night —
@@ -21,9 +21,9 @@ Three pages, one static site — each aimed at a different audience:
 
 | Page | Audience | What it does |
 |---|---|---|
-| [`index.html`](https://lawrenceleejr.github.io/KnoxParkAndPerk/) | **Public** — patrons, partners, press | The program site: how it works, why it matters, the card, an OpenStreetMap map of participating shops/bars and the free garages, partner pitch, FAQ. Every card's QR lands patrons here, on the participating-businesses section. Linked everywhere. |
-| [`redeem.html`](https://lawrenceleejr.github.io/KnoxParkAndPerk/redeem.html) | **Business** — coffee-shop baristas | The card scanner. Opened from the shop's register QR (`?shop=slug`, with a dropdown fallback), it scans a card's QR with the phone camera, shows live detection feedback, and logs the redemption — with duplicate/voided-card rejection, offline queueing, manual entry, and a stop button. Runs in labeled demo mode until the backend is configured. |
-| [`dashboard.html`](https://lawrenceleejr.github.io/KnoxParkAndPerk/dashboard.html) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
+| [`index.html`](https://knoxpickmeup.org/) | **Public** — patrons, partners, press | The program site: how it works, why it matters, the card, an OpenStreetMap map of participating shops/bars and the free garages, partner pitch, FAQ. Every card's QR lands patrons here, on the participating-businesses section. Linked everywhere. |
+| [`redeem.html`](https://knoxpickmeup.org/redeem.html) | **Business** — coffee-shop baristas | The card scanner. Opened from the shop's register QR (`?shop=slug`, with a dropdown fallback), it scans a card's QR with the phone camera, shows live detection feedback, and logs the redemption — with duplicate/voided-card rejection, offline queueing, manual entry, and a stop button. Runs in labeled demo mode until the backend is configured. |
+| [`dashboard.html`](https://knoxpickmeup.org/dashboard.html) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
 
 Also business-facing but not a page: each **card pack's cover sheet** carries
 a QR that opens the pack check-out Google Form (pre-filled serials, pick the
@@ -147,5 +147,5 @@ the repo's CSVs, re-paste the script, update `SCRIPT_URL` in two files.
 
 GitHub Pages is configured to deploy from the `main` branch (Settings → Pages),
 so every push to `main` republishes
-<https://lawrenceleejr.github.io/KnoxParkAndPerk/> automatically. No build
+<https://knoxpickmeup.org/> automatically. No build
 tooling required.

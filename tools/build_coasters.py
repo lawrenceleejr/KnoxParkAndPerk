@@ -17,7 +17,7 @@ Usage:
       --bars "Preservation Pub, Barley's Taproom, Suttree's" \
       --shops "Remedy Coffee, Wild Love Bakehouse, K Brew" \
       --logo path/to/sponsor-or-partner-logo.svg \
-      --qr-url https://lawrenceleejr.github.io/KnoxParkAndPerk/
+      --qr-url https://knoxpickmeup.org/
 
 Outputs print/coasters/coaster-night.svg and coaster-day.svg (gitignored —
 print artifacts). All type is converted to outlines, like every other piece
@@ -34,7 +34,7 @@ from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = 'https://lawrenceleejr.github.io/KnoxParkAndPerk/'
+SITE = 'https://knoxpickmeup.org/'
 
 # geometry — 420 units = 4 in round coaster (105 units/in)
 W = 420
