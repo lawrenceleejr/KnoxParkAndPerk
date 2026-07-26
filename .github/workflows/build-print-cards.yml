@@ -1,0 +1,62 @@
+# Batch-generate print-ready Morning Pick-Me-Up cards + pack cover sheets.
+#
+# Each card gets a unique serial and QR. Output lands in print/ (gitignored),
+# so this workflow packages it as a downloadable artifact instead of committing
+# it — grab the zip from the run's summary page, no terminal required.
+#
+# For a REAL print run, add a repo secret KPMU_PROGRAM_KEY (Settings → Secrets
+# and variables → Actions). Without it the cards are signed with the public
+# demo key — fine for samples, never for cards you actually hand out.
+name: Build print cards
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: 'Serial year'
+        required: true
+        default: '2026'
+      start:
+        description: 'First serial number'
+        required: true
+        default: '1'
+      count:
+        description: 'How many cards to generate'
+        required: true
+        default: '100'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6
+
+      - name: Build cards
+        env:
+          KPMU_PROGRAM_KEY: ${{ secrets.KPMU_PROGRAM_KEY }}
+        run: |
+          python3 tools/build_cards.py \
+            --year "${{ inputs.year }}" \
+            --start "${{ inputs.start }}" \
+            --count "${{ inputs.count }}"
+          if [ -z "$KPMU_PROGRAM_KEY" ]; then
+            echo "⚠️ Built with the public **demo key** — samples only, not a real print run. Add the \`KPMU_PROGRAM_KEY\` secret for production cards." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "Generated $(find print/cards -name 'card-*.svg' | wc -l) card SVGs and $(find print/packs -name 'pack-*.svg' | wc -l) pack sheets." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload cards
+        uses: actions/upload-artifact@v4
+        with:
+          name: cards-${{ inputs.year }}-${{ inputs.start }}-plus${{ inputs.count }}
+          path: print/
+          if-no-files-found: error

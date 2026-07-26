@@ -100,7 +100,7 @@ def card_back_svg():
     b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{NIGHT}" stroke="{NIGHT}" stroke-width="1.5"/>')
     b.append(f'<path d="M15 298.25 H510 a13 13 0 0 0 13.25 -13.25 V278 H1.75 v7 A13 13 0 0 0 15 298.25 Z" fill="{ORANGE}"/>')
     # header: mark + wordmark + tagline
-    b.append(mark(26, 34, 44, dark=PAPER))
+    b.append(mark(26, 34, 44, shield=PAPER, cup=NIGHT))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 24, 86, 58, PAPER)[0])
     b.append(text(fraunces_it, 'Ride from last call to first cup.', 14.5, 86, 80, GOLD)[0])
     b.append('<line x1="26" y1="100" x2="499" y2="100" stroke="#2a3550" stroke-width="1"/>')
