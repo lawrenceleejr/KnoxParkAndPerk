@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up — Visual Identity
 
-*Ride from last call to first call.*
+*Ride from last call to first cup.*
 
 This is the brand guide for Knox Pick-Me-Up. The identity is built on one idea:
 **the journey from a dark night out to a bright morning coffee** — told with
@@ -20,7 +20,7 @@ everywhere — web, print, email — with no font dependencies.
 | | |
 |---|---|
 | **Name** | Knox Pick-Me-Up |
-| **Tagline** | *Ride from last call to first call.* |
+| **Tagline** | *Ride from last call to first cup.* |
 | **Essence** | Road safety made warm and rewarding — not preachy |
 | **Story arc** | Last call → Ride home → Morning → Coffee |
 | **Voice** | Warm, wry, plainspoken. Never "don't drink and drive"; always "good call — coffee's on us." Puns are welcome when they carry the message: *two brews*, *Hair of the KAT*. |

@@ -96,13 +96,13 @@ def lockup(ink, accent, sub_ink, dark_bg=None):
     body.append(mark(mx, my, mh, dark=ink, orange=ORANGE))
     w1_path, w1 = text(fraunces, 'Knox Pick-Me-Up', 58, tx, 88, ink)
     body.append(w1_path)
-    t_path, tw = text(fraunces_it, 'Ride from last call to first call.', 21, tx+2, 124, accent)
+    t_path, tw = text(fraunces_it, 'Ride from last call to first cup.', 21, tx+2, 124, accent)
     body.append(t_path)
     l_path, lw = text(inter6, 'DOWNTOWN KNOXVILLE, TENNESSEE', 11, tx+2, 156, sub_ink, tracking=0.22)
     body.append(l_path)
     W = math.ceil(tx + max(w1, tw, lw) + 12)
     return svg(W, H, ''.join(body),
-               'Knox Pick-Me-Up — Ride from last call to first call. Downtown Knoxville, Tennessee')
+               'Knox Pick-Me-Up — Ride from last call to first cup. Downtown Knoxville, Tennessee')
 
 open(f'{REPO}/assets/logo.svg', 'w').write(lockup(INK, ORANGE_INK, INK2))
 open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', dark_bg=True))

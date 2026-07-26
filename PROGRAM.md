@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up — Program Design
 
-**Tagline:** *Ride from last call to first call.*
+**Tagline:** *Ride from last call to first cup.*
 
 A public-private partnership between the City of Knoxville, the Knoxville Police
 Department, Knoxville Area Transit (KAT), downtown bars, and downtown coffee
@@ -113,7 +113,7 @@ isn't nearby.
 | Element | Spec |
 |---|---|
 | Name | **Knox Pick-Me-Up** — the morning coffee is the literal pick-me-up; getting home safe is the figurative one |
-| Tagline | *Ride from last call to first call.* |
+| Tagline | *Ride from last call to first cup.* |
 | Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
 | Story arc | Last call → Ride home → Morning → Coffee |
 | Palette | Warm paper `#faf5eb`, espresso ink `#241a10`, night navy `#101a30`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color) used sparingly as the single accent — see [BRAND.md](BRAND.md) |

@@ -165,7 +165,7 @@ def night_side(bars, logo_path):
         y = 186 + i * 28
         b.append(text(fraunces, str(i + 1), 19, x0, y, ORANGE)[0])
         b.append(text(inter4, s, ssz, x0 + indent, y - 2, PAPER)[0])
-    b.append(text(fraunces_it, 'Ride from last call to first call.', 14, CX, 292, GOLD, anchor='middle')[0])
+    b.append(text(fraunces_it, 'Ride from last call to first cup.', 14, CX, 292, GOLD, anchor='middle')[0])
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, night side — leave the car overnight, '
                'book a ride home, free coffee in the morning; participating bars around the rim')
