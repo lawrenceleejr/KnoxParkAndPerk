@@ -5,9 +5,9 @@
 This is the brand guide for Knox Pick-Me-Up. The identity is built on one idea:
 **the journey from a dark night out to a bright morning coffee** — told with
 restraint. Warm paper, espresso ink, deep night navy, and one confident stroke
-of Tennessee orange. The signature **mark** — a coffee cup whose inside is a
-steering wheel, steam rising — says the whole program in a single glyph:
-*park the car, coffee's on us.*
+of Tennessee orange. The signature **mark** — a map pin holding a coffee cup
+whose steam curls up into a winding road — says the whole program in a single
+glyph: *park the car, coffee's on us.*
 
 All assets live in [`assets/`](assets) as scalable SVG. Every piece of type in
 the collateral is converted to outlines, so the files render identically
@@ -57,19 +57,21 @@ from sunrise orange · place the light lockup on a dark background (use
 
 ## 3. The mark
 
-A coffee cup whose interior is a three-spoke steering wheel, with steam rising
-and coffee pooled at the bottom — "park the car, the morning's on us."
+A map pin cradling a coffee cup whose steam rises and turns into a dashed,
+winding road — place, coffee, and the drive home in one glyph. "Park the car,
+the morning's on us."
 
-[`assets/mark.svg`](assets/mark.svg) is drawn with the silhouette in
-`currentColor` (so it inherits the text color — ink on paper, paper on night)
-and the steam and coffee locked to sunrise orange `#FF8200`. Inline it (SVG
-`<use>`) so `currentColor` works; when embedded via `<img>` the color must be
-set in the file.
+[`assets/mark.svg`](assets/mark.svg) ships in its native colors — the pin
+body in night navy `#101A30` and the cup + winding road in sunrise orange
+`#FF8200` — which is how it sits on any light (paper) background. On dark
+backgrounds the navy body is recoloured to paper so it stays legible; the
+lockups, favicon, and emblem are regenerated from this one source by
+[`tools/build_collateral.py`](tools/build_collateral.py).
 
 Use it for: the lockup, the favicon / app icon, social avatars, a large
-hero graphic, and merch. Keep the silhouette in a single brand color (ink,
-paper, or night) with the steam/coffee in sunrise orange. Don't outline it,
-add effects, or tilt it.
+hero graphic, and merch. Keep the pin body in a single brand color (night on
+light, paper on dark) with the cup and road in sunrise orange. Don't outline
+it, add effects, or tilt it.
 
 ---
 
@@ -169,7 +171,7 @@ For platforms that need raster icons, export the SVG to PNG at 16, 32, 180,
 assets/
   logo.svg          Primary lockup (light bg) — type outlined, no font deps
   logo-dark.svg     Lockup for dark backgrounds
-  mark.svg          The signature mark (cup + steering wheel)
+  mark.svg          The signature mark (cup + winding road in a map pin)
   logo-mark.svg     The mark sealed in a night circle (emblem)
   favicon.svg       App icon / favicon (the mark in a rounded square)
   card.svg          The Morning Pick-Me-Up Card artwork

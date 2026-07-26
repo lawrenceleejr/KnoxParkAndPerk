@@ -26,17 +26,19 @@ GOLD    = '#eda953'
 RULE    = '#ddcfb4'
 
 # ---- mark extraction (from assets/mark.svg) ----
+# The mark is a map pin: a navy (#101a30) pin body, an orange (#ff8200) cup +
+# winding-road, and navy line details drawn *on top* of the orange. Order
+# matters, so we recolor the body in place rather than splitting it into
+# dark/orange groups (which would flatten the layering).
 mark_src = open(f'{REPO}/assets/mark.svg').read()
-groups = re.findall(r'<g .*?</g>', mark_src, re.S)
-dark_g, orange_g = groups[0], groups[1]
-MARK_X, MARK_Y, MARK_W, MARK_H = 14.96, 43.85, 556.4, 490.32
+MARK_BODY = re.search(r'<svg[^>]*>(.*)</svg>', mark_src, re.S).group(1).strip()
+MARK_X, MARK_Y, MARK_W, MARK_H = 0, 0, 200, 307.04
 
-def mark(x, y, h, dark=INK, orange=ORANGE):
+def mark(x, y, h, dark=NIGHT, orange=ORANGE):
     s = h / MARK_H
-    g_dark = dark_g.replace('fill="currentColor"', f'fill="{dark}"')
-    g_or = orange_g.replace('fill="#ff8200"', f'fill="{orange}"')
+    body = MARK_BODY.replace('#101a30', dark).replace('#ff8200', orange)
     return (f'<g transform="translate({x - MARK_X*s:.2f},{y - MARK_Y*s:.2f}) scale({s:.5f})">'
-            f'{g_dark}{g_or}</g>')
+            f'{body}</g>')
 
 def mark_w(h):
     return h / MARK_H * MARK_W
@@ -93,7 +95,8 @@ def lockup(ink, accent, sub_ink, dark_bg=None):
     body = []
     if dark_bg:
         pass  # transparent background; consumer places on dark
-    body.append(mark(mx, my, mh, dark=ink, orange=ORANGE))
+    # native navy pin on light backgrounds; recolor to paper so it reads on dark
+    body.append(mark(mx, my, mh, dark=(PAPER if dark_bg else NIGHT), orange=ORANGE))
     w1_path, w1 = text(fraunces, 'Knox Pick-Me-Up', 58, tx, 88, ink)
     body.append(w1_path)
     t_path, tw = text(fraunces_it, 'Ride from last call to first cup.', 21, tx+2, 124, accent)
@@ -218,5 +221,28 @@ for i, (name, hexv, on, border) in enumerate(swatches):
 p.append(text(inter4, 'Type: Fraunces 600 (display) · Inter 400/500/600 (text) · Cormorant 700 old-style figures (statistics)', 11, 40, 336, INK2)[0])
 open(f'{REPO}/assets/palette.svg', 'w').write(
     svg(900, 360, ''.join(p), 'Knox Pick-Me-Up color palette and type'))
+
+# =====================================================================
+# 5. Favicon (64 x 64) and emblem badge (240 x 240)
+# =====================================================================
+# Both seal the pin in a night badge, so the navy pin body is recolored to
+# paper — the orange cup + road carry the identity at any tab size.
+def badge_pin(side, h):
+    x = (side - mark_w(h)) / 2
+    y = (side - h) / 2
+    return mark(x, y, h, dark=PAPER, orange=ORANGE)
+
+fav = ('<defs><linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">'
+       f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
+       f'<rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#fav-bg)" stroke="{GOLD}" stroke-width="2.5"/>'
+       + badge_pin(64, 46))
+open(f'{REPO}/assets/favicon.svg', 'w').write(svg(64, 64, fav, 'Knox Pick-Me-Up favicon'))
+
+emblem = ('<defs><linearGradient id="badge-m" x1="0" y1="0" x2="0" y2="1">'
+          f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
+          f'<circle cx="120" cy="120" r="112" fill="url(#badge-m)" stroke="{GOLD}" stroke-width="5"/>'
+          f'<circle cx="120" cy="120" r="96" fill="none" stroke="{GOLD}" stroke-width="1" opacity=".4"/>'
+          + badge_pin(240, 168))
+open(f'{REPO}/assets/logo-mark.svg', 'w').write(svg(240, 240, emblem, 'Knox Pick-Me-Up emblem'))
 
 print('collateral built')
