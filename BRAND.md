@@ -5,9 +5,9 @@
 This is the brand guide for Knox Pick-Me-Up. The identity is built on one idea:
 **the journey from a dark night out to a bright morning coffee** — told with
 restraint. Warm paper, espresso ink, deep night navy, and one confident stroke
-of Tennessee orange. The signature **mark** — a map pin holding a coffee cup
-whose steam curls up into a winding road — says the whole program in a single
-glyph: *park the car, coffee's on us.*
+of Tennessee orange. The signature **mark** — a rounded badge holding a
+steaming coffee cup — says the whole program in a single glyph: *good call,
+coffee's on us.*
 
 All assets live in [`assets/`](assets) as scalable SVG. Every piece of type in
 the collateral is converted to outlines, so the files render identically
@@ -35,8 +35,8 @@ everywhere — web, print, email — with no font dependencies.
 |---|---|---|
 | Primary lockup (light bg) | [`assets/logo.svg`](assets/logo.svg) | Default. Mark + "Knox Pick-Me-Up" wordmark, tagline, and place line on paper/white. |
 | Lockup (dark bg) | [`assets/logo-dark.svg`](assets/logo-dark.svg) | On night navy or dark photography. Paper wordmark, gold tagline. |
-| The mark | [`assets/mark.svg`](assets/mark.svg) | The signature glyph on its own. Uses `currentColor` for the silhouette so it takes the surrounding text color; steam & coffee stay orange. |
-| Emblem / badge | [`assets/logo-mark.svg`](assets/logo-mark.svg) | The mark sealed in a night circle, for stamps, avatars, spot use. |
+| The mark | [`assets/mark.svg`](assets/mark.svg) | The signature glyph on its own — a night-navy badge cradling a paper coffee cup. Recoloured per background: navy badge on light, paper badge on dark. |
+| Emblem / badge | [`assets/logo-mark.svg`](assets/logo-mark.svg) | The mark sealed in a night circle with a gold ring, for stamps, avatars, spot use. |
 | App icon / favicon | [`assets/favicon.svg`](assets/favicon.svg) | Browser tab, social avatar, app tile. |
 
 **The wordmark** is set in Fraunces SemiBold, title case — *Knox Pick-Me-Up* —
@@ -49,29 +49,27 @@ optically aligned to the first line.
 icon no smaller than 20 px.
 
 **Don't:** set the wordmark in another typeface or in all-caps · stretch or
-skew · add drop shadows, outlines, or gradients · recolor the steam/coffee away
-from sunrise orange · place the light lockup on a dark background (use
+skew · add drop shadows, outlines, or gradients · recolor the badge outside the
+navy/paper pair · place the light lockup on a dark background (use
 `logo-dark.svg`).
 
 ---
 
 ## 3. The mark
 
-A map pin cradling a coffee cup whose steam rises and turns into a dashed,
-winding road — place, coffee, and the drive home in one glyph. "Park the car,
-the morning's on us."
+A rounded badge cradling a steaming coffee cup — the morning after the safe
+ride home, sealed in one glyph. "Good call, the morning's on us."
 
-[`assets/mark.svg`](assets/mark.svg) ships in its native colors — the pin
-body in night navy `#101A30` and the cup + winding road in sunrise orange
-`#FF8200` — which is how it sits on any light (paper) background. On dark
-backgrounds the navy body is recoloured to paper so it stays legible; the
-lockups, favicon, and emblem are regenerated from this one source by
+[`assets/mark.svg`](assets/mark.svg) ships in its native colors — the badge
+in night navy `#101A30` with a paper cup — which is how it sits on any light
+(paper) background. On dark backgrounds the badge is recoloured to paper with a
+navy cup so it stays legible; the lockups, favicon, and emblem are regenerated
+from this one source by
 [`tools/build_collateral.py`](tools/build_collateral.py).
 
 Use it for: the lockup, the favicon / app icon, social avatars, a large
-hero graphic, and merch. Keep the pin body in a single brand color (night on
-light, paper on dark) with the cup and road in sunrise orange. Don't outline
-it, add effects, or tilt it.
+hero graphic, and merch. Keep it to the two-color navy/paper pair (navy badge
+on light, paper badge on dark). Don't outline it, add effects, or tilt it.
 
 ---
 
@@ -139,8 +137,8 @@ weight, and space — never color alone.
 
 ## 6. Favicon & app icon
 
-[`assets/favicon.svg`](assets/favicon.svg) — the mark (paper cup, orange steam
-& coffee) on a Night rounded square. Wired into the site as:
+[`assets/favicon.svg`](assets/favicon.svg) — the mark (paper badge, navy cup)
+on a Night rounded square with a gold edge. Wired into the site as:
 
 ```html
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -171,7 +169,7 @@ For platforms that need raster icons, export the SVG to PNG at 16, 32, 180,
 assets/
   logo.svg          Primary lockup (light bg) — type outlined, no font deps
   logo-dark.svg     Lockup for dark backgrounds
-  mark.svg          The signature mark (cup + winding road in a map pin)
+  mark.svg          The signature mark (a coffee cup in a rounded badge)
   logo-mark.svg     The mark sealed in a night circle (emblem)
   favicon.svg       App icon / favicon (the mark in a rounded square)
   card.svg          The Morning Pick-Me-Up Card artwork

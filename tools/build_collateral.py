@@ -26,17 +26,17 @@ GOLD    = '#eda953'
 RULE    = '#ddcfb4'
 
 # ---- mark extraction (from assets/mark.svg) ----
-# The mark is a map pin: a navy (#101a30) pin body, an orange (#ff8200) cup +
-# winding-road, and navy line details drawn *on top* of the orange. Order
-# matters, so we recolor the body in place rather than splitting it into
-# dark/orange groups (which would flatten the layering).
+# The mark is a badge: a navy (#101a30) shield with a white (#ffffff) coffee
+# cup drawn on top. Two tokens carry the whole thing — recolor the shield and
+# the cup independently so it reads on any background (navy shield + paper cup
+# on light; paper shield + navy cup on dark).
 mark_src = open(f'{REPO}/assets/mark.svg').read()
 MARK_BODY = re.search(r'<svg[^>]*>(.*)</svg>', mark_src, re.S).group(1).strip()
-MARK_X, MARK_Y, MARK_W, MARK_H = 0, 0, 200, 307.04
+MARK_X, MARK_Y, MARK_W, MARK_H = 0, 0, 171.89, 189.79
 
-def mark(x, y, h, dark=NIGHT, orange=ORANGE):
+def mark(x, y, h, shield=NIGHT, cup=PAPER):
     s = h / MARK_H
-    body = MARK_BODY.replace('#101a30', dark).replace('#ff8200', orange)
+    body = MARK_BODY.replace('#101a30', shield).replace('#ffffff', cup)
     return (f'<g transform="translate({x - MARK_X*s:.2f},{y - MARK_Y*s:.2f}) scale({s:.5f})">'
             f'{body}</g>')
 
@@ -95,8 +95,11 @@ def lockup(ink, accent, sub_ink, dark_bg=None):
     body = []
     if dark_bg:
         pass  # transparent background; consumer places on dark
-    # native navy pin on light backgrounds; recolor to paper so it reads on dark
-    body.append(mark(mx, my, mh, dark=(PAPER if dark_bg else NIGHT), orange=ORANGE))
+    # navy shield + paper cup on light backgrounds; flip both so the badge
+    # reads on dark (paper shield + navy cup)
+    body.append(mark(mx, my, mh,
+                     shield=(PAPER if dark_bg else NIGHT),
+                     cup=(NIGHT if dark_bg else PAPER)))
     w1_path, w1 = text(fraunces, 'Knox Pick-Me-Up', 58, tx, 88, ink)
     body.append(w1_path)
     t_path, tw = text(fraunces_it, 'Ride from last call to first cup.', 21, tx+2, 124, accent)
@@ -225,12 +228,12 @@ open(f'{REPO}/assets/palette.svg', 'w').write(
 # =====================================================================
 # 5. Favicon (64 x 64) and emblem badge (240 x 240)
 # =====================================================================
-# Both seal the pin in a night badge, so the navy pin body is recolored to
-# paper — the orange cup + road carry the identity at any tab size.
+# Both seal the mark in a night badge, so the navy shield is recolored to
+# paper (with a navy cup) — the badge carries the identity at any tab size.
 def badge_pin(side, h):
     x = (side - mark_w(h)) / 2
     y = (side - h) / 2
-    return mark(x, y, h, dark=PAPER, orange=ORANGE)
+    return mark(x, y, h, shield=PAPER, cup=NIGHT)
 
 fav = ('<defs><linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">'
        f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'

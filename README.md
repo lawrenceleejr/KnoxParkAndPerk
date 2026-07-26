@@ -54,7 +54,7 @@ bar from a dropdown).
   all type converted to outlines, no font dependencies):
   - [`logo.svg`](assets/logo.svg) — primary lockup (light backgrounds)
   - [`logo-dark.svg`](assets/logo-dark.svg) — lockup for dark backgrounds
-  - [`mark.svg`](assets/mark.svg) — the signature mark (cup + winding road in a map pin)
+  - [`mark.svg`](assets/mark.svg) — the signature mark (a coffee cup in a rounded badge)
   - [`logo-mark.svg`](assets/logo-mark.svg) — the mark sealed in a badge (emblem)
   - [`favicon.svg`](assets/favicon.svg) — app icon / favicon
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
