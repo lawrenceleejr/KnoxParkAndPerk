@@ -1,6 +1,6 @@
 # Knox Pick-Me-Up
 
-*Ride from last call to first call.*
+*Ride from last call to first cup.*
 
 **🌐 Live site: <https://lawrenceleejr.github.io/KnoxParkAndPerk/>**
 

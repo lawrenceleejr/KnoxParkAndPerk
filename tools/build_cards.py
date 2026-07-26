@@ -102,7 +102,7 @@ def card_back_svg():
     # header: mark + wordmark + tagline
     b.append(mark(26, 34, 44, dark=PAPER))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 24, 86, 58, PAPER)[0])
-    b.append(text(fraunces_it, 'Ride from last call to first call.', 14.5, 86, 80, GOLD)[0])
+    b.append(text(fraunces_it, 'Ride from last call to first cup.', 14.5, 86, 80, GOLD)[0])
     b.append('<line x1="26" y1="100" x2="499" y2="100" stroke="#2a3550" stroke-width="1"/>')
     # how it works — three numbered lines
     steps = [
