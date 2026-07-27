@@ -112,11 +112,12 @@ def window_sticker():
     S, cx = 560, 280
     b = [f'<circle cx="{cx}" cy="{cx}" r="272" fill="{PAPER}" stroke="{NIGHT}" stroke-width="7"/>',
          f'<circle cx="{cx}" cy="{cx}" r="250" fill="none" stroke="{GOLD}" stroke-width="2"/>']
-    # the logo — the hero, sized to be recognizable at a distance (~54% of the disc)
-    b.append(mark(cx - mark_w(290) / 2, 58, 290))
-    b.append(text(fraunces, 'Knox Pick-Me-Up', 44, cx, 420, INK, anchor='middle')[0])
-    b.append(text(inter6, 'PARTICIPATING LOCATION', 16, cx, 456, ORANGE_INK, tracking=0.22, anchor='middle')[0])
-    b.append(text(fraunces_it, SITE_LABEL, 22, cx, 492, INK2, anchor='middle')[0])
+    # the logo — the hero, sized to read at a distance but nudged down off the
+    # ring so the composition breathes inside the disc
+    b.append(mark(cx - mark_w(272) / 2, 86, 272))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 43, cx, 430, INK, anchor='middle')[0])
+    b.append(text(inter6, 'PARTICIPATING LOCATION', 15.5, cx, 464, ORANGE_INK, tracking=0.22, anchor='middle')[0])
+    b.append(text(fraunces_it, SITE_LABEL, 21, cx, 496, INK2, anchor='middle')[0])
     return svg(S, S, ''.join(b),
                'Knox Pick-Me-Up window sticker — participating location, knoxpickmeup.org')
 
