@@ -8,7 +8,7 @@ shops. Patrons who drove downtown and choose a safe ride home at the end of the
 night — a rideshare, a taxi, or public transit — receive a **Morning Pick-Me-Up
 Card**: a card good for a **free large coffee** at a participating downtown shop
 (plus a free KAT ride) when they return the next morning to retrieve their car.
-It's framed as Knoxville saying *thanks for keeping the roads safe*.
+It's framed as Knoxville saying *thanks for keeping our roads safe*.
 
 ---
 
@@ -114,7 +114,7 @@ isn't nearby.
 |---|---|
 | Name | **Knox Pick-Me-Up** — the morning coffee is the literal pick-me-up; getting home safe is the figurative one |
 | Tagline | *Ride from last call to first cup.* |
-| Core frame | The card is a **thank-you for keeping the roads safe** — recognition, not a coupon |
+| Core frame | The card is a **thank-you for keeping our roads safe** — recognition, not a coupon |
 | Story arc | Last call → Ride home → Morning → Coffee |
 | Palette | Warm paper `#faf5eb`, espresso ink `#241a10`, night navy `#101a30`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color) used sparingly as the single accent — see [BRAND.md](BRAND.md) |
 | Design | Editorial and typographic — generous whitespace, hairline rules, a serif display face (Fraunces), and one accent color; no gradients, shadows, emoji, or clip-art |
