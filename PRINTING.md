@@ -75,8 +75,11 @@ the card backs ("printing donated by ___").
 
 ## 4. Generating the print files
 
+Every generator writes a **true-size, print-ready PDF** next to each SVG (type
+outlined, correct physical dimensions) — hand the PDFs straight to a shop.
+
 ```sh
-pip install fonttools brotli uharfbuzz segno
+pip install fonttools brotli uharfbuzz segno cairosvg
 python3 tools/build_cards.py --year 2026 --start 1 --count 1000 \
     --key 'THE-PROGRAM-KEY'   # same PROGRAM_KEY as in the Apps Script
 ```
@@ -87,10 +90,10 @@ the Apps Script** or every card will scan as invalid. Without it the script
 uses a public demo key and prints a loud warning — fine for samples, never
 for a real run.
 
-That writes to `print/` (gitignored):
-- `print/cards/card-KPMU-2026-00000001.svg` … — one file per card (front)
+That writes to `print/` (gitignored), each as an SVG **and** a `.pdf`:
+- `print/cards/card-KPMU-2026-00000001Q.svg` … — one file per card (front)
 - `print/cards/card-back.svg` — the static back, once
-- `print/packs/pack-KPMU-2026-0000000001.svg` … — one cover sheet per 50
+- `print/packs/pack-KPMU-2026-P0001.svg` … — one cover sheet per 50
 
 The two-sided coaster is its own generator — venue rosters, the day-side QR
 target, and the center logo are flags (defaults build a demo pair with the
@@ -114,32 +117,29 @@ letter-size posters for community boards and restrooms:
 
 ```sh
 python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
-# -> print/signage/table-tent.svg      foldable A-frame (fold at the middle)
-#    print/signage/window-sticker.svg  4.5in participating-location decal
-#    print/signage/sign-community.svg  8.5x11 poster (bulletin boards)
-#    print/signage/sign-bathroom.svg   8.5x11 poster (restroom / above the sink)
+# each writes .svg + .pdf into print/signage/:
+#   table-tent       4x10in foldable A-frame (fold at the middle)
+#   window-sticker   5.6in round participating-location decal
+#   sign-community    8.5x11 poster (bulletin boards)
+#   sign-bathroom     8.5x11 poster (restroom / above the sink)
 ```
 
-Every piece carries a QR and the website. **In the browser:** the *Build print
-materials* GitHub Action (Actions tab → Run workflow) runs the coaster and
-signage generators together and hands back a downloadable zip — no terminal.
+These are **generic branding items** — one design for every venue, no
+per-shop customization. (The only per-shop artifact is the register QR in
+§5.) Every piece carries a QR and the website. **In the browser:** the
+*Build print materials* GitHub Action (Actions tab → Run workflow) runs the
+coaster and signage generators together and hands back a downloadable zip of
+PDFs — no terminal.
 
-Everything is SVG with **all type converted to outlines** — no font
-substitution surprises at the shop. Most shops prefer PDF; convert with:
+The PDFs are vector with **all type converted to outlines** (no font
+substitution at the shop) and at exact physical size.
 
-```sh
-pip install cairosvg
-python3 -c "import cairosvg,glob
-for f in glob.glob('print/**/*.svg', recursive=True):
-    cairosvg.svg2pdf(url=f, write_to=f.replace('.svg', '.pdf'))"
-```
-
-**Bleed:** the current artwork is exact trim size (3.5″ × 2″ at 150/in
-units). The front's orange band and the navy back run to the trim edge,
-so the shop will ask for **1/8″ bleed**. Ask for their template/specs
-first, then extend `tools/build_cards.py` to their bleed + crop-mark spec
-before the final run (the layout is parametric — this is a small change,
-not a redesign).
+**Bleed:** artwork is at exact trim size. Edge-bleed pieces — the round
+coaster and sticker, the card's orange band and navy back, the tent's top
+bar — run color to the trim edge, so a shop will ask for **1/8″ bleed**.
+Ask for their template/specs first, then extend the relevant generator to
+their bleed + crop-mark spec before the final run (the layouts are
+parametric — a small change, not a redesign).
 
 Each pack cover sheet's QR opens the scanner's admin pack check-out
 (`redeem/?pack=…`), pre-loaded with the pack and its card range — whoever

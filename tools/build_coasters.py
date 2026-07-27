@@ -12,7 +12,7 @@ Venue lists, the QR target, and the center logo are all configurable; with no
 flags it builds a sample pair from the demo roster using the brand mark.
 
 Usage:
-  pip install fonttools brotli uharfbuzz segno
+  pip install fonttools brotli uharfbuzz segno cairosvg
   python3 tools/build_coasters.py \
       --bars "Preservation Pub, Barley's Taproom, Suttree's" \
       --shops "Remedy Coffee, Wild Love Bakehouse, K Brew" \
@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, text, arc_text, svg,
-                              mark, mark_w, fraunces, fraunces_it,
+                              mark, mark_w, write_pdf, fraunces, fraunces_it,
                               inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,6 +38,7 @@ SITE = 'https://knoxpickmeup.org/'
 
 # geometry — 420 units = 4 in round coaster (105 units/in)
 W = 420
+UPI = 105        # user units per inch, for true-size PDF export
 CX = CY = 210
 R_EDGE, R_RING, R_INNER, R_NAMES = 204, 192, 158, 175
 NIGHT_RULE = '#2a3550'   # hairline on the night field (matches the card back)
@@ -230,12 +231,13 @@ def main():
 
     qr = args.qr_url or f'{SITE}#partners'   # both sides always carry a QR
     os.makedirs(args.out, exist_ok=True)
-    night_f = os.path.join(args.out, 'coaster-night.svg')
-    day_f = os.path.join(args.out, 'coaster-day.svg')
-    open(night_f, 'w').write(night_side(split_list(args.bars), args.logo, qr))
-    open(day_f, 'w').write(day_side(split_list(args.shops), args.logo, qr))
-    print(f'night side (bars, three steps, QR)      -> {night_f}')
-    print(f'day side (shops, QR to the program)     -> {day_f}')
+    # 420 units = 4 in round  ->  105 user-units per inch
+    for name, svg_str in (('coaster-night', night_side(split_list(args.bars), args.logo, qr)),
+                          ('coaster-day', day_side(split_list(args.shops), args.logo, qr))):
+        svg_f = os.path.join(args.out, name + '.svg')
+        open(svg_f, 'w').write(svg_str)
+        write_pdf(svg_str, os.path.join(args.out, name + '.pdf'), UPI)
+        print(f'{name:14s} -> {svg_f}  (+ .pdf)')
     print('Print as a 4 in round, 2-sided pulpboard coaster — see PRINTING.md.')
 
 

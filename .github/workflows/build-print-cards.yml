@@ -39,7 +39,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install generator dependencies
-        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6 cairosvg==2.9.0
 
       - name: Build cards
         env:
@@ -52,7 +52,7 @@ jobs:
           if [ -z "$KPMU_PROGRAM_KEY" ]; then
             echo "⚠️ Built with the public **demo key** — samples only, not a real print run. Add the \`KPMU_PROGRAM_KEY\` secret for production cards." >> "$GITHUB_STEP_SUMMARY"
           fi
-          echo "Generated $(find print/cards -name 'card-*.svg' | wc -l) card SVGs and $(find print/packs -name 'pack-*.svg' | wc -l) pack sheets." >> "$GITHUB_STEP_SUMMARY"
+          echo "Generated $(find print/cards -name 'card-*.svg' | wc -l) cards and $(find print/packs -name 'pack-*.svg' | wc -l) pack sheets — each as a true-size, print-ready **PDF** (3.5×2in cards) plus its SVG. Download the artifact and send the PDFs straight to the printer." >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload cards
         uses: actions/upload-artifact@v4

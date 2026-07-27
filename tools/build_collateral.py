@@ -89,6 +89,18 @@ def svg(vb_w, vb_h, body, label):
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vb_w} {vb_h}" '
             f'role="img" aria-label="{label}">\n{body}\n</svg>\n')
 
+
+def write_pdf(svg_str, path, upi):
+    """Write a print-ready, true-size vector PDF from an SVG string.
+    `upi` is the artwork's user-units-per-inch, so the PDF prints at the right
+    physical size (all type is already outlined, so the file is self-contained
+    and needs no fonts at the shop). Requires `pip install cairosvg`."""
+    import cairosvg
+    m = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', svg_str)
+    w, h = float(m.group(1)), float(m.group(2))
+    sized = svg_str.replace('<svg ', f'<svg width="{w / upi:.4f}in" height="{h / upi:.4f}in" ', 1)
+    cairosvg.svg2pdf(bytestring=sized.encode('utf-8'), write_to=path)
+
 # =====================================================================
 # 1. Logo lockups
 # =====================================================================

@@ -10,7 +10,7 @@ admin pack check-out (redeem/?pack=…), pre-loaded with the pack and its card
 range, so whoever hands the pack to a bar just scans it and picks the bar.
 
 Usage:
-  pip install fonttools brotli uharfbuzz segno
+  pip install fonttools brotli uharfbuzz segno cairosvg
   python3 tools/build_cards.py --year 2026 --start 1 --count 100
 Outputs to print/cards/ and print/packs/ (gitignored — print artifacts).
 See design/LOGGING.md for the full system.
@@ -20,13 +20,14 @@ import argparse, io, math, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
-                              RULE, text, svg, mark, fraunces, fraunces_it,
+                              RULE, text, svg, mark, write_pdf, fraunces, fraunces_it,
                               inter6, inter4)
 from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
 SITE = 'https://knoxpickmeup.org/'
 PACK_SIZE = 50
+UPI = 150        # cards 525x300 = 3.5x2 in; pack sheets 525x700 = 3.5x4.67 in
 # ==========================================
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -179,22 +180,23 @@ def main():
 
     serials = [f'KPMU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
     serials = [b + serial_letter(b, ck) for b in serials]
+    def emit(path, svg_str):
+        open(path, 'w').write(svg_str)
+        write_pdf(svg_str, path[:-4] + '.pdf', UPI)   # true-size print-ready PDF
+
     for s in serials:
-        open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
-    open(os.path.join(cards_dir, 'card-back.svg'), 'w').write(card_back_svg())
+        emit(os.path.join(cards_dir, f'card-{s}.svg'), card_svg(s))
+    emit(os.path.join(cards_dir, 'card-back.svg'), card_back_svg())
 
     for i in range(0, len(serials), PACK_SIZE):
         chunk = serials[i:i + PACK_SIZE]
         pack_no = (args.start + i - 1) // PACK_SIZE + 1
-        open(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'), 'w').write(
-            pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
+        emit(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'),
+             pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
 
-    print(f'{len(serials)} cards -> {cards_dir}')
+    print(f'{len(serials)} cards -> {cards_dir}  (SVG + print-ready PDF each)')
     print(f'{math.ceil(len(serials)/PACK_SIZE)} pack sheets -> {packs_dir}')
-    print('Hand the SVGs to any print shop, or convert: '
-          'pip install cairosvg && python3 -c "import cairosvg,glob;'
-          '[cairosvg.svg2pdf(url=f,write_to=f.replace(\'.svg\',\'.pdf\')) '
-          'for f in glob.glob(\'print/**/*.svg\',recursive=True)]"')
+    print('PDFs are true-size with outlined type — hand them straight to any print shop.')
 
 
 if __name__ == '__main__':

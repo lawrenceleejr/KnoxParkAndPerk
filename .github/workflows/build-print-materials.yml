@@ -43,7 +43,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install generator dependencies
-        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6 cairosvg==2.9.0
 
       - name: Build coasters
         run: |
@@ -59,10 +59,12 @@ jobs:
           {
             echo "### Print materials built"
             echo ""
-            echo "**Coasters** — \`coaster-night.svg\`, \`coaster-day.svg\` (both carry a QR + website)"
-            echo "**Signage** — \`table-tent.svg\`, \`window-sticker.svg\`, \`sign-community.svg\`, \`sign-bathroom.svg\`"
+            echo "Each item is a **true-size, print-ready PDF** (plus its SVG), type outlined, generic (no per-shop info)."
             echo ""
-            echo "Download the **print-materials** artifact below."
+            echo "**Coasters** — \`coaster-night\`, \`coaster-day\` (4in round; both carry a QR + website)"
+            echo "**Signage** — \`table-tent\` (4×10in fold), \`window-sticker\` (5.6in round), \`sign-community\`, \`sign-bathroom\` (8.5×11in)"
+            echo ""
+            echo "Download the **print-materials** artifact below and hand the PDFs to any print shop."
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload print materials

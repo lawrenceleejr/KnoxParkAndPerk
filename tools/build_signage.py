@@ -1,22 +1,24 @@
 """Signage generator — the print pieces that live at participating venues and
 around town, all from the same brand system as the cards and coasters.
 
-Builds, into print/signage/ (gitignored — print artifacts):
-  table-tent.svg      A foldable A-frame table tent (fold at the middle; the
-                      top panel prints upside-down so both faces read upright).
-                      Sits on bar and cafe tables. 4 x 9.5 in flat.
-  window-sticker.svg  A door/window decal for participating locations —
-                      "Proud partner", the mark, and a QR. 4.5 in square.
-  sign-community.svg  A letter-size (8.5 x 11) poster for bulletin boards,
-                      break rooms, and community boards.
-  sign-bathroom.svg   A letter-size poster written for the captive audience of
-                      a restroom stall / above the sink.
+These are generic branding items — one design for every venue, no per-shop
+customization. Builds, into print/signage/ (gitignored), an SVG and a
+true-size print-ready PDF for each:
+  table-tent      A foldable A-frame table tent (fold at the middle; the top
+                  panel prints upside-down so both faces read upright). Sits on
+                  bar and cafe tables. 4 x 10 in flat.
+  window-sticker  A door/window decal for participating locations — a big
+                  mark, the website, and "participating location". 5.6 in round.
+  sign-community  A letter-size (8.5 x 11) poster for bulletin boards,
+                  break rooms, and community boards.
+  sign-bathroom   A letter-size poster written for the captive audience of a
+                  restroom stall / above the sink.
 
 All type is converted to outlines (like every other piece of collateral), so
 any print shop can run the files as-is.
 
 Usage:
-  pip install fonttools brotli uharfbuzz segno
+  pip install fonttools brotli uharfbuzz segno cairosvg
   python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
 """
 import argparse, os, sys
@@ -24,11 +26,12 @@ import argparse, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, PAPER2, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, text, svg, mark, mark_w,
-                              qr_svg, fraunces, fraunces_it, inter6, inter4)
+                              qr_svg, write_pdf, fraunces, fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://knoxpickmeup.org/'
 SITE_LABEL = 'knoxpickmeup.org'
+UPI = 100        # signage user units per inch (posters 850x1100 = 8.5x11 in)
 
 STEPS = [
     'Booked a safe ride home? Show your bartender before you leave.',
@@ -183,10 +186,13 @@ def main():
             'CITY OF KNOXVILLE · KPD · KAT · DOWNTOWN BARS & COFFEE SHOPS'),
     }
     for name, body in pieces.items():
-        open(os.path.join(args.out, name), 'w').write(body)
-        print(f'{name:22s} -> {os.path.join(args.out, name)}')
+        svg_f = os.path.join(args.out, name)
+        open(svg_f, 'w').write(body)
+        write_pdf(body, svg_f[:-4] + '.pdf', UPI)   # true-size print-ready PDF
+        print(f'{name:22s} -> {svg_f}  (+ .pdf)')
     print('Print: tent on card stock (fold at the middle); sticker as a window '
-          'cling; posters at 8.5 x 11. All type is outlined.')
+          'cling; posters at 8.5 x 11. Print-ready PDFs sit beside each SVG; '
+          'all type is outlined and every piece is generic (no per-shop info).')
 
 
 if __name__ == '__main__':
