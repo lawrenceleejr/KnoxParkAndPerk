@@ -106,16 +106,17 @@ def poster(eyebrow, headline, sub, foot):
 
 # ============================================================ window sticker
 def window_sticker():
-    """A door/window decal (460 ≈ 4.5 in round) — the mark is the hero, with
-    the website and 'participating location' beneath, in one simple circle."""
-    S, cx = 460, 230
-    b = [f'<circle cx="{cx}" cy="{cx}" r="222" fill="{PAPER}" stroke="{NIGHT}" stroke-width="4"/>',
-         f'<circle cx="{cx}" cy="{cx}" r="205" fill="none" stroke="{GOLD}" stroke-width="1.5"/>']
-    # the logo, big and central
-    b.append(mark(cx - mark_w(184) / 2, 74, 184))
-    b.append(text(fraunces, 'Knox Pick-Me-Up', 30, cx, 320, INK, anchor='middle')[0])
-    b.append(text(inter6, 'PARTICIPATING LOCATION', 12.5, cx, 350, ORANGE_INK, tracking=0.2, anchor='middle')[0])
-    b.append(text(fraunces_it, SITE_LABEL, 17, cx, 380, INK2, anchor='middle')[0])
+    """A door/window decal (560 ≈ 5.5 in round) built to read from across the
+    street: a big, dominant mark, then a large wordmark and 'participating
+    location' beneath — high contrast, one simple circle."""
+    S, cx = 560, 280
+    b = [f'<circle cx="{cx}" cy="{cx}" r="272" fill="{PAPER}" stroke="{NIGHT}" stroke-width="7"/>',
+         f'<circle cx="{cx}" cy="{cx}" r="250" fill="none" stroke="{GOLD}" stroke-width="2"/>']
+    # the logo — the hero, sized to be recognizable at a distance (~54% of the disc)
+    b.append(mark(cx - mark_w(290) / 2, 58, 290))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 44, cx, 420, INK, anchor='middle')[0])
+    b.append(text(inter6, 'PARTICIPATING LOCATION', 16, cx, 456, ORANGE_INK, tracking=0.22, anchor='middle')[0])
+    b.append(text(fraunces_it, SITE_LABEL, 22, cx, 492, INK2, anchor='middle')[0])
     return svg(S, S, ''.join(b),
                'Knox Pick-Me-Up window sticker — participating location, knoxpickmeup.org')
 
