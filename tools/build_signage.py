@@ -1,0 +1,193 @@
+"""Signage generator — the print pieces that live at participating venues and
+around town, all from the same brand system as the cards and coasters.
+
+Builds, into print/signage/ (gitignored — print artifacts):
+  table-tent.svg      A foldable A-frame table tent (fold at the middle; the
+                      top panel prints upside-down so both faces read upright).
+                      Sits on bar and cafe tables. 4 x 9.5 in flat.
+  window-sticker.svg  A door/window decal for participating locations —
+                      "Proud partner", the mark, and a QR. 4.5 in square.
+  sign-community.svg  A letter-size (8.5 x 11) poster for bulletin boards,
+                      break rooms, and community boards.
+  sign-bathroom.svg   A letter-size poster written for the captive audience of
+                      a restroom stall / above the sink.
+
+All type is converted to outlines (like every other piece of collateral), so
+any print shop can run the files as-is.
+
+Usage:
+  pip install fonttools brotli uharfbuzz segno
+  python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
+"""
+import argparse, os, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_collateral import (PAPER, PAPER2, INK, INK2, NIGHT, NIGHT2, ORANGE,
+                              ORANGE_INK, GOLD, RULE, text, svg, mark, mark_w,
+                              qr_svg, fraunces, fraunces_it, inter6, inter4)
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SITE = 'https://knoxpickmeup.org/'
+SITE_LABEL = 'knoxpickmeup.org'
+
+STEPS = [
+    'Booked a safe ride home? Show your bartender before you leave.',
+    'Leave the car — downtown garages are free overnight.',
+    'Come back in the morning: a free large coffee, and a free KAT ride to your car.',
+]
+
+
+def qr_card(cx, top_y, size, on_dark=False):
+    """A white rounded card with the program QR centered on it."""
+    pad = size * 0.11
+    box = size + pad * 2
+    stroke = RULE if not on_dark else '#ffffff'
+    return (f'<rect x="{cx - box / 2:.1f}" y="{top_y:.1f}" width="{box:.1f}" height="{box:.1f}" '
+            f'rx="{box * 0.06:.1f}" fill="#ffffff" stroke="{stroke}" stroke-width="1.5"/>'
+            + qr_svg(QR_URL, cx - size / 2, top_y + pad, size))
+
+
+def steps_block(cx, top_y, width, num_size, body_size, gap, num_fill, body_fill):
+    """Three numbered how-it-works rows, left-aligned within a centered column."""
+    out = []
+    indent = num_size * 1.5
+    x0 = cx - width / 2
+    y = top_y
+    for i, s in enumerate(STEPS):
+        out.append(text(fraunces, str(i + 1), num_size, x0, y, num_fill)[0])
+        # wrap the body to the column width
+        for line in wrap(inter4, s, body_size, width - indent):
+            out.append(text(inter4, line, body_size, x0 + indent, y, body_fill)[0])
+            y += body_size * 1.32
+        y += gap
+    return ''.join(out), y
+
+
+def wrap(face, s, size, max_w):
+    """Greedy word wrap to max_w (in user units)."""
+    words, lines, cur = s.split(' '), [], ''
+    for w in words:
+        trial = (cur + ' ' + w).strip()
+        if face.shape(trial, size)[1] <= max_w or not cur:
+            cur = trial
+        else:
+            lines.append(cur); cur = w
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+# ============================================================ letter posters
+def poster(eyebrow, headline, sub, foot):
+    """Letter-size portrait poster (850 x 1100 = 8.5 x 11 in at 100 u/in)."""
+    W, H, cx = 850, 1100, 425
+    b = [f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+         f'<rect x="24" y="24" width="{W-48}" height="{H-48}" fill="none" stroke="{RULE}" stroke-width="2"/>',
+         f'<rect x="24" y="24" width="{W-48}" height="10" fill="{ORANGE}"/>']
+    b.append(mark(cx - mark_w(120) / 2, 66, 120))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 40, cx, 250, INK, anchor='middle')[0])
+    b.append(text(inter6, eyebrow, 13, cx, 284, ORANGE_INK, tracking=0.18, anchor='middle')[0])
+    # headline (may be two lines, split on a literal newline)
+    hy = 366
+    for line in headline.split('\n'):
+        b.append(text(fraunces, line, 52, cx, hy, INK, anchor='middle')[0])
+        hy += 60
+    b.append(text(fraunces_it, sub, 22, cx, hy + 6, ORANGE_INK, anchor='middle')[0])
+    steps_svg, _ = steps_block(cx, hy + 66, 560, 30, 19, 14, ORANGE, INK2)
+    b.append(steps_svg)
+    # QR + website
+    qsz = 210
+    b.append(qr_card(cx, 690, qsz))
+    b.append(text(inter6, 'SCAN — FREE COFFEE FOR A SAFE RIDE HOME', 13, cx, 690 + qsz + 62, INK2, tracking=0.14, anchor='middle')[0])
+    b.append(text(fraunces, SITE_LABEL, 30, cx, 690 + qsz + 100, INK, anchor='middle')[0])
+    b.append(text(inter6, foot, 10.5, cx, H - 58, INK2, tracking=0.12, anchor='middle')[0])
+    return svg(W, H, ''.join(b), f'Knox Pick-Me-Up poster — {headline.replace(chr(10), " ")}')
+
+
+# ============================================================ window sticker
+def window_sticker():
+    """A door/window decal for participating venues (460 x 460 ≈ 4.5 in)."""
+    S, cx = 460, 230
+    b = [f'<rect x="6" y="6" width="{S-12}" height="{S-12}" rx="40" fill="{NIGHT}" stroke="{GOLD}" stroke-width="4"/>',
+         f'<rect x="20" y="20" width="{S-40}" height="{S-40}" rx="30" fill="none" stroke="{GOLD}" stroke-width="1" opacity=".4"/>']
+    b.append(mark(cx - mark_w(84) / 2, 44, 84, shield=PAPER, cup=NIGHT))
+    b.append(text(inter6, 'PROUD PARTNER', 13, cx, 168, GOLD, tracking=0.24, anchor='middle')[0])
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 30, cx, 202, PAPER, anchor='middle')[0])
+    for i, line in enumerate(['We honor the Morning Pick-Me-Up Card —',
+                              'a free coffee for choosing a safe ride home.']):
+        b.append(text(inter4, line, 13, cx, 232 + i * 20, '#c9d0dc', anchor='middle')[0])
+    b.append(qr_card(cx, 286, 96, on_dark=True))
+    b.append(text(fraunces, SITE_LABEL, 17, cx, 300 + 96 + 24, PAPER, anchor='middle')[0])
+    return svg(S, S, ''.join(b),
+               'Knox Pick-Me-Up window sticker — proud partner, participating location')
+
+
+# ============================================================ table tent
+def tent_panel():
+    """One face of the table tent, drawn in a 400 x 500 local box."""
+    W, H, cx = 400, 500, 200
+    b = [f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+         f'<rect y="0" width="{W}" height="8" fill="{ORANGE}"/>']
+    b.append(mark(cx - mark_w(80) / 2, 40, 80))
+    b.append(text(fraunces, 'Drove here tonight?', 27, cx, 190, INK, anchor='middle')[0])
+    b.append(text(fraunces_it, 'Get home safe — coffee’s on us tomorrow.', 14, cx, 216, ORANGE_INK, anchor='middle')[0])
+    b.append(qr_card(cx, 244, 128))
+    b.append(text(inter6, 'SCAN FOR HOW IT WORKS', 11, cx, 420, INK2, tracking=0.16, anchor='middle')[0])
+    b.append(text(fraunces, SITE_LABEL, 20, cx, 452, INK, anchor='middle')[0])
+    return ''.join(b)
+
+
+def table_tent():
+    """Foldable A-frame tent, 400 x 1000 (4 x 10 in). Fold at the middle; the
+    top panel is rotated 180° so it reads upright once the sheet is folded
+    over and stood up."""
+    W, H = 400, 1000
+    panel = tent_panel()
+    b = [f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+         # bottom panel, upright
+         f'<g transform="translate(0,500)">{panel}</g>',
+         # top panel, rotated 180° about the sheet's upper-half center
+         f'<g transform="translate({W},500) rotate(180)">{panel}</g>',
+         # fold line
+         f'<line x1="0" y1="500" x2="{W}" y2="500" stroke="{RULE}" stroke-width="1.5" stroke-dasharray="7 5"/>',
+         f'<g transform="translate({W/2},500)"><rect x="-34" y="-8" width="68" height="16" rx="8" fill="{PAPER}"/>'
+         + text(inter6, 'FOLD', 8, 0, 3, INK2, tracking=0.2, anchor='middle')[0] + '</g>']
+    return svg(W, H, ''.join(b),
+               'Knox Pick-Me-Up table tent — foldable A-frame for bar and cafe tables')
+
+
+def main():
+    ap = argparse.ArgumentParser(description='Build Knox Pick-Me-Up signage (tents, stickers, posters).')
+    ap.add_argument('--qr-url', default=f'{SITE}#partners',
+                    help='URL every QR on the signage encodes')
+    ap.add_argument('--out', default=os.path.join(REPO, 'print', 'signage'),
+                    help='output directory')
+    args = ap.parse_args()
+
+    global QR_URL
+    QR_URL = args.qr_url or f'{SITE}#partners'
+    os.makedirs(args.out, exist_ok=True)
+
+    pieces = {
+        'table-tent.svg': table_tent(),
+        'window-sticker.svg': window_sticker(),
+        'sign-community.svg': poster(
+            'A ROAD-SAFETY PROGRAM FOR DOWNTOWN KNOXVILLE',
+            'Ride home tonight.\nCoffee’s on us tomorrow.',
+            'A thank-you for keeping our roads safe.',
+            'CITY OF KNOXVILLE · KPD · KAT · DOWNTOWN BARS & COFFEE SHOPS'),
+        'sign-bathroom.svg': poster(
+            'BEFORE YOU HEAD OUT',
+            'Not driving home?\nGood call.',
+            'Show your bartender your ride — get a free-coffee card.',
+            'CITY OF KNOXVILLE · KPD · KAT · DOWNTOWN BARS & COFFEE SHOPS'),
+    }
+    for name, body in pieces.items():
+        open(os.path.join(args.out, name), 'w').write(body)
+        print(f'{name:22s} -> {os.path.join(args.out, name)}')
+    print('Print: tent on card stock (fold at the middle); sticker as a window '
+          'cling; posters at 8.5 x 11. All type is outlined.')
+
+
+if __name__ == '__main__':
+    main()

@@ -105,7 +105,24 @@ python3 tools/build_coasters.py \
 ```
 
 Rerun it when the roster changes — the rim names auto-shrink to fit, and the
-night/day pair is regenerated in one shot.
+night/day pair is regenerated in one shot. **Both sides** carry a QR to the
+program site and the website, so the coaster works face-up either way.
+
+**Venue & community signage** is a third generator — table tents for bar and
+cafe tables, a window/door sticker for participating locations, and
+letter-size posters for community boards and restrooms:
+
+```sh
+python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
+# -> print/signage/table-tent.svg      foldable A-frame (fold at the middle)
+#    print/signage/window-sticker.svg  4.5in participating-location decal
+#    print/signage/sign-community.svg  8.5x11 poster (bulletin boards)
+#    print/signage/sign-bathroom.svg   8.5x11 poster (restroom / above the sink)
+```
+
+Every piece carries a QR and the website. **In the browser:** the *Build print
+materials* GitHub Action (Actions tab → Run workflow) runs the coaster and
+signage generators together and hands back a downloadable zip — no terminal.
 
 Everything is SVG with **all type converted to outlines** — no font
 substitution surprises at the shop. Most shops prefer PDF; convert with:

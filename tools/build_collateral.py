@@ -49,9 +49,14 @@ def text(face, s, size, x, y, fill, tracking=0.0, anchor='start'):
     elif anchor == 'end': x -= w
     return f'<path transform="translate({x:.2f},{y:.2f})" fill="{fill}" d="{d}"/>', w
 
-def arc_text(face, s, size, cx, cy, R, fill, tracking=0.12, mode='top', center_deg=0.0):
-    """Per-glyph text along a circle. mode top: baseline circle R, reads clockwise across top.
-    mode bottom: reads across bottom, glyphs upright (tops toward center)."""
+def arc_text(face, s, size, cx, cy, R, fill, tracking=0.12, mode='top', center_deg=0.0, cap=0.72):
+    """Per-glyph text along a circle, vertically CENTERED on radius R (so the
+    band it occupies is symmetric about R, top and bottom arcs matching).
+    mode top: reads clockwise across the top; mode bottom: across the bottom,
+    glyphs upright (tops toward center). `cap` is the cap-height/size ratio
+    used to center the glyphs — glyphs are drawn baseline-at-origin, so a
+    downward shift of cap*size/2 puts their optical center on R."""
+    voff = cap * size / 2
     widths = []
     for ch in s:
         _, w = face.shape(ch, size)
@@ -75,7 +80,7 @@ def arc_text(face, s, size, cx, cy, R, fill, tracking=0.12, mode='top', center_d
                 py = cy + R*math.cos(math.radians(deg))
                 rot = -deg
             out.append(f'<g transform="translate({px:.2f},{py:.2f}) rotate({rot:.2f})">'
-                       f'<path transform="translate({-w/2:.2f},0)" fill="{fill}" d="{d}"/></g>')
+                       f'<path transform="translate({-w/2:.2f},{voff:.2f})" fill="{fill}" d="{d}"/></g>')
         dist += w + track
     return ''.join(out)
 
