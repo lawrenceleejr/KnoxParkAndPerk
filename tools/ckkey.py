@@ -2,7 +2,7 @@
 
 Usage:  python3 tools/ckkey.py 'YOUR-PROGRAM-KEY'
 Each shop's register QR should point at:
-  https://.../redeem.html?shop=<slug>&k=<this value>
+  https://.../redeem/?shop=<slug>&k=<this value>
 The derived key lets the scanner verify serial checksums locally (even
 offline); it cannot be used to access the backup action.
 """

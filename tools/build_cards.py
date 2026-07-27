@@ -3,7 +3,7 @@
 Each card gets a unique serial and a unique QR. The QR encodes a URL on the
 public site with the serial embedded (?c=KPMU-...#partners):
   - a PATRON who scans it lands on the participating-businesses section;
-  - a SHOP scanning it from redeem.html has the serial read straight off it.
+  - a SHOP scanning it from the redeem/ scanner has the serial read straight off it.
 
 Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the pack
 check-out Google Form pre-filled with the pack's serial range, so whoever

@@ -6,7 +6,7 @@ so the derived key can travel in printed register QRs (letting the scanner
 verify serials locally, even offline) without ever exposing the program key
 itself, which also gates the full-data backup action.
 
-Must stay byte-identical with the Apps Script and redeem.html implementations
+Must stay byte-identical with the Apps Script and redeem/index.html implementations
 (see design/LOGGING.md) — printed cards freeze this algorithm.
 """
 import hashlib

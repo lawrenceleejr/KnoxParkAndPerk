@@ -136,14 +136,14 @@ Each shop's counter QR opens the scanner pre-set to that shop:
 ```sh
 CK=$(python3 tools/ckkey.py 'THE-PROGRAM-KEY')   # derived serial-check key
 python3 -c "import segno; segno.make(
-  'https://knoxpickmeup.org/redeem.html?shop=SLUG&k=$CK',
+  'https://knoxpickmeup.org/redeem/?shop=SLUG&k=$CK',
   error='q').save('register-SLUG.png', scale=12, border=2)"
 ```
 
 The `&k=` value is the **derived** check key — safe on printed paper (it
 can't unlock backups or reveal the program key) — and it's what lets the
 scanner verify each scanned serial's checksum instantly, even offline.
-Use the slugs from the `SHOPS` map in [`redeem.html`](redeem.html). Print
+Use the slugs from the `SHOPS` map in [`redeem/index.html`](redeem/index.html). Print
 at ~3″, mount on card stock, laminate. Error level `q` keeps them
 scannable when the lamination glares or the corner gets coffee on it.
 
@@ -159,7 +159,7 @@ scannable when the lamination glares or the corner gets coffee on it.
 2. **`PACK_FORM_URL` configured** so pack sheets carry the check-out QR.
 3. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it
-   from `redeem.html?shop=demo-cafe` and see the serial extracted.
+   from `redeem/?shop=demo-cafe` and see the serial extracted.
 4. **Stamp test** on the shop's actual stock sample: rubber date stamp +
    ballpoint, smudge check after 10 seconds.
 5. **QR size sanity**: the card QR prints at about 0.55″ — fine for

@@ -22,8 +22,8 @@ Three pages, one static site — each aimed at a different audience:
 | Page | Audience | What it does |
 |---|---|---|
 | [`index.html`](https://knoxpickmeup.org/) | **Public** — patrons, partners, press | The program site: how it works, why it matters, the card, an OpenStreetMap map of participating shops/bars and the free garages, partner pitch, FAQ. Every card's QR lands patrons here, on the participating-businesses section. Linked everywhere. |
-| [`redeem.html`](https://knoxpickmeup.org/redeem.html) | **Business** — coffee-shop baristas | The card scanner. Opened from the shop's register QR (`?shop=slug`, with a dropdown fallback), it scans a card's QR with the phone camera, shows live detection feedback, and logs the redemption — with duplicate/voided-card rejection, offline queueing, manual entry, and a stop button. Runs in labeled demo mode until the backend is configured. |
-| [`dashboard.html`](https://knoxpickmeup.org/dashboard.html) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
+| [`/redeem/`](https://knoxpickmeup.org/redeem/) | **Business** — coffee-shop baristas | The card scanner. Opened from the shop's register QR (`?shop=slug`, with a dropdown fallback), it scans a card's QR with the phone camera, shows live detection feedback, and logs the redemption — with duplicate/voided-card rejection, offline queueing, manual entry, and a stop button. Runs in labeled demo mode until the backend is configured. |
+| [`/dashboard/`](https://knoxpickmeup.org/dashboard/) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
 
 Also business-facing but not a page: each **card pack's cover sheet** carries
 a QR that opens the pack check-out Google Form (pre-filled serials, pick the
@@ -31,8 +31,8 @@ bar from a dropdown).
 
 ## Contents
 
-- **[`index.html`](index.html) · [`redeem.html`](redeem.html) ·
-  [`dashboard.html`](dashboard.html)** — the three pages above; self-contained
+- **[`index.html`](index.html) · [`redeem/`](redeem/index.html) ·
+  [`dashboard/`](dashboard/index.html)** — the three pages above; self-contained
   static files, no build step. Libraries are vendored in
   [`assets/vendor/`](assets/vendor) (Leaflet for the map, jsQR for the
   scanner), so the only thing fetched from a third party at view time is the
@@ -43,7 +43,7 @@ bar from a dropdown).
   fraud controls, branding guide, partner engagement playbook, pilot budget,
   metrics, timeline, and risk register.
 - **[`design/LOGGING.md`](design/LOGGING.md)** — the card-tracking system:
-  QR scan-to-log redemptions (`redeem.html`), pack check-out, Google Sheets
+  QR scan-to-log redemptions (`redeem/index.html`), pack check-out, Google Sheets
   backend, Looker Studio dashboards — no servers, $0, volunteer-proof.
 - **[`PRINTING.md`](PRINTING.md)** — the printing guide: card-book specs and
   a copy-paste RFQ, vendor guidance, file generation, register QRs, and the
@@ -67,7 +67,7 @@ One Google Sheet is the entire database. Who writes what:
 
 | Data | Written by | Human involved? |
 |---|---|---|
-| `Redemptions` (each coffee handed over) | the **Apps Script web app**, when a barista scans a card on [`redeem.html`](redeem.html) | barista points a phone camera; no typing |
+| `Redemptions` (each coffee handed over) | the **Apps Script web app**, when a barista scans a card on [`/redeem/`](https://knoxpickmeup.org/redeem/) | barista points a phone camera; no typing |
 | `Packs` (which bar got which serials) | the **pack check-out Google Form**, opened by the QR on each pack's cover sheet | deliverer picks the bar from a dropdown |
 | `Venues`, `Packs.voided` (kill switch) | **you, by hand** | rarely |
 
@@ -100,9 +100,9 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
    authorize it, then add a daily time-driven trigger for it (Triggers → Add).
 5. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
-   - [`redeem.html`](redeem.html): `SCRIPT_URL` = the `/exec` URL; fill the
+   - [`redeem/index.html`](redeem/index.html): `SCRIPT_URL` = the `/exec` URL; fill the
      `SHOPS` map (slug → display name).
-   - [`dashboard.html`](dashboard.html): the same `SCRIPT_URL`.
+   - [`dashboard/index.html`](dashboard/index.html): the same `SCRIPT_URL`.
    - [`tools/build_cards.py`](tools/build_cards.py): `PACK_FORM_URL` using
      the three `entry.NNNNN` IDs from step 3.
    Commit and merge to `main` — Pages redeploys automatically.
@@ -111,7 +111,7 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    register QR per coffee shop, and use the RFQ + pre-flight checklist
    there when ordering.
 7. **Dashboards** — the built-in one is live immediately at
-   [`dashboard.html`](dashboard.html) (unlinked and unindexed; share the URL
+   [`/dashboard/`](https://knoxpickmeup.org/dashboard/) (unlinked and unindexed; share the URL
    freely). Optionally build a Looker Studio view on the Sheet for partners
    who want to slice data themselves.
 8. **Turn on backups** — repo Settings → Secrets and variables → Actions →

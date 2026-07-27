@@ -14,7 +14,7 @@ vacation.
 print run                bar                    coffee shop                you
 ─────────                ───                    ───────────                ───
 tools/build_cards.py     pack cover QR          register QR opens          Google Sheet
-makes per-serial cards   opens pre-filled       redeem.html?shop=slug      (the database)
+makes per-serial cards   opens pre-filled       redeem/?shop=slug      (the database)
 + pack cover sheets  →   Google Form:       →   barista scans the      →       │
 each card QR encodes     "serials X–Y → [bar    card's QR with the             ▼
 site URL with serial     dropdown]" — 10 sec    phone camera → serial      Looker Studio
@@ -26,7 +26,7 @@ site URL with serial     dropdown]" — 10 sec    phone camera → serial      L
 
 - A **patron** who scans it just lands on the participating-businesses
   section of the website. No login walls, nothing weird.
-- The **shop scanner page** (`redeem.html`) doesn't *follow* the URL — it
+- The **shop scanner page** (`redeem/index.html`) doesn't *follow* the URL — it
   *reads* it with the camera and extracts the `KPMU-…` serial with a regex.
 
 Same printed code, two behaviors, zero extra infrastructure.
@@ -34,7 +34,7 @@ Same printed code, two behaviors, zero extra infrastructure.
 **Venue attribution needs nobody to type a venue name, ever:**
 
 - **Coffee shop** = which register QR opened the scanner
-  (`redeem.html?shop=wild-love`). Print one QR per shop, tape it by the till.
+  (`redeem/?shop=wild-love`). Print one QR per shop, tape it by the till.
 - **Bar** = the serial range. Packs of 50 are checked out per bar via the
   pack form, so `serial → bar` is a range lookup in the Sheet.
 
@@ -71,7 +71,7 @@ uses a key *derived* from it: `CK_KEY = hex(HMAC-SHA256(PROGRAM_KEY,
 "serial-v1"))`, then `letter = HMAC-SHA256(CK_KEY, digits)` mapped to a
 24-letter alphabet (no I/O, which read as 1/0). The derivation is one-way,
 which is what lets the derived key ride in each shop's **register QR**
-(`redeem.html?shop=slug&k=<derived>`): the scanner verifies every scanned
+(`redeem/?shop=slug&k=<derived>`): the scanner verifies every scanned
 serial locally and instantly — including offline and in demo mode — while
 someone who photographs a register QR still can't touch the backup action
 or learn the program key. The server re-checks regardless. A made-up serial
@@ -259,19 +259,19 @@ function weeklyDigest() {
     '\nVoided-pack attempts: ' + n('void') + '\nBad serials: ' + n('bad') +
     '\nPacks checked out: ' + packs.filter(inWeek).length + '\n\n' +
     (attn.length ? 'Needs attention:\n- ' + attn.join('\n- ') : 'Nothing needs attention.') +
-    '\n\nDashboard: <your GitHub Pages URL>/dashboard.html';
+    '\n\nDashboard: <your GitHub Pages URL>/dashboard/';
   MailApp.sendEmail(Session.getEffectiveUser().getEmail(),
     'Pick-Me-Up weekly: ' + n('ok') + ' coffees' + (attn.length ? ' — ' + attn.length + ' item(s) need attention' : ''),
     body);
 }
 ```
 
-`redeem.html` calls it with a GET and shows the barista **"Good to go"** or
+`redeem/index.html` calls it with a GET and shows the barista **"Good to go"** or
 **"Card already redeemed at ‹shop›"** in real time.
 
-### C. The scanner: `redeem.html` (this repo, GitHub Pages)
+### C. The scanner: `redeem/index.html` (this repo, GitHub Pages)
 Already built. Brand-styled, self-contained static page:
-- opens from a per-shop QR (`redeem.html?shop=slug`), shows which shop it's
+- opens from a per-shop QR (`redeem/?shop=slug`), shows which shop it's
   logging for;
 - tap-to-start camera with live detection feedback (polygon over the code,
   serial chip, outcome-colored reticle, scan line, torch toggle) and a stop
@@ -298,7 +298,7 @@ per-serial card SVGs and one cover sheet per 50 into `print/` (gitignored),
 ready for any print shop (SVG→PDF one-liner included in the script output).
 Unique QR per card is what makes scan-to-log possible.
 
-### F. The admin dashboard: `dashboard.html` (this repo, GitHub Pages)
+### F. The admin dashboard: `dashboard/index.html` (this repo, GitHub Pages)
 A brand-styled, self-contained dashboard on the same static site, fed live
 from the Sheet through the Apps Script's `stats` action. It shows a KPI row
 (issued, redeemed, redemption rate, last 7 days), redemptions per day/week,
@@ -368,7 +368,7 @@ none of which you have to remember to run:
    `git log -- data/backup`) and File → Import → each CSV into its tab.
 4. If the whole Google account is lost: create a new Sheet from the CSVs,
    re-paste the Apps Script, re-deploy, and update `SCRIPT_URL` in
-   `redeem.html`/`dashboard.html` and the two GitHub secrets. That is the
+   `redeem/index.html`/`dashboard/index.html` and the two GitHub secrets. That is the
    entire blast radius — under an hour.
 
 **Failure alerting for free:** after setup, a failed nightly backup fails
@@ -378,7 +378,7 @@ the GitHub Action, and GitHub emails the repo owner. No pager, no service.
 
 The system is designed so the roster can churn without touching any data:
 
-**A coffee shop joins:** add one line to the `SHOPS` map in `redeem.html`
+**A coffee shop joins:** add one line to the `SHOPS` map in `redeem/index.html`
 (slug → display name) and one to the `SHOPS` roster in `index.html`'s map
 (name + lat/lon pin), merge, print their register QR, and add them to the
 `Venues` tab — including their agreed monthly redemption cap in the cap
@@ -419,11 +419,11 @@ the pack form dropdown — that's how the dashboard links them.
 3. Paste the Apps Script above into the Sheet; set `PROGRAM_KEY` — the one
    secret in the whole system (save it somewhere safe: print runs, register
    QRs, and backups all use it); deploy as web app, copy the `/exec` URL.
-4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem.html`;
-   set `SCRIPT_URL` in `dashboard.html`; set `PACK_FORM_URL` in
+4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem/index.html`;
+   set `SCRIPT_URL` in `dashboard/index.html`; set `PACK_FORM_URL` in
    `tools/build_cards.py`. Commit, merge — Pages redeploys.
 5. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
-   at `https://…/redeem.html?shop=<slug>`; print and laminate.
+   at `https://…/redeem/?shop=<slug>`; print and laminate.
 6. Run `tools/build_cards.py`, send `print/` to the print shop.
 7. Build the Looker Studio dashboard on the Sheet; share view links.
 8. Backups: add the daily `nightlySnapshot` trigger in the Apps Script; in
