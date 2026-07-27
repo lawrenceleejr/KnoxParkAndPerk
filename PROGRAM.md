@@ -70,7 +70,7 @@ crowd stands the coffee for tomorrow's safe riders.
   morning-after trip; prevents hoarding).
 - Serialized (`KPMU-YYYY-########` plus a one-letter keyed checksum, e.g.
   `…00004217H`, so serials can't be invented by counting). Packs of 50 carry
-  their own 10-digit serial (`KPMU-YYYY-##########`); the pack check-out
+  their own serial with a leading P (`KPMU-YYYY-P####`); the pack check-out
   record ties every card serial to its issuing bar, and each redemption is
   stored with that bar attached — so no per-card bar mark is needed.
 

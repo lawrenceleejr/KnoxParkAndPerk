@@ -5,12 +5,12 @@ public site with the serial embedded (?c=KPMU-...#partners):
   - a PATRON who scans it lands on the participating-businesses section;
   - a SHOP scanning it from the redeem/ scanner has the serial read straight off it.
 
-Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the pack
-check-out Google Form pre-filled with the pack's serial range, so whoever
-hands the pack to a bar just scans it and picks the bar from a dropdown.
+Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the scanner's
+admin pack check-out (redeem/?pack=…), pre-loaded with the pack and its card
+range, so whoever hands the pack to a bar just scans it and picks the bar.
 
 Usage:
-  pip install fonttools brotli uharfbuzz segno
+  pip install fonttools brotli uharfbuzz segno cairosvg
   python3 tools/build_cards.py --year 2026 --start 1 --count 100
 Outputs to print/cards/ and print/packs/ (gitignored — print artifacts).
 See design/LOGGING.md for the full system.
@@ -20,18 +20,14 @@ import argparse, io, math, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
-                              RULE, text, svg, mark, fraunces, fraunces_it,
+                              RULE, text, svg, mark, write_pdf, fraunces, fraunces_it,
                               inter6, inter4)
 from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
 SITE = 'https://knoxpickmeup.org/'
-# Pack check-out Google Form (see design/LOGGING.md step 2). Template gets
-# .format(pack=..., first=..., last=...). Leave empty until the form exists.
-PACK_FORM_URL = ''
-# e.g. ('https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url'
-#       '&entry.0000000={pack}&entry.1111111={first}&entry.2222222={last}')
 PACK_SIZE = 50
+UPI = 150        # cards 525x300 = 3.5x2 in; pack sheets 525x700 = 3.5x4.67 in
 # ==========================================
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -123,9 +119,9 @@ def card_back_svg():
 
 
 def pack_serial(year, pack_no):
-    # Pack serials carry two more digits than the 8-digit card serials, so a
-    # pack is never mistakable for a card (or vice versa) anywhere in the DB.
-    return f'KPMU-{year}-{pack_no:010d}'
+    # Pack serials carry a leading "P" (KPMU-YYYY-P####) so a pack can never be
+    # mistaken for a card (KPMU-YYYY-########X) anywhere in the data or by eye.
+    return f'KPMU-{year}-P{pack_no:04d}'
 
 
 def pack_svg(year, pack_no, first, last):
@@ -143,16 +139,15 @@ def pack_svg(year, pack_no, first, last):
     b.append(text(fraunces, f'{first}', 20, 40, 282, INK)[0])
     b.append(text(fraunces, f'through  {last}', 20, 40, 310, INK)[0])
     b.append(f'<line x1="40" y1="336" x2="485" y2="336" stroke="{RULE}" stroke-width="1"/>')
+    # The QR opens the scanner's admin check-out (redeem/?pack=…) pre-loaded
+    # with this pack and its card range; the volunteer just picks the bar and
+    # submits. The same QR is what the in-app admin scanner reads.
+    checkout_url = f'{SITE}redeem/?pack={pk}&first={first}&last={last}'
     b.append(text(inter6, 'CHECKING THIS PACK OUT TO A BAR?', 11, 40, 366, INK, tracking=0.14)[0])
-    if PACK_FORM_URL:
-        url = PACK_FORM_URL.format(pack=pk, first=first, last=last)
-        b.append(qr_group(url, 40, 382, 160))
-        b.append(text(inter4, 'Scan, pick the bar from the list, submit. Ten seconds.', 12, 222, 414, INK2)[0])
-        b.append(text(inter4, 'That ties every card in this pack to the bar for the', 12, 222, 434, INK2)[0])
-        b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])
-    else:
-        b.append(text(inter4, 'Pack check-out form not configured yet — set PACK_FORM_URL in', 12, 40, 390, INK2)[0])
-        b.append(text(inter4, 'tools/build_cards.py (see design/LOGGING.md) and rebuild.', 12, 40, 410, INK2)[0])
+    b.append(qr_group(checkout_url, 40, 382, 160))
+    b.append(text(inter4, 'Scan it: pick the bar, submit. Ten seconds.', 12, 222, 414, INK2)[0])
+    b.append(text(inter4, 'Ties every card in this pack to that bar for the', 12, 222, 434, INK2)[0])
+    b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])
     b.append(f'<line x1="40" y1="560" x2="485" y2="560" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(inter6, 'BAR', 9, 40, 592, INK2, tracking=0.18)[0])
     b.append(f'<line x1="80" y1="592" x2="300" y2="592" stroke="{INK2}" stroke-width="1"/>')
@@ -185,22 +180,23 @@ def main():
 
     serials = [f'KPMU-{args.year}-{n:08d}' for n in range(args.start, args.start + args.count)]
     serials = [b + serial_letter(b, ck) for b in serials]
+    def emit(path, svg_str):
+        open(path, 'w').write(svg_str)
+        write_pdf(svg_str, path[:-4] + '.pdf', UPI)   # true-size print-ready PDF
+
     for s in serials:
-        open(os.path.join(cards_dir, f'card-{s}.svg'), 'w').write(card_svg(s))
-    open(os.path.join(cards_dir, 'card-back.svg'), 'w').write(card_back_svg())
+        emit(os.path.join(cards_dir, f'card-{s}.svg'), card_svg(s))
+    emit(os.path.join(cards_dir, 'card-back.svg'), card_back_svg())
 
     for i in range(0, len(serials), PACK_SIZE):
         chunk = serials[i:i + PACK_SIZE]
         pack_no = (args.start + i - 1) // PACK_SIZE + 1
-        open(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'), 'w').write(
-            pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
+        emit(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'),
+             pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
 
-    print(f'{len(serials)} cards -> {cards_dir}')
+    print(f'{len(serials)} cards -> {cards_dir}  (SVG + print-ready PDF each)')
     print(f'{math.ceil(len(serials)/PACK_SIZE)} pack sheets -> {packs_dir}')
-    print('Hand the SVGs to any print shop, or convert: '
-          'pip install cairosvg && python3 -c "import cairosvg,glob;'
-          '[cairosvg.svg2pdf(url=f,write_to=f.replace(\'.svg\',\'.pdf\')) '
-          'for f in glob.glob(\'print/**/*.svg\',recursive=True)]"')
+    print('PDFs are true-size with outlined type — hand them straight to any print shop.')
 
 
 if __name__ == '__main__':

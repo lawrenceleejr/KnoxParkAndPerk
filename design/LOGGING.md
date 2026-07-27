@@ -14,10 +14,10 @@ vacation.
 print run                bar                    coffee shop                you
 ─────────                ───                    ───────────                ───
 tools/build_cards.py     pack cover QR          register QR opens          Google Sheet
-makes per-serial cards   opens pre-filled       redeem/?shop=slug      (the database)
-+ pack cover sheets  →   Google Form:       →   barista scans the      →       │
-each card QR encodes     "serials X–Y → [bar    card's QR with the             ▼
-site URL with serial     dropdown]" — 10 sec    phone camera → serial      Looker Studio
+makes per-serial cards   opens the scanner's    redeem/?shop=slug      (the database)
++ pack cover sheets  →   admin check-out:   →   barista scans the      →       │
+each card QR encodes     pick the bar, scan     card's QR with the             ▼
+site URL with serial     the pack — 10 sec      phone camera → serial      Looker Studio
                                                 logged automatically       dashboard
 ```
 
@@ -35,8 +35,9 @@ Same printed code, two behaviors, zero extra infrastructure.
 
 - **Coffee shop** = which register QR opened the scanner
   (`redeem/?shop=wild-love`). Print one QR per shop, tape it by the till.
-- **Bar** = the serial range. Packs of 50 are checked out per bar via the
-  pack form, so `serial → bar` is a range lookup in the Sheet.
+- **Bar** = the serial range. Packs of 50 are checked out per bar in the
+  scanner's admin mode (scan the pack QR, pick the bar), so `serial → bar` is
+  a range lookup in the Sheet.
 
 ## 2. Components in detail
 
@@ -44,20 +45,19 @@ Same printed code, two behaviors, zero extra infrastructure.
 Owned by a program Google account (make one — `knoxpickmeup@gmail.com` — so
 this survives any individual volunteer). **How it gets written:** the
 `Redemptions` tab is appended to by the **Apps Script web app** (below) every
-time a barista scans — no form involved; the `Packs` tab is filled by the
-**pack check-out Google Form** (a normal form-linked-to-sheet setup); the
+time a barista scans — no form involved; the `Packs` tab is written by the
+scanner's **admin pack check-out** (`checkout` action below); the
 `Venues` tab and the `voided` column are edited **by hand**, rarely. Nothing
 else ever writes to the file. Three tabs:
 
 | Tab | Columns | Filled by |
 |---|---|---|
 | `Redemptions` | timestamp · serial · shop · status · **bar** · **pack serial** | Apps Script (below) |
-| `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the pack Google Form (voided: you, by hand) |
-| `Venues` | slug · display name · type (bar/shop) · joined date · **deactivated** · **monthly cap** (shops, optional) | you, by hand, rarely |
+| `Packs` | timestamp · **pack serial** · first card serial · last card serial · bar · **voided** | the admin `checkout` action (voided: you, by hand) |
+| `Venues` | slug · display name · type (bar/shop) · joined date · **deactivated** · **monthly cap** (shops, optional) | admin check-out (new bars) + you, by hand |
 
-**Pack serials** are 10 digits (`KPMU-YYYY-##########`) — two more than the
-8-digit card serials, so a pack can never be mistaken for a card anywhere in
-the data. The bar attribution is **stored on each redemption row at scan
+**Pack serials** carry a leading **P** (`KPMU-YYYY-P####`) so a pack can never
+be mistaken for a card (`KPMU-YYYY-########X`) anywhere in the data or by eye. The bar attribution is **stored on each redemption row at scan
 time**: the Apps Script looks the card's serial up in `Packs` (which range
 contains it) and writes the issuing bar and pack serial alongside the shop.
 No formulas required for the join; keep a duplicate flag
@@ -167,6 +167,40 @@ function doGet(e) {
           out = { status: 'ok', bar: src.bar };
         }
       }
+    } finally {
+      lock.releaseLock();
+    }
+  }
+  if (p.action === 'checkout' && /^KPMU-\d{4}-P\d+$/i.test(p.pack || '')) {
+    // Admin pack check-out (redeem/?admin): tie a printed pack to the bar
+    // taking it. Upserts by pack serial, so re-scanning a pack corrects its
+    // bar instead of creating a duplicate range.
+    const pack = p.pack.toUpperCase();
+    const first = String(p.first || '').toUpperCase();
+    const last = String(p.last || '').toUpperCase();
+    const bar = String(p.bar || '').slice(0, 60);
+    const lock = LockService.getScriptLock();
+    lock.waitLock(5000);
+    try {
+      const sh = SpreadsheetApp.getActive().getSheetByName(PACKS);
+      const rows = sh.getDataRange().getValues();
+      let row = 0;                                   // 1-based row of an existing pack, else 0
+      for (let i = 1; i < rows.length; i++) if (String(rows[i][1]) === pack) { row = i + 1; break; }
+      if (row) {
+        sh.getRange(row, 5).setValue(bar);           // update the bar (col E)
+        if (first) sh.getRange(row, 3).setValue(first);
+        if (last) sh.getRange(row, 4).setValue(last);
+      } else {
+        sh.appendRow([new Date(), pack, first, last, bar, '']);
+      }
+      // make sure a newly-typed bar shows up as a venue for the dashboard
+      const vs = SpreadsheetApp.getActive().getSheetByName('Venues');
+      if (vs && bar) {
+        const known = vs.getDataRange().getValues().slice(1)
+          .some(r => String(r[1]).trim().toLowerCase() === bar.toLowerCase());
+        if (!known) vs.appendRow([bar.toLowerCase().replace(/[^a-z0-9]+/g, '-'), bar, 'bar', new Date(), '', '']);
+      }
+      out = { status: 'ok', pack: pack, bar: bar };
     } finally {
       lock.releaseLock();
     }
@@ -287,10 +321,14 @@ Already built. Brand-styled, self-contained static page:
 - **demo mode**: with `SCRIPT_URL` unset it logs to the screen only — safe
   to try right now.
 
-### D. Pack check-out: a plain Google Form
-One question that matters: **Bar** (dropdown). The pack serial and card
-serial range arrive pre-filled by the pack cover sheet's QR. Whoever delivers packs scans,
-taps the bar, submits. The cover sheet also has a written-log fallback line.
+### D. Pack check-out: the scanner's admin mode
+Open `redeem/?admin=1` (or scan a pack's cover-sheet QR, which is a
+`redeem/?pack=…&first=…&last=…` link, or tap the scanner's header five
+times). Pick the bar from the list — **add a new one inline** if it isn't
+there yet — then scan the pack's QR (or paste the code). That posts the
+`checkout` action, which upserts the `Packs` row (pack serial, card range,
+bar) and adds any new bar to `Venues`. Re-scanning a pack corrects its bar.
+The cover sheet also has a written-log fallback line. No Google Form needed.
 
 ### E. Card + pack printing: `tools/build_cards.py` (this repo)
 `python3 tools/build_cards.py --year 2026 --start 1 --count 500` emits
@@ -351,8 +389,9 @@ none of which you have to remember to run:
 
 **Hardening the sheet against "someone breaks something":**
 - Share the Sheet with **no editors**. The Apps Script runs as the owner and
-  the pack form writes through Google's own plumbing — nobody else needs
-  edit access, ever. Give the City/partners the dashboard link, not the sheet.
+  is the only writer (redemptions and pack check-outs both go through it) —
+  nobody else needs edit access, ever. Give the City/partners the dashboard
+  link, not the sheet.
 - Protect the `Redemptions` tab (right-click tab → Protect sheet → only the
   owner). The script still writes; stray humans can't.
 - The one column humans touch on purpose (`Packs.voided`) stays editable.
@@ -396,43 +435,41 @@ silently lost while the change propagates. Clearing the cell reactivates
 it. Don't delete the Venues row — the row is what keeps the display name
 and the grey-out working for historical data.
 
-**A bar joins:** add it to the pack form's Bar dropdown (a one-minute
-Google Forms edit), the `Venues` tab, and the `BARS` roster in
-`index.html`'s map (name + lat/lon pin), then check packs out to it as
-usual. Attribution flows from the pack records — nothing else to update.
+**A bar joins:** just check a pack out to it in admin mode — type the new
+bar's name inline and the `checkout` action adds it to `Venues` for you.
+(Optionally seed it in the `BARS` roster in `redeem/index.html` so it's in
+the dropdown without typing, and in `index.html`'s map for the name + pin.)
+Attribution flows from the pack records — nothing else to update.
 
 **A bar leaves (deactivation):** mark it `deactivated` on the `Venues` tab
-(the dashboard greys it out with a note, keeping its history), void its
+(the dashboard greys it out with a note, keeping its history) and void its
 unredeemed packs (the kill-switch column) so outstanding cards stop
-scanning, and remove it from the form dropdown. All historical attribution
-is stored on the redemption rows at scan time, so past data never shifts.
-Note: the bar's `Venues` display name must exactly match the name used in
-the pack form dropdown — that's how the dashboard links them.
+scanning. All historical attribution is stored on the redemption rows at
+scan time, so past data never shifts. Note: the bar's `Venues` display name
+must exactly match the name used at check-out — that's how the dashboard
+links them.
 
 ## 3. Setup runbook (one afternoon, in order)
 
-1. Create the program Google account; create the Sheet with the three tabs.
-2. Create the **pack form** (fields: pack serial, first card serial, last
-   card serial, bar dropdown), link it to the Sheet's `Packs` tab, and grab
-   a pre-filled URL (⋮ → *Get pre-filled link*) to learn the three
-   `entry.NNNN` IDs.
-3. Paste the Apps Script above into the Sheet; set `PROGRAM_KEY` — the one
+1. Create the program Google account; create the Sheet with the three tabs
+   (`Redemptions`, `Packs`, `Venues`).
+2. Paste the Apps Script above into the Sheet; set `PROGRAM_KEY` — the one
    secret in the whole system (save it somewhere safe: print runs, register
    QRs, and backups all use it); deploy as web app, copy the `/exec` URL.
-4. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem/index.html`;
-   set `SCRIPT_URL` in `dashboard/index.html`; set `PACK_FORM_URL` in
-   `tools/build_cards.py`. Commit, merge — Pages redeploys.
-5. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
+3. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem/index.html`
+   (and optionally seed the `BARS` roster); set `SCRIPT_URL` in
+   `dashboard/index.html`. Commit, merge — Pages redeploys.
+4. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
    at `https://…/redeem/?shop=<slug>`; print and laminate.
-6. Run `tools/build_cards.py`, send `print/` to the print shop.
-7. Build the Looker Studio dashboard on the Sheet; share view links.
-8. Backups: add the daily `nightlySnapshot` trigger in the Apps Script; in
+5. Run `tools/build_cards.py`, send `print/` to the print shop.
+6. Build the Looker Studio dashboard on the Sheet; share view links.
+7. Backups: add the daily `nightlySnapshot` trigger in the Apps Script; in
    this repo's Settings → Secrets → Actions add `BACKUP_URL` (the `/exec`
    URL) and `PROGRAM_KEY` (the same one secret), then run the "Nightly data
    backup" workflow once by hand to confirm a `data/backup/` commit appears.
    While you're in the trigger screen, add the weekly `weeklyDigest` trigger
    (Monday 7–8 AM) so the coordinator gets the week-in-review email.
-9. Dry-run with one friendly bar + one shop before the real pilot.
+8. Dry-run with one friendly bar + one shop before the real pilot.
 
 ## 4. What this costs and what can break
 

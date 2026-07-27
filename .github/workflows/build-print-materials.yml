@@ -1,0 +1,75 @@
+# Generate the on-premise print materials from the brand system:
+#   - the two-sided bar coaster (both sides carry a QR + the website)
+#   - table tents, a window sticker for participating locations, and
+#     letter-size community + bathroom posters
+#
+# Output lands in print/ (gitignored), so this workflow packages it as a
+# downloadable artifact — grab the zip from the run's summary page, no
+# terminal required. Leave the venue lists at their defaults to build a
+# sample coaster pair from the demo roster.
+name: Build print materials
+
+on:
+  workflow_dispatch:
+    inputs:
+      bars:
+        description: 'Bars for the coaster night side (comma-separated)'
+        required: false
+        default: 'Preservation Pub, Barley’s Taproom, Suttree’s'
+      shops:
+        description: 'Coffee shops for the coaster day side (comma-separated)'
+        required: false
+        default: 'Remedy Coffee, Wild Love Bakehouse, K Brew'
+      qr_url:
+        description: 'URL every QR encodes (coasters + signage)'
+        required: false
+        default: 'https://knoxpickmeup.org/#partners'
+      logo:
+        description: 'Optional path to a center logo SVG in the repo (blank = brand mark)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6 cairosvg==2.9.0
+
+      - name: Build coasters
+        run: |
+          python3 tools/build_coasters.py \
+            --bars "${{ inputs.bars }}" \
+            --shops "${{ inputs.shops }}" \
+            --qr-url "${{ inputs.qr_url }}" \
+            --logo "${{ inputs.logo }}"
+
+      - name: Build signage (table tents, window sticker, posters)
+        run: |
+          python3 tools/build_signage.py --qr-url "${{ inputs.qr_url }}"
+          {
+            echo "### Print materials built"
+            echo ""
+            echo "Each item is a **true-size, print-ready PDF** (plus its SVG), type outlined, generic (no per-shop info)."
+            echo ""
+            echo "**Coasters** — \`coaster-night\`, \`coaster-day\` (4in round; both carry a QR + website)"
+            echo "**Signage** — \`table-tent\` (4×10in fold), \`window-sticker\` (5.6in round), \`sign-community\`, \`sign-bathroom\` (8.5×11in)"
+            echo ""
+            echo "Download the **print-materials** artifact below and hand the PDFs to any print shop."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload print materials
+        uses: actions/upload-artifact@v4
+        with:
+          name: print-materials
+          path: print/
+          if-no-files-found: error

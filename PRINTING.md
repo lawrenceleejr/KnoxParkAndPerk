@@ -75,8 +75,11 @@ the card backs ("printing donated by ___").
 
 ## 4. Generating the print files
 
+Every generator writes a **true-size, print-ready PDF** next to each SVG (type
+outlined, correct physical dimensions) — hand the PDFs straight to a shop.
+
 ```sh
-pip install fonttools brotli uharfbuzz segno
+pip install fonttools brotli uharfbuzz segno cairosvg
 python3 tools/build_cards.py --year 2026 --start 1 --count 1000 \
     --key 'THE-PROGRAM-KEY'   # same PROGRAM_KEY as in the Apps Script
 ```
@@ -87,10 +90,10 @@ the Apps Script** or every card will scan as invalid. Without it the script
 uses a public demo key and prints a loud warning — fine for samples, never
 for a real run.
 
-That writes to `print/` (gitignored):
-- `print/cards/card-KPMU-2026-00000001.svg` … — one file per card (front)
+That writes to `print/` (gitignored), each as an SVG **and** a `.pdf`:
+- `print/cards/card-KPMU-2026-00000001Q.svg` … — one file per card (front)
 - `print/cards/card-back.svg` — the static back, once
-- `print/packs/pack-KPMU-2026-0000000001.svg` … — one cover sheet per 50
+- `print/packs/pack-KPMU-2026-P0001.svg` … — one cover sheet per 50
 
 The two-sided coaster is its own generator — venue rosters, the day-side QR
 target, and the center logo are flags (defaults build a demo pair with the
@@ -105,29 +108,43 @@ python3 tools/build_coasters.py \
 ```
 
 Rerun it when the roster changes — the rim names auto-shrink to fit, and the
-night/day pair is regenerated in one shot.
+night/day pair is regenerated in one shot. **Both sides** carry a QR to the
+program site and the website, so the coaster works face-up either way.
 
-Everything is SVG with **all type converted to outlines** — no font
-substitution surprises at the shop. Most shops prefer PDF; convert with:
+**Venue & community signage** is a third generator — table tents for bar and
+cafe tables, a window/door sticker for participating locations, and
+letter-size posters for community boards and restrooms:
 
 ```sh
-pip install cairosvg
-python3 -c "import cairosvg,glob
-for f in glob.glob('print/**/*.svg', recursive=True):
-    cairosvg.svg2pdf(url=f, write_to=f.replace('.svg', '.pdf'))"
+python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
+# each writes .svg + .pdf into print/signage/:
+#   table-tent       4x10in foldable A-frame (fold at the middle)
+#   window-sticker   5.6in round participating-location decal
+#   sign-community    8.5x11 poster (bulletin boards)
+#   sign-bathroom     8.5x11 poster (restroom / above the sink)
 ```
 
-**Bleed:** the current artwork is exact trim size (3.5″ × 2″ at 150/in
-units). The front's orange band and the navy back run to the trim edge,
-so the shop will ask for **1/8″ bleed**. Ask for their template/specs
-first, then extend `tools/build_cards.py` to their bleed + crop-mark spec
-before the final run (the layout is parametric — this is a small change,
-not a redesign).
+These are **generic branding items** — one design for every venue, no
+per-shop customization. (The only per-shop artifact is the register QR in
+§5.) Every piece carries a QR and the website. **In the browser:** the
+*Build print materials* GitHub Action (Actions tab → Run workflow) runs the
+coaster and signage generators together and hands back a downloadable zip of
+PDFs — no terminal.
 
-**Before generating, check the CONFIG block** at the top of
-`tools/build_cards.py`: `PACK_FORM_URL` must be set (see
-[`design/LOGGING.md`](design/LOGGING.md)) or the pack cover sheets print a
-"form not configured" placeholder instead of the check-out QR.
+The PDFs are vector with **all type converted to outlines** (no font
+substitution at the shop) and at exact physical size.
+
+**Bleed:** artwork is at exact trim size. Edge-bleed pieces — the round
+coaster and sticker, the card's orange band and navy back, the tent's top
+bar — run color to the trim edge, so a shop will ask for **1/8″ bleed**.
+Ask for their template/specs first, then extend the relevant generator to
+their bleed + crop-mark spec before the final run (the layouts are
+parametric — a small change, not a redesign).
+
+Each pack cover sheet's QR opens the scanner's admin pack check-out
+(`redeem/?pack=…`), pre-loaded with the pack and its card range — whoever
+delivers the pack picks the bar and submits (see
+[`design/LOGGING.md`](design/LOGGING.md)). No form or extra config to set.
 
 ## 5. Register QRs (one per coffee shop)
 
@@ -156,7 +173,8 @@ scannable when the lamination glares or the corner gets coffee on it.
    (no demo-key warning in the script output), register QRs carry the
    matching `&k=` from `tools/ckkey.py`, and the proof card scans as
    valid, not "serial doesn't check out".
-2. **`PACK_FORM_URL` configured** so pack sheets carry the check-out QR.
+2. **Pack check-out proof** — scan a pack cover sheet's QR: it should open
+   the admin check-out with the pack pre-loaded, ready to assign to a bar.
 3. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it
    from `redeem/?shop=demo-cafe` and see the serial extracted.

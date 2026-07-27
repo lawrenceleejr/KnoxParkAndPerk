@@ -402,7 +402,7 @@ function hbars(host, rows, opts) {
 
 /* ---------- render ---------- */
 /* venue roster: display names + deactivation state.
-   Shops are matched by slug; bars by display name (as in the pack form). */
+   Shops are matched by slug; bars by display name (as set at pack check-out). */
 function venueList() {
   return (DATA.venues || []).map(v => ({
     slug: String(v[0] || '').toLowerCase(), name: String(v[1] || ''),
