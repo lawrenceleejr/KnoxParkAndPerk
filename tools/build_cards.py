@@ -5,9 +5,9 @@ public site with the serial embedded (?c=KPMU-...#partners):
   - a PATRON who scans it lands on the participating-businesses section;
   - a SHOP scanning it from the redeem/ scanner has the serial read straight off it.
 
-Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the pack
-check-out Google Form pre-filled with the pack's serial range, so whoever
-hands the pack to a bar just scans it and picks the bar from a dropdown.
+Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the scanner's
+admin pack check-out (redeem/?pack=…), pre-loaded with the pack and its card
+range, so whoever hands the pack to a bar just scans it and picks the bar.
 
 Usage:
   pip install fonttools brotli uharfbuzz segno
@@ -26,11 +26,6 @@ from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
 SITE = 'https://knoxpickmeup.org/'
-# Pack check-out Google Form (see design/LOGGING.md step 2). Template gets
-# .format(pack=..., first=..., last=...). Leave empty until the form exists.
-PACK_FORM_URL = ''
-# e.g. ('https://docs.google.com/forms/d/e/FORM_ID/viewform?usp=pp_url'
-#       '&entry.0000000={pack}&entry.1111111={first}&entry.2222222={last}')
 PACK_SIZE = 50
 # ==========================================
 
@@ -123,9 +118,9 @@ def card_back_svg():
 
 
 def pack_serial(year, pack_no):
-    # Pack serials carry two more digits than the 8-digit card serials, so a
-    # pack is never mistakable for a card (or vice versa) anywhere in the DB.
-    return f'KPMU-{year}-{pack_no:010d}'
+    # Pack serials carry a leading "P" (KPMU-YYYY-P####) so a pack can never be
+    # mistaken for a card (KPMU-YYYY-########X) anywhere in the data or by eye.
+    return f'KPMU-{year}-P{pack_no:04d}'
 
 
 def pack_svg(year, pack_no, first, last):
@@ -143,16 +138,15 @@ def pack_svg(year, pack_no, first, last):
     b.append(text(fraunces, f'{first}', 20, 40, 282, INK)[0])
     b.append(text(fraunces, f'through  {last}', 20, 40, 310, INK)[0])
     b.append(f'<line x1="40" y1="336" x2="485" y2="336" stroke="{RULE}" stroke-width="1"/>')
+    # The QR opens the scanner's admin check-out (redeem/?pack=…) pre-loaded
+    # with this pack and its card range; the volunteer just picks the bar and
+    # submits. The same QR is what the in-app admin scanner reads.
+    checkout_url = f'{SITE}redeem/?pack={pk}&first={first}&last={last}'
     b.append(text(inter6, 'CHECKING THIS PACK OUT TO A BAR?', 11, 40, 366, INK, tracking=0.14)[0])
-    if PACK_FORM_URL:
-        url = PACK_FORM_URL.format(pack=pk, first=first, last=last)
-        b.append(qr_group(url, 40, 382, 160))
-        b.append(text(inter4, 'Scan, pick the bar from the list, submit. Ten seconds.', 12, 222, 414, INK2)[0])
-        b.append(text(inter4, 'That ties every card in this pack to the bar for the', 12, 222, 434, INK2)[0])
-        b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])
-    else:
-        b.append(text(inter4, 'Pack check-out form not configured yet — set PACK_FORM_URL in', 12, 40, 390, INK2)[0])
-        b.append(text(inter4, 'tools/build_cards.py (see design/LOGGING.md) and rebuild.', 12, 40, 410, INK2)[0])
+    b.append(qr_group(checkout_url, 40, 382, 160))
+    b.append(text(inter4, 'Scan it: pick the bar, submit. Ten seconds.', 12, 222, 414, INK2)[0])
+    b.append(text(inter4, 'Ties every card in this pack to that bar for the', 12, 222, 434, INK2)[0])
+    b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])
     b.append(f'<line x1="40" y1="560" x2="485" y2="560" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(inter6, 'BAR', 9, 40, 592, INK2, tracking=0.18)[0])
     b.append(f'<line x1="80" y1="592" x2="300" y2="592" stroke="{INK2}" stroke-width="1"/>')

@@ -161,9 +161,9 @@ def night_side(bars, logo_path, qr_url):
     b.append(f'<circle cx="{CX}" cy="{CY}" r="{R_RING}" fill="none" stroke="{ORANGE}" stroke-width="2"/>')
     b.append(f'<circle cx="{CX}" cy="{CY}" r="{R_INNER}" fill="none" stroke="{NIGHT_RULE}" stroke-width="1"/>')
     b.append(ring_names(bars, inter6, 13, GOLD, ORANGE))
-    b.append(logo(CX, 56, 34, logo_path, on_dark=True))
-    hsz = fit(fraunces, 'Drove downtown tonight?', 21, chord(116))
-    b.append(text(fraunces, 'Drove downtown tonight?', hsz, CX, 116, PAPER, anchor='middle')[0])
+    b.append(logo(CX, 74, 30, logo_path, on_dark=True))
+    hsz = fit(fraunces, 'Drove downtown tonight?', 21, chord(130))
+    b.append(text(fraunces, 'Drove downtown tonight?', hsz, CX, 130, PAPER, anchor='middle')[0])
     steps = [
         'Leave the car — garages are free overnight.',
         'Book a ride home. Show your bartender.',
@@ -171,16 +171,16 @@ def night_side(bars, logo_path, qr_url):
     ]
     # the whole block fits the tightest of its three rows, numeral included
     indent, ssz = 18, 10.5
-    row_w = min(chord(144 + i * 22) for i in range(len(steps)))
+    row_w = min(chord(158 + i * 21) for i in range(len(steps)))
     ssz = min(fit(inter4, s, ssz, row_w - indent) for s in steps)
     x0 = CX - (max(inter4.shape(s, ssz)[1] for s in steps) + indent) / 2
     for i, s in enumerate(steps):
-        y = 144 + i * 22
+        y = 158 + i * 21
         b.append(text(fraunces, str(i + 1), 16, x0, y, ORANGE)[0])
         b.append(text(inter4, s, ssz, x0 + indent, y - 2, PAPER)[0])
-    b.append(qr_panel(CX, 206, 54, qr_url))
-    b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 292, GOLD, tracking=0.14, anchor='middle')[0])
-    b.append(text(fraunces, SITE_LABEL, 14, CX, 312, PAPER, anchor='middle')[0])
+    b.append(qr_panel(CX, 214, 50, qr_url))
+    b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 296, GOLD, tracking=0.14, anchor='middle')[0])
+    b.append(text(fraunces, SITE_LABEL, 14, CX, 316, PAPER, anchor='middle')[0])
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, night side — leave the car overnight, '
                'book a ride home, free coffee in the morning; participating bars '
@@ -195,13 +195,13 @@ def day_side(shops, logo_path, qr_url):
     b.append(f'<circle cx="{CX}" cy="{CY}" r="{R_RING}" fill="none" stroke="{INK}" stroke-width="2"/>')
     b.append(f'<circle cx="{CX}" cy="{CY}" r="{R_INNER}" fill="none" stroke="{RULE}" stroke-width="1"/>')
     b.append(ring_names(shops, inter6, 13, INK, ORANGE))
-    b.append(logo(CX, 62, 34, logo_path, on_dark=False))
-    b.append(text(fraunces, 'Back for your car?', 21, CX, 128, INK, anchor='middle')[0])
+    b.append(logo(CX, 80, 30, logo_path, on_dark=False))
+    b.append(text(fraunces, 'Back for your car?', 21, CX, 138, INK, anchor='middle')[0])
     sub = 'That card is a free large coffee — and your KAT fare.'
-    b.append(text(fraunces_it, sub, fit(fraunces_it, sub, 12, chord(148)), CX, 150, ORANGE_INK, anchor='middle')[0])
-    b.append(qr_panel(CX, 168, 62, qr_url))
-    b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 292, INK2, tracking=0.14, anchor='middle')[0])
-    b.append(text(fraunces, SITE_LABEL, 14, CX, 312, INK, anchor='middle')[0])
+    b.append(text(fraunces_it, sub, fit(fraunces_it, sub, 12, chord(160)), CX, 160, ORANGE_INK, anchor='middle')[0])
+    b.append(qr_panel(CX, 180, 58, qr_url))
+    b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 276, INK2, tracking=0.14, anchor='middle')[0])
+    b.append(text(fraunces, SITE_LABEL, 14, CX, 298, INK, anchor='middle')[0])
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, day side — free large coffee with your card; '
                'participating coffee shops around the rim, QR to the program site')

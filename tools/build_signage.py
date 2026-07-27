@@ -106,20 +106,18 @@ def poster(eyebrow, headline, sub, foot):
 
 # ============================================================ window sticker
 def window_sticker():
-    """A door/window decal for participating venues (460 x 460 ≈ 4.5 in)."""
+    """A door/window decal (460 ≈ 4.5 in round) — the mark is the hero, with
+    the website and 'participating location' beneath, in one simple circle."""
     S, cx = 460, 230
-    b = [f'<rect x="6" y="6" width="{S-12}" height="{S-12}" rx="40" fill="{NIGHT}" stroke="{GOLD}" stroke-width="4"/>',
-         f'<rect x="20" y="20" width="{S-40}" height="{S-40}" rx="30" fill="none" stroke="{GOLD}" stroke-width="1" opacity=".4"/>']
-    b.append(mark(cx - mark_w(84) / 2, 44, 84, shield=PAPER, cup=NIGHT))
-    b.append(text(inter6, 'PROUD PARTNER', 13, cx, 168, GOLD, tracking=0.24, anchor='middle')[0])
-    b.append(text(fraunces, 'Knox Pick-Me-Up', 30, cx, 202, PAPER, anchor='middle')[0])
-    for i, line in enumerate(['We honor the Morning Pick-Me-Up Card —',
-                              'a free coffee for choosing a safe ride home.']):
-        b.append(text(inter4, line, 13, cx, 232 + i * 20, '#c9d0dc', anchor='middle')[0])
-    b.append(qr_card(cx, 286, 96, on_dark=True))
-    b.append(text(fraunces, SITE_LABEL, 17, cx, 300 + 96 + 24, PAPER, anchor='middle')[0])
+    b = [f'<circle cx="{cx}" cy="{cx}" r="222" fill="{PAPER}" stroke="{NIGHT}" stroke-width="4"/>',
+         f'<circle cx="{cx}" cy="{cx}" r="205" fill="none" stroke="{GOLD}" stroke-width="1.5"/>']
+    # the logo, big and central
+    b.append(mark(cx - mark_w(184) / 2, 74, 184))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 30, cx, 320, INK, anchor='middle')[0])
+    b.append(text(inter6, 'PARTICIPATING LOCATION', 12.5, cx, 350, ORANGE_INK, tracking=0.2, anchor='middle')[0])
+    b.append(text(fraunces_it, SITE_LABEL, 17, cx, 380, INK2, anchor='middle')[0])
     return svg(S, S, ''.join(b),
-               'Knox Pick-Me-Up window sticker — proud partner, participating location')
+               'Knox Pick-Me-Up window sticker — participating location, knoxpickmeup.org')
 
 
 # ============================================================ table tent

@@ -26,8 +26,8 @@ Three pages, one static site — each aimed at a different audience:
 | [`/dashboard/`](https://knoxpickmeup.org/dashboard/) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
 
 Also business-facing but not a page: each **card pack's cover sheet** carries
-a QR that opens the pack check-out Google Form (pre-filled serials, pick the
-bar from a dropdown).
+a QR that opens the scanner's admin pack check-out (pre-loaded with the pack
+and its card range — pick the bar and submit).
 
 ## Contents
 
@@ -68,7 +68,7 @@ One Google Sheet is the entire database. Who writes what:
 | Data | Written by | Human involved? |
 |---|---|---|
 | `Redemptions` (each coffee handed over) | the **Apps Script web app**, when a barista scans a card on [`/redeem/`](https://knoxpickmeup.org/redeem/) | barista points a phone camera; no typing |
-| `Packs` (which bar got which serials) | the **pack check-out Google Form**, opened by the QR on each pack's cover sheet | deliverer picks the bar from a dropdown |
+| `Packs` (which bar got which serials) | the **scanner's admin pack check-out**, opened by the QR on each pack's cover sheet | deliverer picks the bar and scans the pack |
 | `Venues`, `Packs.voided` (kill switch) | **you, by hand** | rarely |
 
 Nothing else ever writes to the Sheet. Full architecture, the Apps Script
@@ -77,7 +77,7 @@ code, and failure-mode analysis: [`design/LOGGING.md`](design/LOGGING.md).
 ## Set up the program (one afternoon)
 
 Everything below is free and requires no server. Steps 1–3 happen in Google,
-4–6 in this repo, 7–8 back in Google/GitHub.
+4–5 in this repo, 6–8 back in Google/GitHub.
 
 1. **Create the program Google account** (e.g. `knoxpickmeup@gmail.com`) so
    nothing is tied to one volunteer. Do all Google steps signed in as it.
@@ -87,41 +87,35 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    - `Venues`: `slug | name | type | joined | deactivated`
    Share it with **no one** (partners get the dashboard, not the sheet), and
    right-click the `Redemptions` tab → *Protect sheet* → only you.
-3. **Create the pack check-out Form** (Google Forms): short-answer fields
-   *Pack serial*, *First card serial*, *Last card serial*, and a *Bar*
-   dropdown. Link responses to the Sheet's `Packs` tab. Then ⋮ → *Get
-   pre-filled link*, fill dummy values, and note the three `entry.NNNNN`
-   numbers in the generated URL.
-4. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
+3. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
    into the Sheet (Extensions → Apps Script). Set `PROGRAM_KEY` to one long
    random string — **the only secret in the whole system** (backups, card
    checksums, and register QRs all derive from it); save it somewhere safe.
    Deploy → New deployment → Web app, *Execute as: me*,
    *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
    authorize it, then add a daily time-driven trigger for it (Triggers → Add).
-5. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
+4. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
    - [`redeem/index.html`](redeem/index.html): `SCRIPT_URL` = the `/exec` URL; fill the
-     `SHOPS` map (slug → display name).
+     `SHOPS` map (slug → display name), and optionally seed the `BARS` roster
+     used by the admin pack check-out.
    - [`dashboard/index.html`](dashboard/index.html): the same `SCRIPT_URL`.
-   - [`tools/build_cards.py`](tools/build_cards.py): `PACK_FORM_URL` using
-     the three `entry.NNNNN` IDs from step 3.
    Commit and merge to `main` — Pages redeploys automatically.
-6. **Print things** — follow [`PRINTING.md`](PRINTING.md): generate the
+5. **Print things** — follow [`PRINTING.md`](PRINTING.md): generate the
    card books and pack cover sheets with `tools/build_cards.py`, make one
    register QR per coffee shop, and use the RFQ + pre-flight checklist
    there when ordering.
-7. **Dashboards** — the built-in one is live immediately at
+6. **Dashboards** — the built-in one is live immediately at
    [`/dashboard/`](https://knoxpickmeup.org/dashboard/) (unlinked and unindexed; share the URL
    freely). Optionally build a Looker Studio view on the Sheet for partners
    who want to slice data themselves.
-8. **Turn on backups** — repo Settings → Secrets and variables → Actions →
+7. **Turn on backups** — repo Settings → Secrets and variables → Actions →
    add `BACKUP_URL` (the `/exec` URL) and `PROGRAM_KEY` (the same one
    secret). Run the *Nightly data backup* workflow once by hand
    (Actions tab → Run workflow) and confirm a commit touching
    `data/backup/*.csv` appears.
-9. **Dry-run** with one friendly bar and one shop before the pilot:
-   check a pack out, scan a card at a register, watch it land on the
-   dashboard.
+8. **Dry-run** with one friendly bar and one shop before the pilot: open the
+   scanner's admin mode, check a pack out to the bar, scan a card at a
+   register, and watch it land on the dashboard.
 
 ## Backups — "what if someone breaks the sheet?"
 

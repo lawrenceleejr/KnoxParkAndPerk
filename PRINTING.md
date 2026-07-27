@@ -141,10 +141,10 @@ first, then extend `tools/build_cards.py` to their bleed + crop-mark spec
 before the final run (the layout is parametric — this is a small change,
 not a redesign).
 
-**Before generating, check the CONFIG block** at the top of
-`tools/build_cards.py`: `PACK_FORM_URL` must be set (see
-[`design/LOGGING.md`](design/LOGGING.md)) or the pack cover sheets print a
-"form not configured" placeholder instead of the check-out QR.
+Each pack cover sheet's QR opens the scanner's admin pack check-out
+(`redeem/?pack=…`), pre-loaded with the pack and its card range — whoever
+delivers the pack picks the bar and submits (see
+[`design/LOGGING.md`](design/LOGGING.md)). No form or extra config to set.
 
 ## 5. Register QRs (one per coffee shop)
 
@@ -173,7 +173,8 @@ scannable when the lamination glares or the corner gets coffee on it.
    (no demo-key warning in the script output), register QRs carry the
    matching `&k=` from `tools/ckkey.py`, and the proof card scans as
    valid, not "serial doesn't check out".
-2. **`PACK_FORM_URL` configured** so pack sheets carry the check-out QR.
+2. **Pack check-out proof** — scan a pack cover sheet's QR: it should open
+   the admin check-out with the pack pre-loaded, ready to assign to a bar.
 3. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it
    from `redeem/?shop=demo-cafe` and see the serial extracted.

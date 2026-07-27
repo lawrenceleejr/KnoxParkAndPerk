@@ -80,6 +80,16 @@
     font: inherit; font-size: 1rem; width: 100%; padding: .65rem .8rem;
     border: 1px solid var(--rule); border-radius: 4px; background: #fff; color: var(--ink);
   }
+  .addbar { margin-top: .5rem; font-size: .82rem; }
+  .addbar a { color: var(--orange-ink); }
+  #addbarrow { margin-top: .5rem; }
+  .packbox { margin-top: 1rem; }
+  .packbox .row { display: flex; gap: .6rem; align-items: center; margin-top: .3rem; }
+  #packserial {
+    flex: 1; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 1.05rem;
+    color: var(--ink); border: 1px dashed var(--rule); border-radius: 4px; padding: .55rem .8rem;
+  }
+  #checkoutgo:disabled { opacity: .4; cursor: default; }
   #camstart {
     position: absolute; inset: 0; display: flex; flex-direction: column; gap: .8rem;
     align-items: center; justify-content: center; color: var(--paper);
@@ -146,6 +156,24 @@
     <select id="shopselect"><option value="">Choose your shop…</option></select>
   </div>
 
+  <div class="shoppick" id="barpick" hidden>
+    <span class="label">Bar taking this pack</span>
+    <select id="barselect"><option value="">Choose the bar…</option></select>
+    <p class="addbar"><a href="#" id="addbarlink">+ add a new bar</a></p>
+    <div class="row" id="addbarrow" hidden>
+      <input id="newbar" placeholder="New bar name" autocomplete="off">
+      <button class="btn" id="addbargo" type="button">Add</button>
+    </div>
+  </div>
+
+  <div class="packbox" id="packbox" hidden>
+    <span class="label">Pack to check out</span>
+    <div class="row">
+      <span id="packserial">— scan a pack QR —</span>
+      <button class="btn" id="checkoutgo" type="button" disabled>Check out</button>
+    </div>
+  </div>
+
   <div id="viewport">
     <video id="video" playsinline muted hidden></video>
     <canvas id="overlay"></canvas>
@@ -199,11 +227,30 @@ const SHOPS = {
   // 'remedy':    'Remedy Coffee',
   // 'k-brew':    'K Brew Downtown',
 };
+// Bars that hand out cards — the starting list for the admin pack check-out
+// (open redeem/?admin=1). New bars added in admin mode are also remembered on
+// the device, so this list is just a convenient seed.
+const BARS = {
+  'preservation-pub': 'Preservation Pub',
+  'barleys':          'Barley’s Taproom',
+  'suttrees':         'Suttree’s High Gravity Tavern',
+};
 /* ========================================== */
 
 const SERIAL_RE = /KPMU-\d{4}-\d{8}[A-HJ-NP-Z]/i;   // trailing letter = keyed checksum
+const PACK_RE = /KPMU-\d{4}-P\d+/i;                 // pack serials: KPMU-YYYY-P####
 const qs = new URLSearchParams(location.search);
 const shopSlug = (qs.get('shop') || '').toLowerCase();
+
+// Admin pack check-out: reached via redeem/?admin=1, the #admin hash, five
+// taps on the header, or by scanning a pack QR (which is a redeem/?pack=… link).
+function packFromParams(p) {
+  const pk = (p.get('pack') || '').toUpperCase();
+  if (!PACK_RE.test(pk)) return null;
+  return { pack: pk, first: (p.get('first') || '').toUpperCase(), last: (p.get('last') || '').toUpperCase() };
+}
+const DEEP_PACK = packFromParams(qs);
+const ADMIN = qs.get('admin') === '1' || location.hash === '#admin' || !!DEEP_PACK;
 
 /* Local serial validation. The register QR carries k=<derived check key>
    (see design/LOGGING.md) — derived one-way from the program secret, so it
@@ -500,9 +547,8 @@ async function scanLoop() {
         codes = [];
       }
       for (const c of codes) {
-        const m = String(c.rawValue).match(SERIAL_RE);
-        drawDetection(c.cornerPoints.map(p => ({ x: p.x, y: p.y })), m ? m[0].toUpperCase() : 'Not a card QR');
-        if (await handleSerial(c.rawValue, true)) break;
+        drawDetection(c.cornerPoints.map(p => ({ x: p.x, y: p.y })), scanLabel(c.rawValue));
+        if (await onScan(c.rawValue, true)) break;
       }
       if (detector && !codes.length) clearDetection();
     } else if (video.readyState >= 2) {
@@ -514,26 +560,136 @@ async function scanLoop() {
       if (code && code.data) {
         const k = (video.videoWidth || w) / w;   // scale jsQR coords back to video pixels
         const L = code.location;
-        const m = String(code.data).match(SERIAL_RE);
         drawDetection([L.topLeftCorner, L.topRightCorner, L.bottomRightCorner, L.bottomLeftCorner]
-          .map(p => ({ x: p.x * k, y: p.y * k })), m ? m[0].toUpperCase() : 'Not a card QR');
-        await handleSerial(code.data, true);
+          .map(p => ({ x: p.x * k, y: p.y * k })), scanLabel(code.data));
+        await onScan(code.data, true);
       } else clearDetection();
     }
   } catch (e) { /* keep scanning */ }
   setTimeout(scanLoop, 200);
 }
 
+/* ---------- scan dispatch (card scanner vs. admin pack check-out) ---------- */
+function scanLabel(raw) {
+  if (ADMIN) { const p = parsePack(raw); return p ? p.pack : 'Not a pack QR'; }
+  const m = String(raw).match(SERIAL_RE);
+  return m ? m[0].toUpperCase() : 'Not a card QR';
+}
+function onScan(raw, fromCamera) {
+  return ADMIN ? handlePackScan(raw, fromCamera) : handleSerial(raw, fromCamera);
+}
+
+/* ---------- admin: pack check-out ---------- */
+let pendingPack = null, lastPack = '', lastPackAt = 0, checkingOut = false;
+function barValue() { return $('barselect').value; }
+function parsePack(raw) {
+  raw = String(raw);
+  let hit = null;
+  if (raw.includes('?')) {                       // a redeem/?pack=… deep-link
+    try { hit = packFromParams(new URL(raw, location.href).searchParams); } catch (e) {}
+  }
+  if (!hit) { const m = raw.match(PACK_RE); if (m) hit = { pack: m[0].toUpperCase(), first: '', last: '' }; }
+  return hit;
+}
+function renderPack() {
+  $('packserial').textContent = pendingPack ? pendingPack.pack : '— scan a pack QR —';
+  $('checkoutgo').disabled = !(pendingPack && barValue());
+}
+function handlePackScan(raw, fromCamera) {
+  const p = parsePack(raw);
+  if (!p) return false;
+  const now = Date.now();
+  if (fromCamera && p.pack === lastPack && now - lastPackAt < 4000) { lastPackAt = now; return true; }
+  lastPack = p.pack; lastPackAt = now;
+  pendingPack = p; renderPack();
+  if (fromCamera) flashReticle('ok');
+  if (!barValue()) setStatus('warn', 'Pick the bar first', 'Choose (or add) the bar taking ' + p.pack + ', then press Check out.');
+  else doCheckout();
+  return true;
+}
+async function submitCheckout(p, bar) {
+  if (demo) return { status: 'ok', demo: true };
+  const u = SCRIPT_URL + '?action=checkout&pack=' + encodeURIComponent(p.pack)
+    + '&first=' + encodeURIComponent(p.first) + '&last=' + encodeURIComponent(p.last)
+    + '&bar=' + encodeURIComponent(bar);
+  return (await fetch(u, { method: 'GET' })).json();
+}
+async function doCheckout() {
+  if (checkingOut || !pendingPack) return;
+  const bar = barValue();
+  if (!bar) { setStatus('warn', 'Pick the bar first', 'Choose (or add) the bar taking this pack.'); return; }
+  checkingOut = true;
+  const pk = pendingPack.pack;
+  setStatus('', 'Checking out ' + pk + '…', '');
+  try {
+    const out = await submitCheckout(pendingPack, bar);
+    if (out.status === 'ok') {
+      setStatus('ok', 'Pack checked out ☀', pk + ' → ' + bar + (out.demo ? ' (demo mode: not sent anywhere)' : '') + '.');
+      addLog(pk, 'ok', 'to ' + bar);
+      pendingPack = null; renderPack();
+    } else {
+      setStatus('bad', 'Check-out refused', pk + ': ' + (out.status || 'unknown error') + '.');
+      addLog(pk, 'bad', out.status || 'error');
+    }
+  } catch (e) {
+    setStatus('warn', 'No signal — not saved', pk + ' was not checked out. Try again when you have a connection.');
+    addLog(pk, 'warn', 'no signal');
+  }
+  checkingOut = false;
+}
+function loadBars() { try { return JSON.parse(localStorage.getItem('kpmu-bars') || '[]'); } catch (e) { return []; } }
+function fillBars() {
+  const sel = $('barselect');
+  const names = [...new Set([...Object.values(BARS), ...loadBars()])].sort((a, b) => a.localeCompare(b));
+  sel.innerHTML = '<option value="">Choose the bar…</option>';
+  for (const n of names) { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); }
+}
+function initAdmin() {
+  document.querySelector('header .tool').textContent = 'Pack check-out';
+  $('shopline').textContent = 'Admin — assign a printed pack to the bar taking it: pick the bar, then scan the pack’s QR (or paste it below).';
+  $('barpick').hidden = false; $('packbox').hidden = false;
+  fillBars();
+  $('barselect').addEventListener('change', renderPack);
+  $('addbarlink').addEventListener('click', e => { e.preventDefault(); $('addbarrow').hidden = false; $('newbar').focus(); });
+  $('addbargo').addEventListener('click', () => {
+    const n = $('newbar').value.trim();
+    if (!n) return;
+    const a = loadBars(); if (!a.includes(n)) { a.push(n); localStorage.setItem('kpmu-bars', JSON.stringify(a)); }
+    fillBars(); $('barselect').value = n; $('newbar').value = ''; $('addbarrow').hidden = true; renderPack();
+  });
+  $('newbar').addEventListener('keydown', e => { if (e.key === 'Enter') $('addbargo').click(); });
+  $('checkoutgo').addEventListener('click', doCheckout);
+  // repoint the camera + manual copy at packs instead of cards
+  $('camstart').querySelector('.big').textContent = 'Tap to scan a pack QR';
+  $('camstart').querySelector('.small').textContent = 'Point the camera at the QR on the pack’s cover sheet.';
+  document.querySelector('.manual .label').textContent = 'Manual: paste the pack QR link, or type the pack serial';
+  $('serialbox').placeholder = 'KPMU-2026-P0001';
+  $('setupnote').hidden = false;
+  $('setupnote').innerHTML = 'Scanning a pack QR (or opening its link) lands here. Not an admin? The barista scanner is at <a href="./">redeem</a>.';
+  if (DEEP_PACK) { pendingPack = DEEP_PACK; renderPack(); setStatus('', 'Pack ' + DEEP_PACK.pack + ' ready', 'Pick the bar taking it, then press Check out.'); }
+}
+
 /* ---------- wiring ---------- */
 $('camstart').addEventListener('click', startCamera);
 $('manualgo').addEventListener('click', () => {
   const v = $('serialbox').value.trim();
-  if (!handleSerialSync(v)) setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217T — including the letter at the end.');
+  if (ADMIN) {
+    if (!handlePackScan(v, false)) setStatus('bad', 'Not a pack', 'Paste the pack QR link, or type a pack serial like KPMU-2026-P0001.');
+  } else if (!handleSerialSync(v)) {
+    setStatus('bad', 'Not a card serial', 'Serials look like KPMU-2026-00004217T — including the letter at the end.');
+  }
   $('serialbox').value = '';
 });
 function handleSerialSync(v) { const ok = SERIAL_RE.test(v); if (ok) handleSerial(v); return ok; }
 $('serialbox').addEventListener('keydown', e => { if (e.key === 'Enter') $('manualgo').click(); });
+// five taps on the header opens admin check-out from the barista scanner
+if (!ADMIN) {
+  let taps = 0;
+  document.querySelector('header').addEventListener('click', () => { if (++taps >= 5) location.replace('./?admin=1'); });
+}
 
+if (ADMIN) initAdmin();
+else (function () {
 const shopline = $('shopline');
 const shopPick = $('shoppick'), shopSel = $('shopselect');
 // populate the shop dropdown once; picking one reloads with ?shop=<slug>
@@ -565,6 +721,7 @@ if (shopName) {
   const s = $('setupnote'); s.hidden = false;
   s.innerHTML = 'Shops normally open this page from their register QR (<code>redeem/?shop=your-shop-code</code>) so the shop is preset. Patrons: you probably want the <a href="../">Knox Pick-Me-Up site</a>.';
 }
+})();
 if (demo) {
   const rm = $('resetmem');
   rm.hidden = false;
