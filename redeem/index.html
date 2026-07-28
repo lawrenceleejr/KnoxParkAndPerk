@@ -209,7 +209,7 @@
 
   <div class="setup" id="setupnote" hidden></div>
 
-  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="../">knoxpickmeup site</a> · scanner build <span id="build">2026-07-19c</span><span id="resetsep" hidden> · </span><a href="#" id="resetmem" hidden>reset this device&rsquo;s scanner memory</a></footer>
+  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="../">knoxpickmeup site</a> · <a href="./?admin=1" id="adminlink">pack check-out (admin)</a> · scanner build <span id="build">2026-07-19c</span><span id="resetsep" hidden> · </span><a href="#" id="resetmem" hidden>reset this device&rsquo;s scanner memory</a></footer>
 </div>
 
 <script>
@@ -646,6 +646,7 @@ function fillBars() {
 }
 function initAdmin() {
   document.querySelector('header .tool').textContent = 'Pack check-out';
+  $('adminlink').hidden = true;   // already here
   $('shopline').textContent = 'Admin — assign a printed pack to the bar taking it: pick the bar, then scan the pack’s QR (or paste it below).';
   $('barpick').hidden = false; $('packbox').hidden = false;
   fillBars();
