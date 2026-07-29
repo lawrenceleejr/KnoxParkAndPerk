@@ -608,7 +608,14 @@ function handlePackScan(raw, fromCamera) {
   return true;
 }
 async function submitCheckout(p, bar) {
-  if (demo) return { status: 'ok', demo: true };
+  if (demo) {
+    // no backend in demo — remember checked-out packs on the device so the
+    // "already in the DB" guard is demonstrable
+    const done = JSON.parse(localStorage.getItem('kpmu-checked') || '{}');
+    if (done[p.pack]) return { status: 'exists', bar: done[p.pack], demo: true };
+    done[p.pack] = bar; localStorage.setItem('kpmu-checked', JSON.stringify(done));
+    return { status: 'ok', demo: true };
+  }
   const u = SCRIPT_URL + '?action=checkout&pack=' + encodeURIComponent(p.pack)
     + '&first=' + encodeURIComponent(p.first) + '&last=' + encodeURIComponent(p.last)
     + '&bar=' + encodeURIComponent(bar);
@@ -626,6 +633,11 @@ async function doCheckout() {
     if (out.status === 'ok') {
       setStatus('ok', 'Pack checked out ☀', pk + ' → ' + bar + (out.demo ? ' (demo mode: not sent anywhere)' : '') + '.');
       addLog(pk, 'ok', 'to ' + bar);
+      pendingPack = null; renderPack();
+    } else if (out.status === 'exists') {
+      // already checked out — refuse and say who has it, don't reassign
+      setStatus('warn', 'Already checked out', pk + ' is already assigned' + (out.bar ? ' to ' + out.bar : '') + ' — left unchanged. Edit the Packs sheet to reassign.');
+      addLog(pk, 'warn', 'already in DB' + (out.bar ? ' · ' + out.bar : ''));
       pendingPack = null; renderPack();
     } else {
       setStatus('bad', 'Check-out refused', pk + ': ' + (out.status || 'unknown error') + '.');
@@ -729,7 +741,7 @@ if (demo) {
   $('resetsep').hidden = false;
   rm.addEventListener('click', e => {
     e.preventDefault();
-    ['kpu-seen', 'kpu-queue', 'kpmu-ck'].forEach(k => localStorage.removeItem(k));
+    ['kpu-seen', 'kpu-queue', 'kpmu-ck', 'kpmu-checked'].forEach(k => localStorage.removeItem(k));
     location.reload();
   });
 }
