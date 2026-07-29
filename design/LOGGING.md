@@ -173,8 +173,9 @@ function doGet(e) {
   }
   if (p.action === 'checkout' && /^KPMU-\d{4}-P\d+$/i.test(p.pack || '')) {
     // Admin pack check-out (redeem/?admin): tie a printed pack to the bar
-    // taking it. Upserts by pack serial, so re-scanning a pack corrects its
-    // bar instead of creating a duplicate range.
+    // taking it. Insert-only — a pack already in the sheet is REFUSED (never
+    // duplicated or silently reassigned); to move a pack, edit the Packs tab
+    // by hand.
     const pack = p.pack.toUpperCase();
     const first = String(p.first || '').toUpperCase();
     const last = String(p.last || '').toUpperCase();
@@ -184,23 +185,22 @@ function doGet(e) {
     try {
       const sh = SpreadsheetApp.getActive().getSheetByName(PACKS);
       const rows = sh.getDataRange().getValues();
-      let row = 0;                                   // 1-based row of an existing pack, else 0
-      for (let i = 1; i < rows.length; i++) if (String(rows[i][1]) === pack) { row = i + 1; break; }
-      if (row) {
-        sh.getRange(row, 5).setValue(bar);           // update the bar (col E)
-        if (first) sh.getRange(row, 3).setValue(first);
-        if (last) sh.getRange(row, 4).setValue(last);
+      let existing = null;
+      for (let i = 1; i < rows.length; i++) if (String(rows[i][1]) === pack) { existing = rows[i]; break; }
+      if (existing) {
+        // already checked out — refuse, and report which bar has it
+        out = { status: 'exists', pack: pack, bar: String(existing[4] || '') };
       } else {
         sh.appendRow([new Date(), pack, first, last, bar, '']);
+        // make sure a newly-typed bar shows up as a venue for the dashboard
+        const vs = SpreadsheetApp.getActive().getSheetByName('Venues');
+        if (vs && bar) {
+          const known = vs.getDataRange().getValues().slice(1)
+            .some(r => String(r[1]).trim().toLowerCase() === bar.toLowerCase());
+          if (!known) vs.appendRow([bar.toLowerCase().replace(/[^a-z0-9]+/g, '-'), bar, 'bar', new Date(), '', '']);
+        }
+        out = { status: 'ok', pack: pack, bar: bar };
       }
-      // make sure a newly-typed bar shows up as a venue for the dashboard
-      const vs = SpreadsheetApp.getActive().getSheetByName('Venues');
-      if (vs && bar) {
-        const known = vs.getDataRange().getValues().slice(1)
-          .some(r => String(r[1]).trim().toLowerCase() === bar.toLowerCase());
-        if (!known) vs.appendRow([bar.toLowerCase().replace(/[^a-z0-9]+/g, '-'), bar, 'bar', new Date(), '', '']);
-      }
-      out = { status: 'ok', pack: pack, bar: bar };
     } finally {
       lock.releaseLock();
     }
@@ -326,9 +326,12 @@ Open `redeem/?admin=1` (or scan a pack's cover-sheet QR, which is a
 `redeem/?pack=…&first=…&last=…` link, or tap the scanner's header five
 times). Pick the bar from the list — **add a new one inline** if it isn't
 there yet — then scan the pack's QR (or paste the code). That posts the
-`checkout` action, which upserts the `Packs` row (pack serial, card range,
-bar) and adds any new bar to `Venues`. Re-scanning a pack corrects its bar.
-The cover sheet also has a written-log fallback line. No Google Form needed.
+`checkout` action, which appends a `Packs` row (pack serial, card range, bar)
+and adds any new bar to `Venues`. Check-out is **insert-only**: a pack already
+in the sheet is refused (the scanner shows "already checked out to <bar>"), so
+a double-scan can't duplicate or silently reassign it — to move a pack, edit
+the `Packs` tab by hand. The cover sheet also has a written-log fallback line.
+No Google Form needed.
 
 ### E. Card + pack printing: `tools/build_cards.py` (this repo)
 `python3 tools/build_cards.py --year 2026 --start 1 --count 500` emits
