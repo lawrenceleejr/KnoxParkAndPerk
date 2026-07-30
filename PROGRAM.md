@@ -303,7 +303,7 @@ ridership."
 | Risk | Mitigation |
 |---|---|
 | Bartenders skip it on busy nights | 10-second workflow, staff perks, coasters do the marketing passively |
-| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages and lots are free evenings/weekends; confirm hours with the City; print them on signage; hotline on the card |
+| Patron fears a ticket or tow for leaving the car | Lead with the fact that municipal garages and lots are free evenings/weekends; confirm hours with the City; print them on signage; program contact on the card |
 | Perception of promoting drinking | Framing is strictly "safe ride home / safer roads"; KPD/city endorsement; no alcohol-brand sponsors on patron-facing materials |
 | Fraud (fake ride screens, duplicates) | One-free-coffee cap, one-per-ride rule, serials, expiry, bartender discretion; accept small leakage as marketing cost |
 | Redemption load concentrates on a few coffee shops | Per-shop monthly caps at pilot; recruit shops near every major garage; publish redemption spread |
