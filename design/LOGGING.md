@@ -412,7 +412,7 @@ none of which you have to remember to run:
 | 1. **Sheet version history** | a bad edit, a deleted column, a broken formula | built into Google Sheets (File → Version history → See version history) | zero — automatic |
 | 2. **Nightly Drive snapshot** | a mangled or deleted *tab*, script accidents | `nightlySnapshot()` in the same Apps Script + one daily trigger; keeps 30 dated copies in a "KPMU Backups" Drive folder | one-time trigger setup |
 | 3. **Nightly off-Google backup** | Google account lockout, Drive loss, "I just don't trust Google" | [`.github/workflows/backup.yml`](../.github/workflows/backup.yml) pulls every tab via the key-gated `backup` action and commits CSVs to `data/backup/` in this repo — **git history is the archive**, so every past day is recoverable | two repo secrets |
-| 4. **Print artifacts** | everything digital at once | pack cover sheets have a hand-written bar/date line; cards are physically stamped | already in the workflow |
+| 4. **Print artifacts** | everything digital at once | pack cover sheets have a hand-written bar/date line; cards are dated by hand | already in the workflow |
 
 **Hardening the sheet against "someone breaks something":**
 - Share the Sheet with **no editors**. The Apps Script runs as the owner and
@@ -528,7 +528,7 @@ week).
 |---|---|---|
 | Shop has no signal | Scan queues on the phone, flushes later | Coffee still handed over; data arrives late, not never |
 | Apps Script down / quota hit | Same queue path | Google outages are rare and short; nobody pages you |
-| Barista can't scan | Manual entry box; worst case, write it down | The card itself is still stamped and dated |
+| Barista can't scan | Manual entry box; worst case, write it down | The card itself is still dated by hand |
 | Someone spams the endpoint | Junk rows in a sheet | Serials are checkable against issued ranges; worst real-world case is one free coffee — controls stay proportionate (PROGRAM.md §2) |
 | Volunteer leaves | Credentials live in the program account | Hand the Google account + repo admin to the next person |
 

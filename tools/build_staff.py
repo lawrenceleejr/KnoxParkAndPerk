@@ -9,7 +9,7 @@ for each:
                       entry, the flashlight, and offline behavior. Laminate it
                       and keep it by the register.
   bar-onboarding      For a bar joining the program: what you're agreeing to,
-                      when to hand a card, the date-stamp step, pack basics, and
+                      when to hand a card, the date-writing step, pack basics, and
                       who to contact.
 
 The outcome wording here is copied verbatim from redeem/index.html's setStatus
@@ -172,7 +172,7 @@ def bar_onboarding():
     for s in [
         'Hand a card to a patron who shows you a booked ride home (rideshare booked, or an active KAT ticket).',
         'One card per booked ride, while your pack lasts. The card is the thank-you — no cost to you.',
-        'Keep the cards behind the bar; they’re serialized and date-stamped, so treat them like the vouchers they are.',
+        'Keep the cards behind the bar; they’re serialized and dated by hand, so treat them like the vouchers they are.',
     ]:
         b.append(f'<circle cx="{MARGIN+4}" cy="{y-4}" r="2.6" fill="{ORANGE}"/>')
         y = para(b, y, s, 14, indent=20) + 8
@@ -181,7 +181,7 @@ def bar_onboarding():
     y = section_label(b, y, 'HANDING OUT A CARD')
     for i, s in enumerate([
         'Confirm the ride: a booked rideshare on their phone, or an activated KAT ticket.',
-        'Stamp today’s date in the DATE ISSUED box — that starts the one-day clock.',
+        'Write today’s date in the DATE ISSUED box — that starts the one-day clock.',
         'Hand it over. That’s it — the patron scans and redeems it themselves tomorrow.',
     ]):
         b.append(text(fraunces, str(i + 1), 22, MARGIN, y + 4, ORANGE)[0])

@@ -43,7 +43,7 @@ crowd stands the coffee for tomorrow's safe riders.
    a booked rideshare/taxi, or a KAT bus.
 3. Patron **shows proof of the ride** to a bartender at a participating bar: a
    confirmed rideshare screen or an activated transit ticket.
-4. Bartender **date-stamps and hands over one Morning Pick-Me-Up Card** per ride.
+4. Bartender **writes today's date on and hands over one Morning Pick-Me-Up Card** per ride.
 5. While the card is valid, it **doubles as a free KAT pass** — the patron can
    ride any bus free, including the morning trip back downtown to the car.
 6. Patron returns in the morning, **claims a free large coffee** at a
@@ -78,8 +78,8 @@ crowd stands the coffee for tomorrow's safe riders.
 - **Serialization:** every card has a unique number; books of 50 are checked
   out to bars, so issuance is traceable per venue per week.
 - **One-per-ride rule** is self-limiting: a card requires a distinct booked
-  ride shown at the bar, stamped at the moment of proof.
-- **Two-touch validation:** bar stamp at issue, coffee shop log at redemption.
+  ride shown at the bar, dated by hand at the moment of proof.
+- **Two-touch validation:** bar dates it at issue, coffee shop log at redemption.
   Redemptions are logged by scanning the card's QR at the register and packs
   are checked out to bars by scanning the pack sheet — a zero-maintenance,
   $0 system built on the static site plus Google Sheets, with live
@@ -119,13 +119,13 @@ isn't nearby.
 | Palette | Warm paper `#faf5eb`, espresso ink `#241a10`, night navy `#101a30`, sunrise orange `#ff8200` (a nod to Knoxville's favorite color) used sparingly as the single accent — see [BRAND.md](BRAND.md) |
 | Design | Editorial and typographic — generous whitespace, hairline rules, a serif display face (Fraunces), and one accent color; no gradients, shadows, emoji, or clip-art |
 | Voice | Warm, wry, zero lecture. Never "don't drink and drive"; always "good call — coffee's on us." Promise "a free large coffee," and don't oversell it. |
-| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Pick-Me-Up Partner"), bartender stamp, and books of Morning Pick-Me-Up Cards |
+| Physical kit | Coasters ("Booked your ride? Show your bartender."), restroom mirror clings, table tents, window decals ("Pick-Me-Up Partner"), and books of Morning Pick-Me-Up Cards |
 
 Two distinct pieces of print: **coasters** are the advertising medium — they sit
 under the drink at exactly the decision moment, and bars go through thousands
 anyway, so the program replaces a cost with free branded stock. The **Morning
 Pick-Me-Up Card** is the redeemable item — a simple, wallet-sized card (not a coaster),
-easy to stamp, carry home, and hand to a barista.
+easy to date, carry home, and hand to a barista.
 
 ## 4. Monetization & Sustainability
 
@@ -192,7 +192,7 @@ the program — which is what makes it durable.
 
 | Item | Estimate |
 |---|---|
-| Printing: coasters, cards, signage, stamps | $4,000 |
+| Printing: coasters, cards, signage | $4,000 |
 | Part-time coordinator (reconciliation, restock, partner care) | $9,000 |
 | Launch marketing & press event | $3,000 |
 | Contingency | $2,000 |
@@ -208,7 +208,7 @@ costs above, not a per-perk payout.
 ### Downtown bars — *the distribution network*
 **Pitch:** "Free coasters and signage, a safer close to your night, reduced
 dram-shop-adjacent risk, and your name on a city-backed road-safety program.
-The ask is a 10-second stamp-and-hand at last call."
+The ask is a 10-second date-and-hand at last call."
 - Cost to join: $0 at pilot. Program supplies all materials and card books.
 - Engagement: start with 5–8 anchor venues in the Old City and Market Square
   whose owners talk to each other; early-partner billing (logo on cards, press)
@@ -381,7 +381,7 @@ skeptical.
 ### Behavioral design (why reward at the decision moment)
 - **Nudge: Improving Decisions About Health, Wealth, and Happiness** — Thaler &
   Sunstein (2008). The case for removing friction and rewarding the desired
-  choice at the exact moment it's made — the design principle behind stamping
+  choice at the exact moment it's made — the design principle behind dating
   the card at last call.
 
 ### The scale of the problem (why public money is justified)

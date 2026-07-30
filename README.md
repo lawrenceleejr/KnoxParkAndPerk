@@ -135,7 +135,7 @@ Four independent layers, detailed in
    Google account is lost. If the backup breaks, the Action fails and
    GitHub emails you — that's the whole monitoring system.
 4. **Paper** — pack cover sheets carry a hand-written bar/date line, and
-   every card is physically stamped.
+   every card is dated by hand.
 
 Losing the whole Google account costs under an hour: rebuild the Sheet from
 the repo's CSVs, re-paste the script, update `SCRIPT_URL` in two files.
