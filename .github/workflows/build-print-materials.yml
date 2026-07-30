@@ -2,6 +2,7 @@
 #   - the two-sided bar coaster (both sides carry a QR + the website)
 #   - table tents, a window sticker for participating locations, and
 #     letter-size community + bathroom posters
+#   - staff sheets: a barista quick-reference one-pager + a bar onboarding sheet
 #
 # Output lands in print/ (gitignored), so this workflow packages it as a
 # downloadable artifact — grab the zip from the run's summary page, no
@@ -80,9 +81,13 @@ jobs:
             echo ""
             echo "**Coasters** — \`coaster-night\`, \`coaster-day\` (4in round; both carry a QR + website)"
             echo "**Signage** — \`table-tent\` (4×10in fold), \`window-sticker\` (5.6in round), \`sign-community\`, \`sign-bathroom\` (8.5×11in)"
+            echo "**Staff sheets** — \`barista-one-pager\`, \`bar-onboarding\` (8.5×11in)"
             echo ""
             echo "Download the **print-materials** artifact below and hand the PDFs to any print shop."
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build staff sheets (barista one-pager, bar onboarding)
+        run: python3 tools/build_staff.py
 
       - name: Upload print materials
         uses: actions/upload-artifact@v4

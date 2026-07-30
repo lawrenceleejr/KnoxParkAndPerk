@@ -3,7 +3,7 @@
 # build_cards + build_coasters; this job exists so that can't recur).
 #
 # Checks:
-#   1. All four generators run end-to-end (tiny card count).
+#   1. All print generators run end-to-end (tiny card count).
 #   2. Regenerating brand assets from source produces NO diff — catches both
 #      a broken generator and someone hand-editing generated assets/*.svg.
 #   3. Every emitted print SVG has its true-size PDF twin.
@@ -47,6 +47,7 @@ jobs:
           python3 tools/build_cards.py --year 2026 --start 1 --count 2
           python3 tools/build_coasters.py
           python3 tools/build_signage.py
+          python3 tools/build_staff.py
 
       - name: Every print SVG has its PDF twin
         run: |
