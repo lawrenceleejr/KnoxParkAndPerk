@@ -1,8 +1,8 @@
 """Batch-generate print-ready Morning Pick-Me-Up cards and pack cover sheets.
 
 Each card gets a unique serial and a unique QR. The QR encodes a URL on the
-public site with the serial embedded (?c=KPMU-...#partners):
-  - a PATRON who scans it lands on the participating-businesses section;
+public site with the serial embedded (?c=KPMU-...#findus):
+  - a PATRON who scans it lands on the shop map — the places that redeem it;
   - a SHOP scanning it from the redeem/ scanner has the serial read straight off it.
 
 Each pack of PACK_SIZE cards gets a cover sheet whose QR opens the scanner's
@@ -51,7 +51,7 @@ def qr_group(data, x, y, size, color=NIGHT):
 
 
 def card_svg(serial):
-    url = f'{SITE}?c={serial}#partners'
+    url = f'{SITE}?c={serial}#findus'
     b = []
     b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
     b.append(f'<path d="M15 1.75 H510 a13 13 0 0 1 13.25 13.25 V22 H1.75 V15 A13 13 0 0 1 15 1.75 Z" fill="{ORANGE}"/>')

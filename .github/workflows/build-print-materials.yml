@@ -23,7 +23,7 @@ on:
       qr_url:
         description: 'URL every QR encodes (coasters + signage)'
         required: false
-        default: 'https://knoxpickmeup.org/#partners'
+        default: 'https://knoxpickmeup.org/#findus'
       logo:
         description: 'Optional path to a center logo SVG in the repo (blank = brand mark)'
         required: false

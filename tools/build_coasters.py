@@ -223,14 +223,14 @@ def main():
     ap.add_argument('--logo', default='',
                     help='path to an SVG to use as the center logo on both sides '
                          '(default: the brand mark, in each side’s ink)')
-    ap.add_argument('--qr-url', default=f'{SITE}#partners',
+    ap.add_argument('--qr-url', default=f'{SITE}#findus',
                     help='URL both QRs encode (both sides carry a QR and the '
                          'website)')
     ap.add_argument('--out', default=os.path.join(REPO, 'print', 'coasters'),
                     help='output directory')
     args = ap.parse_args()
 
-    qr = args.qr_url or f'{SITE}#partners'   # both sides always carry a QR
+    qr = args.qr_url or f'{SITE}#findus'   # both sides always carry a QR
     os.makedirs(args.out, exist_ok=True)
     # 420 units = 4 in round  ->  105 user-units per inch
     for name, svg_str in (('coaster-night', night_side(split_list(args.bars), args.logo, qr)),
