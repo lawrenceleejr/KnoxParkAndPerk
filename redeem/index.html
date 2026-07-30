@@ -283,8 +283,10 @@ const statusEl = $('status'), logList = $('loglist');
 const seen = new Set(JSON.parse(localStorage.getItem('kpu-seen') || '[]'));
 let queue = JSON.parse(localStorage.getItem('kpu-queue') || '[]');
 
+const QUEUE_CAP = 500;   // safety bound; keep the most recent if it ever runs away
 function saveLocal() {
   localStorage.setItem('kpu-seen', JSON.stringify([...seen].slice(-2000)));
+  if (queue.length > QUEUE_CAP) queue = queue.slice(-QUEUE_CAP);
   localStorage.setItem('kpu-queue', JSON.stringify(queue));
 }
 
@@ -311,7 +313,9 @@ function updateQueueNote() {
   const n = $('queuenote');
   if (queue.length) {
     n.style.display = 'block';
-    n.textContent = queue.length + ' scan(s) saved on this phone, waiting for signal — they will retry automatically.';
+    const serials = queue.map(r => r.serial);
+    const shown = serials.slice(-6).join(', ') + (serials.length > 6 ? ', …' : '');
+    n.textContent = queue.length + ' scan(s) saved on this phone, waiting for signal — retrying automatically. ' + shown;
   } else n.style.display = 'none';
 }
 
@@ -326,18 +330,26 @@ async function submit(serial) {
   return res.json();
 }
 
+let flushing = false;
 async function flushQueue() {
-  if (demo || !queue.length) return;
-  const pending = queue; queue = []; saveLocal(); updateQueueNote();
-  for (const rec of pending) {
-    try {
-      await fetch(SCRIPT_URL + '?action=redeem&serial=' + encodeURIComponent(rec.serial)
-        + '&shop=' + encodeURIComponent(rec.shop) + '&at=' + encodeURIComponent(rec.at));
-    } catch (e) { queue.push(rec); }
-  }
-  saveLocal(); updateQueueNote();
+  if (demo || flushing || !queue.length) return;
+  flushing = true;                              // single-flight: never double-send
+  try {
+    const pending = queue; queue = []; saveLocal(); updateQueueNote();
+    const stillFailed = [];
+    for (const rec of pending) {
+      try {
+        await fetch(SCRIPT_URL + '?action=redeem&serial=' + encodeURIComponent(rec.serial)
+          + '&shop=' + encodeURIComponent(rec.shop) + '&at=' + encodeURIComponent(rec.at));
+      } catch (e) { stillFailed.push(rec); }    // network error only — a server reply means delivered
+    }
+    // prepend the still-failed ahead of anything enqueued while we were flushing
+    queue = stillFailed.concat(queue); saveLocal(); updateQueueNote();
+  } finally { flushing = false; }
 }
 window.addEventListener('online', flushQueue);
+// captive-portal reconnects don't always fire 'online' — poll while pending
+setInterval(() => { if (queue.length && navigator.onLine) flushQueue(); }, 30000);
 
 let busy = false, lastSerial = '', lastAt = 0;
 async function handleSerial(raw, fromCamera) {
