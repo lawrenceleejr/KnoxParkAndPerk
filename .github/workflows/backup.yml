@@ -22,9 +22,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: nightly-backup
+  cancel-in-progress: false
+
 jobs:
   backup:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -57,4 +62,7 @@ jobs:
           git add data/backup
           git diff --cached --quiet && { echo "No changes since last backup."; exit 0; }
           git commit -m "Nightly data backup ($(date -u +%F))"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && break
+            echo "push attempt $i failed; retrying"; sleep $((i * 3))
+          done

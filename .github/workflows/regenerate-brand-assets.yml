@@ -13,9 +13,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: regenerate-brand-assets
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -39,7 +44,11 @@ jobs:
             exit 0
           fi
           git commit -m "Regenerate brand assets (manual run)"
-          git push
+          # survive an intervening push to the same branch
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push && break
+            echo "push attempt $i failed; retrying"; sleep $((i * 3))
+          done
           {
             echo "Regenerated and committed brand assets:"
             echo '```'
