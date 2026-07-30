@@ -32,9 +32,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: print-materials
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -46,16 +51,28 @@ jobs:
         run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6 cairosvg==2.9.0
 
       - name: Build coasters
+        env:
+          BARS: ${{ inputs.bars }}
+          SHOPS: ${{ inputs.shops }}
+          QR_URL: ${{ inputs.qr_url }}
+          LOGO: ${{ inputs.logo }}
         run: |
-          python3 tools/build_coasters.py \
-            --bars "${{ inputs.bars }}" \
-            --shops "${{ inputs.shops }}" \
-            --qr-url "${{ inputs.qr_url }}" \
-            --logo "${{ inputs.logo }}"
+          set -euo pipefail
+          # a repo-relative SVG path only — no absolute paths, no traversal
+          if [ -n "$LOGO" ]; then
+            case "$LOGO" in
+              /*|*..*) echo "::error::logo must be a repo-relative path with no '..'"; exit 1 ;;
+            esac
+            [ -f "$LOGO" ] || { echo "::error::logo not found: $LOGO"; exit 1; }
+          fi
+          python3 tools/build_coasters.py --bars "$BARS" --shops "$SHOPS" --qr-url "$QR_URL" --logo "$LOGO"
 
       - name: Build signage (table tents, window sticker, posters)
+        env:
+          QR_URL: ${{ inputs.qr_url }}
         run: |
-          python3 tools/build_signage.py --qr-url "${{ inputs.qr_url }}"
+          set -euo pipefail
+          python3 tools/build_signage.py --qr-url "$QR_URL"
           {
             echo "### Print materials built"
             echo ""
