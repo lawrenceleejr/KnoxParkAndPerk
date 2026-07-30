@@ -61,9 +61,16 @@ def steps_block(cx, top_y, width, num_size, body_size, gap, num_fill, body_fill)
         # wrap the body to the column width
         for line in wrap(inter4, s, body_size, width - indent):
             out.append(text(inter4, line, body_size, x0 + indent, y, body_fill)[0])
-            y += body_size * 1.32
+            y += body_size * 1.28
         y += gap
     return ''.join(out), y
+
+
+def fit(face, s, size, max_w, min_size=10):
+    """Largest size <= the requested one at which s fits in max_w."""
+    while size > min_size and face.shape(s, size)[1] > max_w:
+        size -= 0.5
+    return size
 
 
 def wrap(face, s, size, max_w):
@@ -90,19 +97,25 @@ def poster(eyebrow, headline, sub, foot):
     b.append(mark(cx - mark_w(120) / 2, 66, 120))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 40, cx, 250, INK, anchor='middle')[0])
     b.append(text(inter6, eyebrow, 13, cx, 284, ORANGE_INK, tracking=0.18, anchor='middle')[0])
-    # headline (may be two lines, split on a literal newline)
-    hy = 366
+    # headline (may be two lines, split on a literal newline) — each line fit
+    # to the inner width so a longer message can't run off the sheet
+    TEXTW = W - 120
+    hy = 352
     for line in headline.split('\n'):
-        b.append(text(fraunces, line, 52, cx, hy, INK, anchor='middle')[0])
-        hy += 60
-    b.append(text(fraunces_it, sub, 22, cx, hy + 6, ORANGE_INK, anchor='middle')[0])
-    steps_svg, _ = steps_block(cx, hy + 66, 560, 30, 19, 14, ORANGE, INK2)
+        b.append(text(fraunces, line, fit(fraunces, line, 52, TEXTW), cx, hy, INK, anchor='middle')[0])
+        hy += 58
+    b.append(text(fraunces_it, sub, fit(fraunces_it, sub, 22, TEXTW), cx, hy + 4, ORANGE_INK, anchor='middle')[0])
+    steps_svg, steps_end = steps_block(cx, hy + 56, 560, 28, 18, 12, ORANGE, INK2)
     b.append(steps_svg)
-    # QR + website
-    qsz = 210
-    b.append(qr_card(cx, 690, qsz))
-    b.append(text(inter6, 'SCAN — FREE COFFEE FOR A SAFE RIDE HOME', 13, cx, 690 + qsz + 62, INK2, tracking=0.14, anchor='middle')[0])
-    b.append(text(fraunces, SITE_LABEL, 30, cx, 690 + qsz + 100, INK, anchor='middle')[0])
+    # QR + website, positioned from where the steps actually ended (they wrap,
+    # so the end moves) with a guaranteed gap; guard the footer below it
+    qsz = 180
+    qy = steps_end + 20
+    b.append(qr_card(cx, qy, qsz))
+    label_y = qy + qsz + 2 * quiet_pad(QR_URL, qsz) + 30
+    b.append(text(inter6, 'SCAN — FREE COFFEE FOR A SAFE RIDE HOME', 13, cx, label_y, INK2, tracking=0.14, anchor='middle')[0])
+    b.append(text(fraunces, SITE_LABEL, 28, cx, label_y + 34, INK, anchor='middle')[0])
+    assert label_y + 34 < H - 70, 'poster copy overflows the footer — shorten a step'
     b.append(text(inter6, foot, 10.5, cx, H - 58, INK2, tracking=0.12, anchor='middle')[0])
     return svg(W, H, ''.join(b), f'Knox Pick-Me-Up poster — {headline.replace(chr(10), " ")}')
 
@@ -151,10 +164,10 @@ def table_tent():
          f'<g transform="translate(0,500)">{panel}</g>',
          # top panel, rotated 180° about the sheet's upper-half center
          f'<g transform="translate({W},500) rotate(180)">{panel}</g>',
-         # fold line
-         f'<line x1="0" y1="500" x2="{W}" y2="500" stroke="{RULE}" stroke-width="1.5" stroke-dasharray="7 5"/>',
-         f'<g transform="translate({W/2},500)"><rect x="-34" y="-8" width="68" height="16" rx="8" fill="{PAPER}"/>'
-         + text(inter6, 'FOLD', 8, 0, 3, INK2, tracking=0.2, anchor='middle')[0] + '</g>']
+         # fold guide — a hairline dash across the crease and a small paper
+         # label sitting ON the orange band, so nothing knocks a hole in the art
+         f'<line x1="0" y1="500" x2="{W}" y2="500" stroke="{NIGHT}" stroke-width="0.75" stroke-dasharray="6 5" opacity="0.5"/>',
+         text(inter6, 'FOLD', 7, W / 2, 503.5, PAPER, tracking=0.3, anchor='middle')[0]]
     return svg(W, H, ''.join(b),
                'Knox Pick-Me-Up table tent — foldable A-frame for bar and cafe tables')
 
