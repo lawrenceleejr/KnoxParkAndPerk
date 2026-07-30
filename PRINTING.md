@@ -14,8 +14,8 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Card books** (the main event) | `tools/build_cards.py` → `print/cards/` (unique front per card + one static back) | 50 cards/book; 20 books per 1,000 cards |
 | **Pack cover sheets** | same script → `print/packs/` (one per book, with pack serial + check-out QR) | 1 per book |
 | **Register QRs** (one per coffee shop) | generate per shop, see §5 | 1–2 per shop, laminated |
-| **Coasters** (two-sided) | `tools/build_coasters.py` → `print/coasters/` (night side: bars + the three steps; day side: shops + QR) · single-sided spot design: [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
-| Later: table tents, mirror clings, window decals | from `assets/` lockups | per venue |
+| **Coasters** (two-sided) | `tools/build_coasters.py` → `print/coasters/` (night side: bars + the three steps; day side: shops; **both sides carry a QR**) · single-sided spot design: [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
+| **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 
 ## 2. The card books — what to ask a printer for
 
@@ -103,7 +103,8 @@ brand mark):
 python3 tools/build_coasters.py \
     --bars "Preservation Pub, Barley's Taproom, …" \
     --shops "Remedy Coffee, Wild Love Bakehouse, …" \
-    --logo path/to/logo.svg            # optional; default: the brand mark
+    --qr-url https://knoxpickmeup.org/#findus \
+    --logo path/to/logo.svg            # both optional — QR defaults to the shop map, logo to the brand mark
 # -> print/coasters/coaster-night.svg + coaster-day.svg
 ```
 
@@ -169,20 +170,20 @@ scannable when the lamination glares or the corner gets coffee on it.
 1. **Serial continuity** — `--start` must be the next unused number
    (check the highest serial in the `Packs` tab or `data/backup/packs.csv`;
    never reprint a live range).
-1. **Program key** — `--key` matches the Apps Script's `PROGRAM_KEY`
+2. **Program key** — `--key` matches the Apps Script's `PROGRAM_KEY`
    (no demo-key warning in the script output), register QRs carry the
    matching `&k=` from `tools/ckkey.py`, and the proof card scans as
    valid, not "serial doesn't check out".
-2. **Pack check-out proof** — scan a pack cover sheet's QR: it should open
+3. **Pack check-out proof** — scan a pack cover sheet's QR: it should open
    the admin check-out with the pack pre-loaded, ready to assign to a bar.
-3. **Proof one card end to end**: print `card-…0001` on a desk printer,
+4. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it
    from `redeem/?shop=demo-cafe` and see the serial extracted.
-4. **Stamp test** on the shop's actual stock sample: rubber date stamp +
+5. **Stamp test** on the shop's actual stock sample: rubber date stamp +
    ballpoint, smudge check after 10 seconds.
-5. **QR size sanity**: the card QR prints at about 0.55″ — fine for
+6. **QR size sanity**: the card QR prints at about 0.55″ — fine for
    phone cameras, but don't let a shop shrink the card below 3.5″ × 2″.
-6. Order **books = cards ÷ 50**, and physically match pack cover sheets
+7. Order **books = cards ÷ 50**, and physically match pack cover sheets
    to books by serial range when they arrive.
 
 ---

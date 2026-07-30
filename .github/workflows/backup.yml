@@ -5,7 +5,7 @@
 # night — git history IS the archive, so any past day can be recovered with
 # `git log -- data/backup`.
 #
-# Setup (see README "Set up the program" step 8):
+# Setup (see README "Set up the program" step 7):
 #   repo Settings → Secrets and variables → Actions → New repository secret
 #     BACKUP_URL  = the Apps Script web-app URL (ends in /exec)
 #     PROGRAM_KEY = the PROGRAM_KEY string you set inside the Apps Script
@@ -39,7 +39,7 @@ jobs:
           PROGRAM_KEY: ${{ secrets.PROGRAM_KEY }}
         run: |
           if [ -z "$BACKUP_URL" ] || [ -z "$PROGRAM_KEY" ]; then
-            echo "Backup secrets not configured yet — skipping. See README setup step 8."
+            echo "Backup secrets not configured yet — skipping. See README setup step 7."
             exit 0
           fi
           curl -sL --fail "$BACKUP_URL?action=backup&key=$PROGRAM_KEY" -o /tmp/backup.json

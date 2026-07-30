@@ -17,8 +17,8 @@ tools/build_cards.py     pack cover QR          register QR opens          Googl
 makes per-serial cards   opens the scanner's    redeem/?shop=slug      (the database)
 + pack cover sheets  →   admin check-out:   →   barista scans the      →       │
 each card QR encodes     pick the bar, scan     card's QR with the             ▼
-site URL with serial     the pack — 10 sec      phone camera → serial      Looker Studio
-                                                logged automatically       dashboard
+site URL with serial     the pack — 10 sec      phone camera → serial      built-in /dashboard/
+                                                logged automatically       (Looker optional)
 ```
 
 **The one clever trick — the card QR is dual-use.** Every card's QR encodes
@@ -68,7 +68,8 @@ one letter (`KPMU-2026-00004217T`) that can't be computed without a secret,
 so serials can't be minted by counting up from a card in hand. **There is
 exactly one secret in the whole system** — `PROGRAM_KEY` — and the checksum
 uses a key *derived* from it: `CK_KEY = hex(HMAC-SHA256(PROGRAM_KEY,
-"serial-v1"))`, then `letter = HMAC-SHA256(CK_KEY, digits)` mapped to a
+"serial-v1"))`, then `letter = HMAC-SHA256(CK_KEY, serial)` — over the whole
+`KPMU-YYYY-########` body, not just the digits — mapped to a
 24-letter alphabet (no I/O, which read as 1/0). The derivation is one-way,
 which is what lets the derived key ride in each shop's **register QR**
 (`redeem/?shop=slug&k=<derived>`): the scanner verifies every scanned
@@ -358,8 +359,8 @@ clear "open a register QR once" message instead of a silent failure.
 
 ### E. Card + pack printing: `tools/build_cards.py` (this repo)
 `python3 tools/build_cards.py --year 2026 --start 1 --count 500` emits
-per-serial card SVGs and one cover sheet per 50 into `print/` (gitignored),
-ready for any print shop (SVG→PDF one-liner included in the script output).
+per-serial card SVGs — each with a true-size print-ready PDF beside it — and
+one cover sheet per 50 into `print/` (gitignored), ready for any print shop.
 Unique QR per card is what makes scan-to-log possible.
 
 ### F. The admin dashboard: `dashboard/index.html` (this repo, GitHub Pages)
@@ -427,8 +428,8 @@ none of which you have to remember to run:
    accidents in one click.
 2. Else open the newest copy in the **KPMU Backups** Drive folder, rename it,
    and repoint nothing — instead copy its tabs back into the original file
-   (the Apps Script and form are bound to the original's ID; keeping that
-   file alive is simpler than re-deploying).
+   (the Apps Script and its triggers are bound to the original's ID; keeping
+   that file alive is simpler than re-deploying).
 3. Else pull `data/backup/*.csv` from this repo (or any older version via
    `git log -- data/backup`) and File → Import → each CSV into its tab.
 4. If the whole Google account is lost: create a new Sheet from the CSVs,
@@ -498,10 +499,16 @@ links them.
 3. In this repo: set `SCRIPT_URL` and the `SHOPS` map in `redeem/index.html`
    (and optionally seed the `BARS` roster); set `SCRIPT_URL` in
    `dashboard/index.html`. Commit, merge — Pages redeploys.
-4. Generate per-shop register QRs (any QR tool, or segno one-liner) pointing
-   at `https://…/redeem/?shop=<slug>`; print and laminate.
-5. Run `tools/build_cards.py`, send `print/` to the print shop.
-6. Build the Looker Studio dashboard on the Sheet; share view links.
+4. Generate per-shop register QRs pointing at
+   `https://…/redeem/?shop=<slug>&k=<derived>`, where `<derived>` is the check
+   key from `tools/ckkey.py` (so the scanner can verify serials offline);
+   print and laminate.
+5. Run `tools/build_cards.py --key "$KPMU_PROGRAM_KEY"` (the same secret —
+   **without it the cards are signed with the public demo key and won't
+   validate**), then send `print/` to the print shop. See PRINTING.md.
+6. The built-in dashboard is already live at `/dashboard/` from step 3 — share
+   that link with partners. (Optionally also build a Looker Studio view on the
+   Sheet if a partner wants their own charts.)
 7. Backups: add the daily `nightlySnapshot` trigger in the Apps Script; in
    this repo's Settings → Secrets → Actions add `BACKUP_URL` (the `/exec`
    URL) and `PROGRAM_KEY` (the same one secret), then run the "Nightly data
@@ -512,7 +519,7 @@ links them.
 
 ## 4. What this costs and what can break
 
-**Cost:** $0. GitHub Pages, Google Forms/Sheets/Apps Script, and Looker
+**Cost:** $0. GitHub Pages, Google Sheets/Apps Script, and Looker
 Studio are all free at this scale (Apps Script's free quota is ~20k
 requests/day; a wildly successful pilot is a few hundred redemptions a
 week).

@@ -24,7 +24,7 @@ everywhere — web, print, email — with no font dependencies.
 | **Essence** | Road safety made warm and rewarding — not preachy |
 | **Story arc** | Last call → Ride home → Morning → Coffee |
 | **Voice** | Warm, wry, plainspoken. Never "don't drink and drive"; always "good call — coffee's on us." Puns are welcome when they carry the message: *two brews*, *Hair of the KAT*. |
-| **Sub-brands** | *Hair of the KAT* — the card doubles as KAT bus fare while valid; *Pick It Forward* — patrons chip in a dollar for tomorrow's cards |
+| **Sub-brands** | *Hair of the KAT* — the card doubles as KAT bus fare while valid. (*Pick It Forward*, a patron dollar round-up, is **parked for the pilot** — not on the site or the collateral yet; see PROGRAM.md. Don't use the name in pilot materials until it's switched on.) |
 | **Design posture** | Editorial and civic: generous whitespace, hairline rules, one accent color used sparingly. No gradients, no drop shadows, no decoration that doesn't carry meaning. |
 
 ---
@@ -52,6 +52,11 @@ icon no smaller than 20 px.
 skew · add drop shadows, outlines, or gradients · recolor the badge outside the
 navy/paper pair · place the light lockup on a dark background (use
 `logo-dark.svg`).
+
+**One functional exception to the no-shadow rule:** map pins and the hero
+mark carry a soft *contact* shadow — the shadow reads as a physical pin
+resting on a surface, which is meaning (depth/placement), not decoration. It
+never goes on the wordmark, lockups, or flat collateral.
 
 ---
 
@@ -179,8 +184,10 @@ assets/
   mark.svg          The signature mark (a coffee cup in a rounded badge)
   logo-mark.svg     The mark sealed in a night circle (emblem)
   favicon.svg       App icon / favicon (the mark in a rounded square)
-  card.svg          The Morning Pick-Me-Up Card artwork
-  coaster.svg       The bar coaster artwork
+  card.svg          Reference render of the Card (demo-key) — NOT a print master;
+                    real cards come from tools/build_cards.py with the program key
+  coaster.svg       One-sided brand swatch — the two-sided print coaster is
+                    tools/build_coasters.py
   palette.svg       Color swatch sheet
   fonts/            Self-hosted woff2 (Fraunces, Inter, Cormorant) + fonts.css
 ```

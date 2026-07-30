@@ -1,6 +1,6 @@
 """Regenerate brand collateral (logo, card, coaster, palette) with outlined type.
 
-Usage: pip install fonttools brotli uharfbuzz && python3 tools/build_collateral.py
+Usage: pip install fonttools brotli uharfbuzz segno cairosvg && python3 tools/build_collateral.py
 """
 import math, re, sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))

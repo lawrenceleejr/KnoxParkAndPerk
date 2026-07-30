@@ -69,7 +69,7 @@ crowd stands the coffee for tomorrow's safe riders.
   the record of issue and the start of the validity window (covers the
   morning-after trip; prevents hoarding).
 - Serialized (`KPMU-YYYY-########` plus a one-letter keyed checksum, e.g.
-  `…00004217H`, so serials can't be invented by counting). Packs of 50 carry
+  `…00004217T`, so serials can't be invented by counting). Packs of 50 carry
   their own serial with a leading P (`KPMU-YYYY-P####`); the pack check-out
   record ties every card serial to its issuing bar, and each redemption is
   stored with that bar attached — so no per-card bar mark is needed.
@@ -146,6 +146,11 @@ redemptions while the model proves out.
 ticket-size data to keep shops convinced.
 
 ### B. Pick It Forward (patron round-up) — the thank-you loop
+**Status: parked for the pilot.** It's kept here as a funding *option* to
+switch on later; it is deliberately absent from the public site and all
+collateral for now, so don't treat it as a live pillar until the program
+decides to turn it on.
+
 An optional $1 line on bar tabs: tonight's patrons stand the coffee for
 tomorrow's safe riders. This is the purest expression of the brand — the
 community literally thanking people for getting home safe — and even modest
