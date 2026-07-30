@@ -58,8 +58,8 @@ and its card range — pick the bar and submit).
   - [`logo-mark.svg`](assets/logo-mark.svg) — the mark sealed in a badge (emblem)
   - [`favicon.svg`](assets/favicon.svg) — app icon / favicon
   - [`palette.svg`](assets/palette.svg) — color swatch sheet
-  - [`card.svg`](assets/card.svg) — the Morning Pick-Me-Up Card (business-card size)
-  - [`coaster.svg`](assets/coaster.svg) — the bar coaster (round)
+  - [`card.svg`](assets/card.svg) — a **reference render** of the Morning Pick-Me-Up Card (business-card size), signed with the public demo key. Real cards come from `tools/build_cards.py` with the program key — don't print this file.
+  - [`coaster.svg`](assets/coaster.svg) — a one-sided brand **swatch** of the coaster. The two-sided print coaster comes from `tools/build_coasters.py`.
 
 ## How the data flows
 
@@ -84,7 +84,8 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
 2. **Create the Sheet** with three tabs and header rows:
    - `Redemptions`: `timestamp | serial | shop | status | bar | pack serial`
    - `Packs`: `timestamp | pack serial | first | last | bar | voided`
-   - `Venues`: `slug | name | type | joined | deactivated`
+   - `Venues`: `slug | name | type | joined | deactivated | monthly cap`
+     (the last column is the optional shop redemption cap the dashboard tracks against)
    Share it with **no one** (partners get the dashboard, not the sheet), and
    right-click the `Redemptions` tab → *Protect sheet* → only you.
 3. **Paste the Apps Script** from [`design/LOGGING.md`](design/LOGGING.md)
@@ -94,6 +95,8 @@ Everything below is free and requires no server. Steps 1–3 happen in Google,
    Deploy → New deployment → Web app, *Execute as: me*,
    *Access: anyone*. Copy the `/exec` URL. Run `nightlySnapshot` once to
    authorize it, then add a daily time-driven trigger for it (Triggers → Add).
+   While you're there, add a weekly time-driven trigger for `weeklyDigest`
+   (Monday morning) so the coordinator gets the week-in-review email.
 4. **Configure this repo** (marked `CONFIG` blocks at the top of each file):
    - [`redeem/index.html`](redeem/index.html): `SCRIPT_URL` = the `/exec` URL; fill the
      `SHOPS` map (slug → display name), and optionally seed the `BARS` roster
