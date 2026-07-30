@@ -24,6 +24,14 @@ ORANGE  = '#ff8200'
 ORANGE_INK = '#b04e00'
 GOLD    = '#eda953'
 RULE    = '#ddcfb4'
+NIGHT_RULE = '#2a3550'   # hairline on night fields (card back + night coaster)
+
+# canonical site + QR target — imported by every generator so the URL lives
+# in exactly one place. Printed QRs land on the shop map (#findus), never the
+# partner-recruitment section.
+SITE = 'https://knoxpickmeup.org/'
+SITE_LABEL = 'knoxpickmeup.org'
+FINDUS = SITE + '#findus'
 
 # ---- mark extraction (from assets/mark.svg) ----
 # The mark is a badge: a navy (#101a30) shield with a white (#ffffff) coffee
@@ -138,7 +146,6 @@ def build_lockups():
 # the public site URL with this sample's serial embedded.
 import io, segno
 from serials import DEMO_KEY, derive_ck_key, serial_letter
-SITE = 'https://knoxpickmeup.org/'
 
 SAMPLE_SERIAL = 'KPMU-2026-00004217' + serial_letter('KPMU-2026-00004217',
                                                      derive_ck_key(DEMO_KEY))
@@ -162,50 +169,20 @@ def quiet_pad(data, size, error='m', modules=4):
     return modules * size / qr_modules(data, error)
 
 def build_card_sample():
-    b = []
-    b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
-    b.append(f'<path d="M15 1.75 H510 a13 13 0 0 1 13.25 13.25 V22 H1.75 V15 A13 13 0 0 1 15 1.75 Z" fill="{ORANGE}"/>')
-    # header
-    b.append(mark(26, 40, 40))
-    b.append(text(fraunces, 'Knox Pick-Me-Up', 23, 82, 68, INK)[0])
-    b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, tracking=0.18, anchor='end')[0])
-    b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
-    # offer
-    b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
-    b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
-    bullet_rows = [
-        [('One large coffee at participating downtown shops', inter4, INK2)],
-        [('Hair of the KAT', inter6, ORANGE_INK),
-         (' — your KAT bus fare while this card is valid', inter4, INK2)],
-        [('One per ride · Not for resale · No cash value', inter4, INK2)],
-    ]
-    for i, segs in enumerate(bullet_rows):
-        y = 202 + i*19
-        b.append(f'<rect x="26" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
-        x = 41
-        for seg, face, col in segs:
-            pth, w = text(face, seg, 11, x, y, col)
-            b.append(pth)
-            x += w
-    # QR
-    b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-    b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#findus', 407, 114, 82))
-    b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
-    b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
-    # validity + serial
-    b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
-    # blank line is where the server writes today's date at hand-out — that
-    # date is both the issue date and the start of the one-day validity window
-    b.append(text(inter6, 'DATE ISSUED · VALID ONE DAY', 9.5, 26, 274, INK, tracking=0.14)[0])
-    b.append(f'<line x1="211" y1="276" x2="345" y2="276" stroke="{INK2}" stroke-width="1"/>')
-    b.append(text(inter4, f'Nº {SAMPLE_SERIAL}', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
-    open(f'{REPO}/assets/card.svg', 'w').write(
-        svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
+    # assets/card.svg is reference art, not a separate design: it is the exact
+    # production card face (build_cards.card_svg) rendered with a demo-key
+    # sample serial, so it can never drift from what the print run emits.
+    from build_cards import card_svg
+    open(f'{REPO}/assets/card.svg', 'w').write(card_svg(SAMPLE_SERIAL))
 
 # =====================================================================
 # 3. Coaster (420 x 420)
 # =====================================================================
 def build_coaster_sample():
+    # assets/coaster.svg is a distinct one-sided brand swatch, NOT the
+    # two-sided print coaster — that lives in tools/build_coasters.py. This
+    # single face just shows the mark + rim + a decision line for the brand
+    # sheet; don't treat it as a print master.
     c = []
     cx = cy = 210
     c.append(f'<circle cx="{cx}" cy="{cy}" r="204" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')

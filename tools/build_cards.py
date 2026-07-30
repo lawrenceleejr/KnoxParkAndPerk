@@ -15,39 +15,20 @@ Usage:
 Outputs to print/cards/ and print/packs/ (gitignored — print artifacts).
 See design/LOGGING.md for the full system.
 """
-import argparse, io, math, os, re, sys
+import argparse, math, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
-                              RULE, text, svg, mark, write_pdf, fraunces, fraunces_it,
-                              inter6, inter4)
+                              RULE, NIGHT_RULE, SITE, text, svg, mark, qr_svg,
+                              write_pdf, fraunces, fraunces_it, inter6, inter4)
 from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
-SITE = 'https://knoxpickmeup.org/'
 PACK_SIZE = 50
 UPI = 150        # cards 525x300 = 3.5x2 in; pack sheets 525x700 = 3.5x4.67 in
 # ==========================================
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-def qr_path(data, error='m'):
-    """Return (svg_path_d, modules_per_side) for a QR encoding `data`."""
-    q = segno.make(data, error=error, micro=False)
-    buf = io.BytesIO()
-    q.save(buf, kind='svg', xmldecl=False, svgns=False, border=0)
-    m = re.search(r'<path[^>]* d="([^"]+)"', buf.getvalue().decode())
-    n = q.symbol_size(border=0)[0]
-    return m.group(1), n
-
-
-def qr_group(data, x, y, size, color=NIGHT):
-    d, n = qr_path(data)
-    s = size / n
-    return (f'<g transform="translate({x},{y}) scale({s:.5f})">'
-            f'<path stroke="{color}" d="{d}"/></g>')
 
 
 def card_svg(serial):
@@ -76,7 +57,7 @@ def card_svg(serial):
             b.append(pth)
             x += w
     b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-    b.append(qr_group(url, 407, 114, 82))
+    b.append(qr_svg(url, 407, 114, 82))
     b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
     b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
     b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
@@ -99,7 +80,7 @@ def card_back_svg():
     b.append(mark(26, 34, 44, shield=PAPER, cup=NIGHT))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 24, 86, 58, PAPER)[0])
     b.append(text(fraunces_it, 'Ride from last call to first cup.', 14.5, 86, 80, GOLD)[0])
-    b.append('<line x1="26" y1="100" x2="499" y2="100" stroke="#2a3550" stroke-width="1"/>')
+    b.append(f'<line x1="26" y1="100" x2="499" y2="100" stroke="{NIGHT_RULE}" stroke-width="1"/>')
     # how it works — three numbered lines
     steps = [
         ('1', 'Booked a safe ride home? Show your bartender before you leave.'),
@@ -110,7 +91,7 @@ def card_back_svg():
         y = 132 + i * 34
         b.append(text(fraunces, num, 22, 26, y, ORANGE)[0])
         b.append(text(inter4, line, 11.5, 48, y - 3, PAPER)[0])
-    b.append('<line x1="26" y1="232" x2="499" y2="232" stroke="#2a3550" stroke-width="1"/>')
+    b.append(f'<line x1="26" y1="232" x2="499" y2="232" stroke="{NIGHT_RULE}" stroke-width="1"/>')
     # footer: partnership + sponsor slot
     b.append(text(inter6, 'A ROAD-SAFETY PARTNERSHIP · CITY OF KNOXVILLE · KPD · KAT', 7.5, 26, 254, GOLD, tracking=0.14)[0])
     b.append(text(inter4, 'knoxpickmeup.org — participating shops, program details, and the fine print', 9.5, 26, 270, '#b9b3a4')[0])
@@ -144,7 +125,7 @@ def pack_svg(year, pack_no, first, last, size=PACK_SIZE):
     # submits. The same QR is what the in-app admin scanner reads.
     checkout_url = f'{SITE}redeem/?pack={pk}&first={first}&last={last}'
     b.append(text(inter6, 'CHECKING THIS PACK OUT TO A BAR?', 11, 40, 366, INK, tracking=0.14)[0])
-    b.append(qr_group(checkout_url, 40, 382, 160))
+    b.append(qr_svg(checkout_url, 40, 382, 160))
     b.append(text(inter4, 'Scan it: pick the bar, submit. Ten seconds.', 12, 222, 414, INK2)[0])
     b.append(text(inter4, 'Ties every card in this pack to that bar for the', 12, 222, 434, INK2)[0])
     b.append(text(inter4, 'monthly numbers — no other paperwork.', 12, 222, 454, INK2)[0])

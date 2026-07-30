@@ -24,34 +24,21 @@ print artifacts). All type is converted to outlines, like every other piece
 of collateral, so any print shop can run the files as-is. Coaster spec is in
 PRINTING.md (pulpboard, 3.5-4 in round, flat color).
 """
-import argparse, io, math, os, re, sys
+import argparse, math, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
-                              ORANGE_INK, GOLD, RULE, text, arc_text, svg,
-                              mark, mark_w, write_pdf, quiet_pad, fraunces, fraunces_it,
-                              inter6, inter4)
+                              ORANGE_INK, GOLD, RULE, NIGHT_RULE, SITE, SITE_LABEL,
+                              text, arc_text, svg, mark, mark_w, qr_svg, write_pdf,
+                              quiet_pad, fraunces, fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = 'https://knoxpickmeup.org/'
 
 # geometry — 420 units = 4 in round coaster (105 units/in)
 W = 420
 UPI = 105        # user units per inch, for true-size PDF export
 CX = CY = 210
 R_EDGE, R_RING, R_INNER, R_NAMES = 204, 192, 158, 175
-NIGHT_RULE = '#2a3550'   # hairline on the night field (matches the card back)
-
-
-def qr_group(data, x, y, size, color=NIGHT):
-    q = segno.make(data, error='m', micro=False)
-    buf = io.BytesIO()
-    q.save(buf, kind='svg', xmldecl=False, svgns=False, border=0)
-    d = re.search(r'<path[^>]* d="([^"]+)"', buf.getvalue().decode()).group(1)
-    n = q.symbol_size(border=0)[0]
-    return (f'<g transform="translate({x},{y}) scale({size / n:.5f})">'
-            f'<path stroke="{color}" d="{d}"/></g>')
 
 
 def qr_panel(cx, top_y, size, qr_url):
@@ -60,7 +47,7 @@ def qr_panel(cx, top_y, size, qr_url):
     box = size + pad * 2
     return (f'<rect x="{cx - box / 2:.1f}" y="{top_y:.1f}" width="{box}" height="{box}" rx="5" '
             f'fill="#ffffff" stroke="{RULE}" stroke-width="1"/>'
-            + qr_group(qr_url, cx - size / 2, top_y + pad, size))
+            + qr_svg(qr_url, cx - size / 2, top_y + pad, size))
 
 
 def embed_svg(path, cx, top_y, h):
@@ -149,9 +136,6 @@ def ring_names(names, face, base_size, fill, dot, max_arc_deg=152):
                 out.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="2.4" fill="{dot}"/>')
             deg += wdeg + math.degrees(gap / R_NAMES)
     return ''.join(out)
-
-
-SITE_LABEL = 'knoxpickmeup.org'
 
 
 def night_side(bars, logo_path, qr_url):
