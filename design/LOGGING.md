@@ -173,9 +173,17 @@ function doGet(e) {
   }
   if (p.action === 'checkout' && /^KPMU-\d{4}-P\d+$/i.test(p.pack || '')) {
     // Admin pack check-out (redeem/?admin): tie a printed pack to the bar
-    // taking it. Insert-only — a pack already in the sheet is REFUSED (never
-    // duplicated or silently reassigned); to move a pack, edit the Packs tab
-    // by hand.
+    // taking it. Gated by the DERIVED check key (the same k printed on
+    // register QRs) so a drive-by request can't write Packs/Venues rows —
+    // the admin phone arms itself by opening any register QR once. This is
+    // a tripwire, not a vault: anyone holding a register QR has k, but they
+    // could also just scan cards. Insert-only — a pack already in the sheet
+    // is REFUSED (never duplicated or silently reassigned); to move a pack,
+    // edit the Packs tab by hand.
+    if ((p.k || '') !== CK_KEY) {
+      return ContentService.createTextOutput(JSON.stringify({ status: 'denied' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     const pack = p.pack.toUpperCase();
     const first = String(p.first || '').toUpperCase();
     const last = String(p.last || '').toUpperCase();
@@ -332,6 +340,12 @@ in the sheet is refused (the scanner shows "already checked out to <bar>"), so
 a double-scan can't duplicate or silently reassign it — to move a pack, edit
 the `Packs` tab by hand. The cover sheet also has a written-log fallback line.
 No Google Form needed.
+
+Check-outs are **gated by the derived check key** — the same `k` every
+register QR carries — so a random internet request can't write `Packs`/
+`Venues` rows. The admin phone arms itself the first time it opens any
+register QR (the key is remembered on the device); an unarmed device gets a
+clear "open a register QR once" message instead of a silent failure.
 
 ### E. Card + pack printing: `tools/build_cards.py` (this repo)
 `python3 tools/build_cards.py --year 2026 --start 1 --count 500` emits

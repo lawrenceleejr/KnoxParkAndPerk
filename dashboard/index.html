@@ -329,6 +329,12 @@ function el(name, attrs, parent) {
   return n;
 }
 function txt(node, s) { node.textContent = s; return node; }
+/* Escape untrusted strings (venue names, slugs, serials — anything that
+   arrives via the Sheet) before they touch an HTML string. Charts and the
+   tooltip already go through textContent/setAttribute and are safe. */
+function esc(v) {
+  return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 const tip = $('tip');
 function hover(node, html) {
   node.addEventListener('mousemove', e => {
@@ -537,7 +543,7 @@ function render() {
     if (onLast.length) {
       w.hidden = false;
       const names = onLast.map(v =>
-        '<span class="who">' + v.name + '</span> (' + v.used + ' of ' + v.size + ' redeemed)').join(', ');
+        '<span class="who">' + esc(v.name) + '</span> (' + v.used + ' of ' + v.size + ' redeemed)').join(', ');
       w.innerHTML = '<b>⚠ Resupply needed.</b> More than half of the last assigned pack is'
         + ' provably used up for ' + names + ' — and hand-outs run ahead of redemptions,'
         + ' so they are even further along. Check a new pack out to them soon.';
@@ -556,7 +562,7 @@ function render() {
     if (dormant.length) {
       dw.hidden = false;
       dw.innerHTML = '<b>Dormant packs.</b> ' + dormant.map(x =>
-        '<span class="who">' + x.bar.name + '</span> — pack …' + String(x.p[1]).slice(-4)
+        '<span class="who">' + esc(x.bar.name) + '</span> — pack …' + esc(String(x.p[1]).slice(-4))
         + ' checked out ' + x.age + ' days ago, no redemptions yet').join('; ')
         + '. It may be sitting in a storeroom, lost, or the bar stopped issuing — worth a check-in.';
     } else {
@@ -657,8 +663,8 @@ function render() {
       sus.sort((a, b) => (b.bad - a.bad) || (b.rows.length - a.rows.length));
       host.innerHTML = (sus.length
         ? '<table><tr><th>Serial</th><th class="num">Attempts</th><th>Where</th><th>Reading</th></tr>' +
-          sus.map(x => `<tr><td>…${x.serial.slice(-9)}</td><td class="num">${x.rows.length}</td>` +
-            `<td>${x.shopsHit.map(sl => shopInfo(sl).name).join(', ')}</td>` +
+          sus.map(x => `<tr><td>…${esc(x.serial.slice(-9))}</td><td class="num">${x.rows.length}</td>` +
+            `<td>${x.shopsHit.map(sl => esc(shopInfo(sl).name)).join(', ')}</td>` +
             `<td class="st ${x.bad ? 'bad' : 'dup'}">${x.note}</td></tr>`).join('') + '</table>'
         : '<p class="empty">No suspicious duplicates in this range.</p>')
         + (benign ? '<p class="inote">' + benign + ' other duplicate scan' + (benign === 1 ? '' : 's')
@@ -677,8 +683,8 @@ function render() {
       const k = (r[3] || '(unassigned)') + '|' + (r[1] || '(unknown)');
       cellCount[k] = (cellCount[k] || 0) + 1; cmax = Math.max(cmax, cellCount[k]);
     });
-    const shopHead = s => { const v = shopInfo(s); return `<th class="num${v.off ? ' inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${v.name}${v.off ? ' †' : ''}</th>`; };
-    const barHead = b => { const v = barInfo(b); return `<td class="${v.off ? 'inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${v.name}${v.off ? ' †' : ''}</td>`; };
+    const shopHead = s => { const v = shopInfo(s); return `<th class="num${v.off ? ' inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${esc(v.name)}${v.off ? ' †' : ''}</th>`; };
+    const barHead = b => { const v = barInfo(b); return `<td class="${v.off ? 'inactive' : ''}"${v.off ? ' title="deactivated"' : ''}>${esc(v.name)}${v.off ? ' †' : ''}</td>`; };
     let h = '<div class="matrixwrap"><table class="matrix"><tr><th>Bar \\ Shop</th>' + shops.map(shopHead).join('') + '</tr>';
     for (const b of bars) {
       h += `<tr>${barHead(b)}` + shops.map(s => {
@@ -686,7 +692,7 @@ function render() {
         const step = v === 0 ? -1 : Math.min(4, Math.floor(v / cmax * 4.999));
         const bg = step < 0 ? 'transparent' : RAMP[step];
         const fg = step >= 2 ? '#fffdf7' : '#241a10';
-        return `<td class="cell" data-t="${b} → ${s}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
+        return `<td class="cell" data-t="${esc(b)} → ${esc(s)}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
       }).join('') + '</tr>';
     }
     const anyOff = shops.some(x => shopInfo(x).off) || bars.some(x => barInfo(x).off);
@@ -700,11 +706,11 @@ function render() {
     adminOn ? 'Most recent 20 scans in range (all statuses)' : 'Most recent 20 redemptions in range';
   const latest = [...latestSrc].sort((a, b) => new Date(b[0]) - new Date(a[0])).slice(0, 20);
   const vcell = info => info.off
-    ? `<span class="inactive" title="deactivated">${info.name} †</span>` : info.name;
+    ? `<span class="inactive" title="deactivated">${esc(info.name)} †</span>` : esc(info.name);
   $('latest').innerHTML = '<table><tr><th>When</th><th>Shop</th><th>Issuing bar</th><th>Status</th></tr>' +
     latest.map(r => `<tr><td>${new Date(r[0]).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>` +
       `<td>${r[1] ? vcell(shopInfo(r[1])) : ''}</td><td>${r[3] ? vcell(barInfo(r[3])) : '—'}</td>` +
-      `<td class="st ${r[2]}">${{ok:'redeemed',dup:'duplicate',void:'voided pack',bad:'invalid serial'}[r[2]] || r[2]}</td></tr>`).join('') +
+      `<td class="st ${esc(r[2])}">${{ok:'redeemed',dup:'duplicate',void:'voided pack',bad:'invalid serial'}[r[2]] || esc(r[2])}</td></tr>`).join('') +
     '</table>';
 }
 
