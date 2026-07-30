@@ -138,13 +138,22 @@ function doGet(e) {
   if (p.action === 'redeem' && /^KPMU-\d{4}-\d{8}[A-Z]$/i.test(p.serial || '')) {
     const serial = p.serial.toUpperCase();
     const shop = String(p.shop || 'unknown').slice(0, 40);
+    // Honor the scan's own timestamp for offline-queued scans, so a batch
+    // that reconnects hours later isn't all dated to flush time (which would
+    // corrupt the dashboard's time-of-day heatmap). Trust it only if it
+    // parses, isn't in the future, and isn't older than 2 days; else now.
+    const when = (function () {
+      const t = Date.parse(p.at || '');
+      const now = Date.now();
+      return (t && t <= now + 60000 && t >= now - 2 * 86400000) ? new Date(t) : new Date();
+    })();
     const lock = LockService.getScriptLock();
     lock.waitLock(5000);                       // serialize concurrent scans
     try {
       const sh = SpreadsheetApp.getActive().getSheetByName(SHEET);
       if (checkLetter(serial.slice(0, -1)) !== serial.slice(-1)) {
         // fails the keyed checksum — mistyped or made up; log it and refuse
-        sh.appendRow([new Date(), serial, shop, 'bad', '', '']);
+        sh.appendRow([when, serial, shop, 'bad', '', '']);
         out = { status: 'invalid' };
         return ContentService.createTextOutput(JSON.stringify(out))
           .setMimeType(ContentService.MimeType.JSON);
@@ -152,7 +161,7 @@ function doGet(e) {
       const src = lookupBar(serial);
       if (src.voided) {
         // pack was invalidated — refuse, but keep the attempt for the audit trail
-        sh.appendRow([new Date(), serial, shop, 'void', src.bar, src.pack]);
+        sh.appendRow([when, serial, shop, 'void', src.bar, src.pack]);
         out = { status: 'void' };
       } else {
         // columns B..D: serial | shop | status — only 'ok' rows count as redeemed
@@ -160,10 +169,10 @@ function doGet(e) {
         const hit = rows.find(r => r[0] === serial && r[2] === 'ok');
         if (hit) {
           // refused, but logged so the dashboard can count duplicate attempts
-          sh.appendRow([new Date(), serial, shop, 'dup', src.bar, src.pack]);
+          sh.appendRow([when, serial, shop, 'dup', src.bar, src.pack]);
           out = { status: 'duplicate', firstShop: hit[1] };
         } else {
-          sh.appendRow([new Date(), serial, shop, 'ok', src.bar, src.pack]);
+          sh.appendRow([when, serial, shop, 'ok', src.bar, src.pack]);
           out = { status: 'ok', bar: src.bar };
         }
       }
