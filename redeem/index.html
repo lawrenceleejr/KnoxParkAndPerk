@@ -443,7 +443,12 @@ function drawDetection(corners, label) {
     const w = octx.measureText(label).width + 18;
     const bx = Math.min(Math.max(cx - w / 2, 6), overlay.width - w - 6), by = Math.max(topY - 34, 6);
     octx.fillStyle = 'rgba(10,16,31,.85)';
-    octx.beginPath(); octx.roundRect(bx, by, w, 25, 5); octx.fill();
+    octx.beginPath();
+    // roundRect is unsupported before Safari 16.4 (every iPhone takes the
+    // jsQR path here) — fall back to a plain rect rather than throw
+    if (octx.roundRect) octx.roundRect(bx, by, w, 25, 5);
+    else octx.rect(bx, by, w, 25);
+    octx.fill();
     octx.fillStyle = '#faf5eb';
     octx.fillText(label, bx + 9, by + 17.5);
   }
@@ -547,7 +552,8 @@ async function scanLoop() {
         codes = [];
       }
       for (const c of codes) {
-        drawDetection(c.cornerPoints.map(p => ({ x: p.x, y: p.y })), scanLabel(c.rawValue));
+        // drawing is best-effort — never let an overlay error skip the scan
+        try { drawDetection(c.cornerPoints.map(p => ({ x: p.x, y: p.y })), scanLabel(c.rawValue)); } catch (e) {}
         if (await onScan(c.rawValue, true)) break;
       }
       if (detector && !codes.length) clearDetection();
@@ -560,8 +566,8 @@ async function scanLoop() {
       if (code && code.data) {
         const k = (video.videoWidth || w) / w;   // scale jsQR coords back to video pixels
         const L = code.location;
-        drawDetection([L.topLeftCorner, L.topRightCorner, L.bottomRightCorner, L.bottomLeftCorner]
-          .map(p => ({ x: p.x * k, y: p.y * k })), scanLabel(code.data));
+        try { drawDetection([L.topLeftCorner, L.topRightCorner, L.bottomRightCorner, L.bottomLeftCorner]
+          .map(p => ({ x: p.x * k, y: p.y * k })), scanLabel(code.data)); } catch (e) {}
         await onScan(code.data, true);
       } else clearDetection();
     }
