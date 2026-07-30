@@ -257,6 +257,29 @@ def build_emblem():
               + badge_pin(240, 168))
     open(f'{REPO}/assets/logo-mark.svg', 'w').write(svg(240, 240, emblem, 'Knox Pick-Me-Up emblem'))
 
+# =====================================================================
+# 6. Social share card (1200 x 630) — the og:image for link previews
+# =====================================================================
+# Emitted as SVG here (deterministic, no extra deps for the regenerate
+# workflow); the raster assets/og-image.png that scrapers actually read is
+# rendered from this SVG with cairosvg — see tools/build_og_png.py.
+def build_og():
+    W, H, cx = 1200, 630, 600
+    b = [('<defs><linearGradient id="og-bg" x1="0" y1="0" x2="0" y2="1">'
+          f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'),
+         f'<rect width="{W}" height="{H}" fill="url(#og-bg)"/>',
+         f'<rect x="26" y="26" width="{W-52}" height="{H-52}" fill="none" stroke="{GOLD}" stroke-width="2" opacity="0.5"/>',
+         f'<rect x="26" y="26" width="{W-52}" height="10" fill="{ORANGE}"/>']
+    # the badge mark — paper shield, navy cup, so it reads on the night field
+    b.append(mark(cx - mark_w(150) / 2, 84, 150, shield=PAPER, cup=NIGHT))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 78, cx, 330, PAPER, anchor='middle')[0])
+    b.append(text(fraunces_it, 'Ride from last call to first cup.', 32, cx, 384, GOLD, anchor='middle')[0])
+    b.append(f'<line x1="{cx-150}" y1="432" x2="{cx+150}" y2="432" stroke="{GOLD}" stroke-width="1" opacity="0.5"/>')
+    b.append(text(inter6, 'FREE COFFEE FOR A SAFE RIDE HOME', 23, cx, 486, PAPER, tracking=0.16, anchor='middle')[0])
+    b.append(text(inter6, 'DOWNTOWN KNOXVILLE · KNOXPICKMEUP.ORG', 15, cx, 556, '#b9b3a4', tracking=0.2, anchor='middle')[0])
+    open(f'{REPO}/assets/og-image.svg', 'w').write(
+        svg(W, H, ''.join(b), 'Knox Pick-Me-Up — free coffee for a safe ride home, downtown Knoxville'))
+
 def build_all():
     build_lockups()
     build_card_sample()
@@ -264,6 +287,7 @@ def build_all():
     build_palette()
     build_favicon()
     build_emblem()
+    build_og()
     print('collateral built')
 
 

@@ -1,0 +1,9 @@
+# Knox Pick-Me-Up — https://knoxpickmeup.org/
+User-agent: *
+Allow: /
+
+# Operational, staff-facing tools — keep them out of search results
+Disallow: /redeem/
+Disallow: /redeem.html
+Disallow: /dashboard/
+Disallow: /dashboard.html
