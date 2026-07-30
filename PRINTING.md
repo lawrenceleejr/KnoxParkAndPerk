@@ -18,7 +18,6 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 | **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
 | **Sponsor one-sheet** | `tools/build_sponsor.py` → `print/sponsor/` (letter-size) | outreach leave-behind |
-| **Date-stamp die** | `tools/build_stamp.py` → `print/stamp/` (30mm round) | one dater per bar |
 
 Optionally, a **sponsor logo** rides in a small "printing donated by" slot on
 the card back (`build_cards.py --sponsor logo.svg`) and both coaster sides
@@ -38,8 +37,8 @@ printing*, VDP), which any digital-press shop can do.
 
 > Tear-off card books, 50 cards per book plus a printed cover (artwork
 > supplied). Card size 3.5″ × 2″ (quote with and without a 0.75″ bound
-> stub). Stock: **14pt uncoated cover** — cards must accept a rubber stamp
-> and ballpoint pen, so no gloss or UV coating. Ink 4/4: **front carries
+> stub). Stock: **14pt uncoated cover** — cards must accept a ballpoint
+> pen, so no gloss or UV coating. Ink 4/4: **front carries
 > variable data** (unique QR + serial per card, sequential across books;
 > print-ready files supplied, one file per card), **back is static** (one
 > file, same on every card). Micro-perforation between stub and card (or
@@ -48,13 +47,9 @@ printing*, VDP), which any digital-press shop can do.
 > Quantity: 1,000 cards / 20 books — please also quote 2,500 and 5,000.
 
 Why each line matters:
-- **Uncoated stock** is non-negotiable: the bartender's date stamp is the
-  validity control, and glossy stock rejects stamps. The stamp itself is a
-  **30 mm round self-inking dater** (e.g. Trodat Printy 46030); its custom
-  text plates — the mark + `KNOX PICK-ME-UP` above the date, `VALID ONE DAY`
-  below — are `tools/build_stamp.py` → `print/stamp/stamp-die.{svg,pdf}`
-  (true-size, one color, centre band left clear for the date wheel). Hand the
-  PDF to any stamp vendor; one dater goes in each bar's kit.
+- **Uncoated stock** is non-negotiable: at hand-out the bartender **writes
+  today's date** on the card's DATE ISSUED line in ballpoint — that's the
+  validity control — and glossy or UV-coated stock resists pen ink.
 - **Front variable / back static** is what keeps two-sided cheap — VDP is
   priced per variable *side*, and our back
   (`print/cards/card-back.svg`) is deliberately identical on every card.
@@ -207,8 +202,8 @@ scannable when the lamination glares or the corner gets coffee on it.
 4. **Proof one card end to end**: print `card-…0001` on a desk printer,
    scan its QR with a phone — it must open the public site — then scan it
    from `redeem/?shop=demo-cafe` and see the serial extracted.
-5. **Stamp test** on the shop's actual stock sample: rubber date stamp +
-   ballpoint, smudge check after 10 seconds.
+5. **Pen test** on the shop's actual stock sample: write a date in ballpoint,
+   smudge check after 10 seconds.
 6. **QR size sanity**: the card QR prints at about 0.55″ — fine for
    phone cameras, but don't let a shop shrink the card below 3.5″ × 2″.
 7. Order **books = cards ÷ 50**, and physically match pack cover sheets
