@@ -124,14 +124,14 @@ def pack_serial(year, pack_no):
     return f'KPMU-{year}-P{pack_no:04d}'
 
 
-def pack_svg(year, pack_no, first, last):
+def pack_svg(year, pack_no, first, last, size=PACK_SIZE):
     pk = pack_serial(year, pack_no)
     b = []
     b.append(f'<rect width="525" height="700" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
     b.append(f'<rect width="525" height="16" fill="{ORANGE}"/>')
     b.append(mark(40, 52, 56))
     b.append(text(fraunces, 'Knox Pick-Me-Up', 30, 118, 92, INK)[0])
-    b.append(text(inter6, f'CARD PACK · {PACK_SIZE} CARDS', 11, 40, 142, ORANGE_INK, tracking=0.16)[0])
+    b.append(text(inter6, f'CARD PACK · {size} CARDS', 11, 40, 142, ORANGE_INK, tracking=0.16)[0])
     b.append(f'<line x1="40" y1="162" x2="485" y2="162" stroke="{RULE}" stroke-width="1"/>')
     b.append(text(inter6, 'PACK SERIAL', 9, 40, 190, INK2, tracking=0.18)[0])
     b.append(text(fraunces, pk, 26, 40, 222, INK)[0])
@@ -166,15 +166,30 @@ def main():
     ap.add_argument('--key', default=os.environ.get('KPMU_PROGRAM_KEY', ''),
                     help='the ONE program secret — MUST match PROGRAM_KEY in the '
                          'Apps Script (or set env KPMU_PROGRAM_KEY)')
+    ap.add_argument('--out', default=os.path.join(REPO, 'print'),
+                    help='output directory (cards/ and packs/ are created inside)')
+    ap.add_argument('--force', action='store_true',
+                    help='allow a --start that is not the first card of a pack '
+                         '(pack cover sheets will be off-boundary — rarely what you want)')
     args = ap.parse_args()
+
+    if args.start < 1 or args.count < 1:
+        ap.error('--start and --count must both be >= 1')
+    # a run should begin on a pack boundary, or pack cover sheets silently
+    # overlap/overwrite a previous run's ranges
+    if (args.start - 1) % PACK_SIZE != 0 and not args.force:
+        ap.error(f'--start {args.start} is not the first card of a pack (packs are '
+                 f'{PACK_SIZE} cards, so start must be 1, {PACK_SIZE + 1}, '
+                 f'{2 * PACK_SIZE + 1}, …). Pass --force to override.')
+
     key = args.key or DEMO_KEY
     if key == DEMO_KEY:
         print('WARNING: using the public demo key — fine for samples, '
               'NEVER for a real print run. Pass --key or set KPMU_PROGRAM_KEY.')
     ck = derive_ck_key(key)
 
-    cards_dir = os.path.join(REPO, 'print', 'cards')
-    packs_dir = os.path.join(REPO, 'print', 'packs')
+    cards_dir = os.path.join(args.out, 'cards')
+    packs_dir = os.path.join(args.out, 'packs')
     os.makedirs(cards_dir, exist_ok=True)
     os.makedirs(packs_dir, exist_ok=True)
 
@@ -192,7 +207,7 @@ def main():
         chunk = serials[i:i + PACK_SIZE]
         pack_no = (args.start + i - 1) // PACK_SIZE + 1
         emit(os.path.join(packs_dir, f'pack-{pack_serial(args.year, pack_no)}.svg'),
-             pack_svg(args.year, pack_no, chunk[0], chunk[-1]))
+             pack_svg(args.year, pack_no, chunk[0], chunk[-1], size=len(chunk)))
 
     print(f'{len(serials)} cards -> {cards_dir}  (SVG + print-ready PDF each)')
     print(f'{math.ceil(len(serials)/PACK_SIZE)} pack sheets -> {packs_dir}')
