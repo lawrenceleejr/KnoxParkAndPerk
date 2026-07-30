@@ -21,7 +21,7 @@ Three pages, one static site — each aimed at a different audience:
 
 | Page | Audience | What it does |
 |---|---|---|
-| [`index.html`](https://knoxpickmeup.org/) | **Public** — patrons, partners, press | The program site: how it works, why it matters, the card, an OpenStreetMap map of participating shops/bars and the free garages, partner pitch, FAQ. Every card's QR lands patrons here, on the participating-businesses section. Linked everywhere. |
+| [`index.html`](https://knoxpickmeup.org/) | **Public** — patrons, partners, press | The program site: how it works, why it matters, the card, an OpenStreetMap map of participating shops/bars and the free garages, partner pitch, FAQ. Every card’s QR lands patrons here, on the shop map (the places that redeem it). Linked everywhere. |
 | [`/redeem/`](https://knoxpickmeup.org/redeem/) | **Business** — coffee-shop baristas | The card scanner. Opened from the shop's register QR (`?shop=slug`, with a dropdown fallback), it scans a card's QR with the phone camera, shows live detection feedback, and logs the redemption — with duplicate/voided-card rejection, offline queueing, manual entry, and a stop button. Runs in labeled demo mode until the backend is configured. |
 | [`/dashboard/`](https://knoxpickmeup.org/dashboard/) | **Admin** — you, and anyone you hand the link | Live program numbers from the Sheet: issued/redeemed/rate tiles, integrity counters, redemptions over time, to-shop and from-bar rankings, the bar→shop flow matrix, latest activity. Unlinked and unindexed but freely shareable — it exposes venue names, timestamps, and counts only, never patron data or serials. |
 

@@ -180,7 +180,7 @@ def build_card_sample():
             x += w
     # QR
     b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-    b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#partners', 407, 114, 82))
+    b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#findus', 407, 114, 82))
     b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
     b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
     # validity + serial

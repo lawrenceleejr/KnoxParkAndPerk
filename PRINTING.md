@@ -116,7 +116,7 @@ cafe tables, a window/door sticker for participating locations, and
 letter-size posters for community boards and restrooms:
 
 ```sh
-python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
+python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#findus
 # each writes .svg + .pdf into print/signage/:
 #   table-tent       4x10in foldable A-frame (fold at the middle)
 #   window-sticker   5.6in round participating-location decal

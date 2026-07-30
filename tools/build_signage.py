@@ -19,7 +19,7 @@ any print shop can run the files as-is.
 
 Usage:
   pip install fonttools brotli uharfbuzz segno cairosvg
-  python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#partners
+  python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#findus
 """
 import argparse, os, sys
 
@@ -161,14 +161,14 @@ def table_tent():
 
 def main():
     ap = argparse.ArgumentParser(description='Build Knox Pick-Me-Up signage (tents, stickers, posters).')
-    ap.add_argument('--qr-url', default=f'{SITE}#partners',
+    ap.add_argument('--qr-url', default=f'{SITE}#findus',
                     help='URL every QR on the signage encodes')
     ap.add_argument('--out', default=os.path.join(REPO, 'print', 'signage'),
                     help='output directory')
     args = ap.parse_args()
 
     global QR_URL
-    QR_URL = args.qr_url or f'{SITE}#partners'
+    QR_URL = args.qr_url or f'{SITE}#findus'
     os.makedirs(args.out, exist_ok=True)
 
     pieces = {

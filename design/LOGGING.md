@@ -22,10 +22,10 @@ site URL with serial     the pack — 10 sec      phone camera → serial      L
 ```
 
 **The one clever trick — the card QR is dual-use.** Every card's QR encodes
-`https://…/?c=KPMU-2026-00004217#partners` — a plain link to the public site:
+`https://…/?c=KPMU-2026-00004217T#findus` — a plain link to the public site:
 
-- A **patron** who scans it just lands on the participating-businesses
-  section of the website. No login walls, nothing weird.
+- A **patron** who scans it just lands on the shop map — the list of places
+  that redeem the card. No login walls, nothing weird.
 - The **shop scanner page** (`redeem/index.html`) doesn't *follow* the URL — it
   *reads* it with the camera and extracts the `KPMU-…` serial with a regex.
 
