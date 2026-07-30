@@ -20,7 +20,7 @@ import argparse, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, INK, INK2, NIGHT, ORANGE, ORANGE_INK, GOLD,
                               RULE, NIGHT_RULE, SITE, text, svg, mark, qr_svg,
-                              write_pdf, fraunces, fraunces_it, inter6, inter4)
+                              sponsor_row, write_pdf, fraunces, fraunces_it, inter6, inter4)
 from serials import DEMO_KEY, derive_ck_key, serial_letter
 
 # ================= CONFIG =================
@@ -70,9 +70,11 @@ def card_svg(serial):
                f'Knox Pick-Me-Up — Morning Pick-Me-Up Card {serial}')
 
 
-def card_back_svg():
+def card_back_svg(sponsor=''):
     """Static back — identical on every card, so printers run it as one plate.
-    The night side of the story: navy field, the mark, and how it works."""
+    The night side of the story: navy field, the mark, and how it works. An
+    optional `sponsor` SVG rides in a small slot above the footer rule; the
+    program mark is never displaced."""
     b = []
     b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{NIGHT}" stroke="{NIGHT}" stroke-width="1.5"/>')
     b.append(f'<path d="M15 298.25 H510 a13 13 0 0 0 13.25 -13.25 V278 H1.75 v7 A13 13 0 0 0 15 298.25 Z" fill="{ORANGE}"/>')
@@ -91,8 +93,12 @@ def card_back_svg():
         y = 132 + i * 34
         b.append(text(fraunces, num, 22, 26, y, ORANGE)[0])
         b.append(text(inter4, line, 11.5, 48, y - 3, PAPER)[0])
+    # optional sponsor slot: a small logo on a white chip, centered in the gap
+    # above the footer rule — mark and steps untouched
+    if sponsor:
+        b.append(sponsor_row(262.5, 216, sponsor, 'PRINTING DONATED BY', GOLD, h=14))
     b.append(f'<line x1="26" y1="232" x2="499" y2="232" stroke="{NIGHT_RULE}" stroke-width="1"/>')
-    # footer: partnership + sponsor slot
+    # footer: partnership + website
     b.append(text(inter6, 'A ROAD-SAFETY PARTNERSHIP · CITY OF KNOXVILLE · KPD · KAT', 7.5, 26, 254, GOLD, tracking=0.14)[0])
     b.append(text(inter4, 'knoxpickmeup.org · hello@knoxpickmeup.org — shops, details, and the fine print', 9.5, 26, 270, '#b9b3a4')[0])
     return svg(525, 300, ''.join(b),
@@ -152,7 +158,12 @@ def main():
     ap.add_argument('--force', action='store_true',
                     help='allow a --start that is not the first card of a pack '
                          '(pack cover sheets will be off-boundary — rarely what you want)')
+    ap.add_argument('--sponsor', default='',
+                    help='optional path to a sponsor logo SVG — rides in a small '
+                         '"printing donated by" slot on the card back (mark stays)')
     args = ap.parse_args()
+    if args.sponsor and not os.path.isfile(args.sponsor):
+        ap.error(f'--sponsor file not found: {args.sponsor}')
 
     if args.start < 1 or args.count < 1:
         ap.error('--start and --count must both be >= 1')
@@ -182,7 +193,7 @@ def main():
 
     for s in serials:
         emit(os.path.join(cards_dir, f'card-{s}.svg'), card_svg(s))
-    emit(os.path.join(cards_dir, 'card-back.svg'), card_back_svg())
+    emit(os.path.join(cards_dir, 'card-back.svg'), card_back_svg(args.sponsor))
 
     for i in range(0, len(serials), PACK_SIZE):
         chunk = serials[i:i + PACK_SIZE]

@@ -109,6 +109,51 @@ def write_pdf(svg_str, path, upi):
     sized = svg_str.replace('<svg ', f'<svg width="{w / upi:.4f}in" height="{h / upi:.4f}in" ', 1)
     cairosvg.svg2pdf(bytestring=sized.encode('utf-8'), write_to=path)
 
+
+def embed_svg(path, h):
+    """Inline an arbitrary SVG (a sponsor/partner logo) scaled to height `h`,
+    positioned with its top-left at (0,0). Returns (fragment, width) — wrap the
+    fragment in your own translate() to place it. Needs a viewBox or width/height
+    on the root."""
+    src = open(path).read()
+    m = re.search(r'viewBox="([\d.eE+\- ,]+)"', src)
+    if m:
+        vx, vy, vw, vh = (float(v) for v in m.group(1).replace(',', ' ').split())
+    else:
+        mw = re.search(r'<svg[^>]*\swidth="([\d.]+)', src)
+        mh = re.search(r'<svg[^>]*\sheight="([\d.]+)', src)
+        if not (mw and mh):
+            raise SystemExit(f'{path}: logo SVG needs a viewBox (or width/height)')
+        vx, vy, vw, vh = 0.0, 0.0, float(mw.group(1)), float(mh.group(1))
+    inner = re.sub(r'^.*?<svg[^>]*>', '', src, count=1, flags=re.S).rsplit('</svg>', 1)[0]
+    s = h / vh
+    frag = f'<g transform="translate({-vx*s:.2f},{-vy*s:.2f}) scale({s:.5f})">{inner}</g>'
+    return frag, vw * s
+
+
+def place(frag, x, y):
+    """Wrap an embed_svg fragment in a translate to (x, y)."""
+    return f'<g transform="translate({x:.2f},{y:.2f})">{frag}</g>'
+
+
+def sponsor_row(cx, y_mid, path, label, label_fill, h=15):
+    """A centered 'LABEL [logo-on-white-chip]' row — the sponsor slot used on
+    the card back and the coaster. The white chip keeps any logo legible on
+    navy or paper; the program mark is never touched."""
+    frag, w = embed_svg(path, h)
+    pad = 5
+    boxw, boxh = w + pad * 2, h + pad * 2
+    lbl_path, lbl_w = text(inter6, label, 7, 0, 0, label_fill, tracking=0.14)
+    gap = 9
+    total = lbl_w + gap + boxw
+    x0 = cx - total / 2
+    out = [text(inter6, label, 7, x0, y_mid + 2.5, label_fill, tracking=0.14)[0]]
+    bx, by = x0 + lbl_w + gap, y_mid - boxh / 2
+    out.append(f'<rect x="{bx:.1f}" y="{by:.1f}" width="{boxw:.1f}" height="{boxh:.1f}" '
+               f'rx="3" fill="#ffffff" stroke="{RULE}" stroke-width="0.8"/>')
+    out.append(place(frag, bx + pad, by + pad))
+    return ''.join(out)
+
 # =====================================================================
 # 1. Logo lockups
 # =====================================================================

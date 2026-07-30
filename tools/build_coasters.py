@@ -16,21 +16,25 @@ Usage:
   python3 tools/build_coasters.py \
       --bars "Preservation Pub, Barley's Taproom, Suttree's" \
       --shops "Remedy Coffee, Wild Love Bakehouse, K Brew" \
-      --logo path/to/sponsor-or-partner-logo.svg \
+      --sponsor path/to/sponsor-logo.svg \
       --qr-url https://knoxpickmeup.org/
+
+  --logo REPLACES the center brand mark; --sponsor ADDS a small logo in a
+  "printing donated by" slot below the website and leaves the mark in place.
 
 Outputs print/coasters/coaster-night.svg and coaster-day.svg (gitignored —
 print artifacts). All type is converted to outlines, like every other piece
 of collateral, so any print shop can run the files as-is. Coaster spec is in
 PRINTING.md (pulpboard, 3.5-4 in round, flat color).
 """
-import argparse, math, os, re, sys
+import argparse, math, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, NIGHT_RULE, SITE, SITE_LABEL,
-                              text, arc_text, svg, mark, mark_w, qr_svg, write_pdf,
-                              quiet_pad, fraunces, fraunces_it, inter6, inter4)
+                              text, arc_text, svg, mark, mark_w, qr_svg, embed_svg,
+                              place, sponsor_row, write_pdf, quiet_pad, fraunces,
+                              fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -50,32 +54,12 @@ def qr_panel(cx, top_y, size, qr_url):
             + qr_svg(qr_url, cx - size / 2, top_y + pad, size))
 
 
-def embed_svg(path, cx, top_y, h):
-    """Inline an arbitrary SVG file scaled to height h, horizontally centered
-    on cx with its top at top_y. Needs a viewBox (or width/height) on the
-    root element."""
-    src = open(path).read()
-    m = re.search(r'viewBox="([\d.eE+\- ,]+)"', src)
-    if m:
-        vx, vy, vw, vh = (float(v) for v in m.group(1).replace(',', ' ').split())
-    else:
-        mw = re.search(r'<svg[^>]*\swidth="([\d.]+)', src)
-        mh = re.search(r'<svg[^>]*\sheight="([\d.]+)', src)
-        if not (mw and mh):
-            raise SystemExit(f'{path}: the logo SVG needs a viewBox (or width/height)')
-        vx, vy, vw, vh = 0.0, 0.0, float(mw.group(1)), float(mh.group(1))
-    inner = re.sub(r'^.*?<svg[^>]*>', '', src, count=1, flags=re.S).rsplit('</svg>', 1)[0]
-    s = h / vh
-    x = cx - vw * s / 2
-    return (f'<g transform="translate({x - vx * s:.2f},{top_y - vy * s:.2f}) scale({s:.5f})">'
-            f'{inner}</g>')
-
-
 def logo(cx, top_y, h, logo_path, on_dark):
     """Center logo slot: the supplied SVG if configured, else the brand mark
     in the side's ink (paper silhouette on night, ink on paper)."""
     if logo_path:
-        return embed_svg(logo_path, cx, top_y, h)
+        frag, w = embed_svg(logo_path, h)
+        return place(frag, cx - w / 2, top_y)
     return mark(cx - mark_w(h) / 2, top_y, h,
                 shield=(PAPER if on_dark else INK),
                 cup=(NIGHT if on_dark else PAPER))
@@ -138,7 +122,7 @@ def ring_names(names, face, base_size, fill, dot, max_arc_deg=152):
     return ''.join(out)
 
 
-def night_side(bars, logo_path, qr_url):
+def night_side(bars, logo_path, qr_url, sponsor=''):
     """The bar side: navy field, bars around the rim, the three steps and a
     QR in the center — for someone already out, deciding about the car."""
     b = []
@@ -166,13 +150,15 @@ def night_side(bars, logo_path, qr_url):
     b.append(qr_panel(CX, 216, 60, qr_url))
     b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 302, GOLD, tracking=0.14, anchor='middle')[0])
     b.append(text(fraunces, SITE_LABEL, 14, CX, 322, PAPER, anchor='middle')[0])
+    if sponsor:
+        b.append(sponsor_row(CX, 344, sponsor, 'PRINTING DONATED BY', GOLD, h=12))
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, night side — leave the car overnight, '
                'book a ride home, free coffee in the morning; participating bars '
                'around the rim, QR to the program site')
 
 
-def day_side(shops, logo_path, qr_url):
+def day_side(shops, logo_path, qr_url, sponsor=''):
     """The morning side: paper field, coffee shops around the rim, and a QR to
     the program site in the center."""
     b = []
@@ -188,6 +174,8 @@ def day_side(shops, logo_path, qr_url):
     b.append(qr_panel(CX, 198, 76, qr_url))
     b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 308, INK2, tracking=0.14, anchor='middle')[0])
     b.append(text(fraunces, SITE_LABEL, 14, CX, 330, INK, anchor='middle')[0])
+    if sponsor:
+        b.append(sponsor_row(CX, 349, sponsor, 'PRINTING DONATED BY', INK2, h=12))
     return svg(W, W, ''.join(b),
                'Knox Pick-Me-Up coaster, day side — free large coffee with your card; '
                'participating coffee shops around the rim, QR to the program site')
@@ -206,19 +194,26 @@ def main():
                     help='comma-separated coffee shops for the day-side rim')
     ap.add_argument('--logo', default='',
                     help='path to an SVG to use as the center logo on both sides '
-                         '(default: the brand mark, in each side’s ink)')
+                         '(default: the brand mark, in each side’s ink) — REPLACES the mark')
+    ap.add_argument('--sponsor', default='',
+                    help='path to a sponsor logo SVG — rides in a small "printing '
+                         'donated by" slot below the website (mark stays; does NOT '
+                         'replace it, unlike --logo)')
     ap.add_argument('--qr-url', default=f'{SITE}#findus',
                     help='URL both QRs encode (both sides carry a QR and the '
                          'website)')
     ap.add_argument('--out', default=os.path.join(REPO, 'print', 'coasters'),
                     help='output directory')
     args = ap.parse_args()
+    for flag, val in (('--logo', args.logo), ('--sponsor', args.sponsor)):
+        if val and not os.path.isfile(val):
+            ap.error(f'{flag} file not found: {val}')
 
     qr = args.qr_url or f'{SITE}#findus'   # both sides always carry a QR
     os.makedirs(args.out, exist_ok=True)
     # 420 units = 4 in round  ->  105 user-units per inch
-    for name, svg_str in (('coaster-night', night_side(split_list(args.bars), args.logo, qr)),
-                          ('coaster-day', day_side(split_list(args.shops), args.logo, qr))):
+    for name, svg_str in (('coaster-night', night_side(split_list(args.bars), args.logo, qr, args.sponsor)),
+                          ('coaster-day', day_side(split_list(args.shops), args.logo, qr, args.sponsor))):
         svg_f = os.path.join(args.out, name + '.svg')
         open(svg_f, 'w').write(svg_str)
         write_pdf(svg_str, os.path.join(args.out, name + '.pdf'), UPI)
