@@ -661,7 +661,11 @@
   const host = document.getElementById('kmap');
   if (!host) return;
   const NIGHT = '#101a30', ORANGE = '#ff8200', ORANGE_INK = '#b04e00',
-        INK = '#241a10', GOLD = '#eda953', PAPER = '#fffdf7';
+        INK = '#241a10', GOLD = '#eda953',
+        /* Marker white is intentionally brighter than brand paper (#faf5eb):
+           small pin dots and popups need a near-white that reads crisply on
+           top of Leaflet's map tiles. Not a drift — do not "unify" to paper. */
+        PAPER = '#fffdf7';
 
   /* Downtown only, on purpose: this is a downtown program (PROGRAM.md §2) and
      the map's job is "your coffee is a few blocks from your car." A shop out

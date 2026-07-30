@@ -25,12 +25,11 @@ import argparse, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, PAPER2, INK, INK2, NIGHT, NIGHT2, ORANGE,
-                              ORANGE_INK, GOLD, RULE, text, svg, mark, mark_w,
-                              qr_svg, quiet_pad, write_pdf, fraunces, fraunces_it, inter6, inter4)
+                              ORANGE_INK, GOLD, RULE, SITE, SITE_LABEL, text, svg,
+                              mark, mark_w, qr_svg, quiet_pad, write_pdf, fraunces,
+                              fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SITE = 'https://knoxpickmeup.org/'
-SITE_LABEL = 'knoxpickmeup.org'
 UPI = 100        # signage user units per inch (posters 850x1100 = 8.5x11 in)
 
 STEPS = [
