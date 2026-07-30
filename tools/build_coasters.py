@@ -30,7 +30,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import segno
 from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, text, arc_text, svg,
-                              mark, mark_w, write_pdf, fraunces, fraunces_it,
+                              mark, mark_w, write_pdf, quiet_pad, fraunces, fraunces_it,
                               inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -56,7 +56,7 @@ def qr_group(data, x, y, size, color=NIGHT):
 
 def qr_panel(cx, top_y, size, qr_url):
     """A white rounded card with the QR on it — reads on either field."""
-    pad = 7
+    pad = quiet_pad(qr_url, size)   # mandatory 4-module quiet zone
     box = size + pad * 2
     return (f'<rect x="{cx - box / 2:.1f}" y="{top_y:.1f}" width="{box}" height="{box}" rx="5" '
             f'fill="#ffffff" stroke="{RULE}" stroke-width="1"/>'
@@ -179,7 +179,7 @@ def night_side(bars, logo_path, qr_url):
         y = 164 + i * 21
         b.append(text(fraunces, str(i + 1), 16, x0, y, ORANGE)[0])
         b.append(text(inter4, s, ssz, x0 + indent, y - 2, PAPER)[0])
-    b.append(qr_panel(CX, 220, 50, qr_url))
+    b.append(qr_panel(CX, 216, 60, qr_url))
     b.append(text(inter6, 'SCAN FOR SHOPS, HOURS + THE PROGRAM', 8, CX, 302, GOLD, tracking=0.14, anchor='middle')[0])
     b.append(text(fraunces, SITE_LABEL, 14, CX, 322, PAPER, anchor='middle')[0])
     return svg(W, W, ''.join(b),

@@ -26,7 +26,7 @@ import argparse, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, PAPER2, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, text, svg, mark, mark_w,
-                              qr_svg, write_pdf, fraunces, fraunces_it, inter6, inter4)
+                              qr_svg, quiet_pad, write_pdf, fraunces, fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = 'https://knoxpickmeup.org/'
@@ -42,7 +42,7 @@ STEPS = [
 
 def qr_card(cx, top_y, size, on_dark=False):
     """A white rounded card with the program QR centered on it."""
-    pad = size * 0.11
+    pad = quiet_pad(QR_URL, size)   # mandatory 4-module quiet zone
     box = size + pad * 2
     stroke = RULE if not on_dark else '#ffffff'
     return (f'<rect x="{cx - box / 2:.1f}" y="{top_y:.1f}" width="{box:.1f}" height="{box:.1f}" '
