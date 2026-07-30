@@ -164,7 +164,10 @@ Annual "presented by" packages for organizations whose interests align with
 safer roads: rideshare companies (the program drives bookings), auto insurers,
 hospital/trauma systems, parking operators, downtown property owners. Sponsor
 logos ride on coasters and cards already in every bar downtown — unusually good
-placement per dollar.
+placement per dollar. The placement is built: `build_cards.py --sponsor` and
+`build_coasters.py --sponsor` drop a logo into a "printing donated by" slot
+without touching the program mark, and `tools/build_sponsor.py` prints the
+outreach one-sheet (what it funds, where the logo rides, the logo spec).
 *Pro:* covers fixed costs (printing, coordinator) that per-coffee models don't.
 *Con:* renewal risk; keep alcohol brands off patron-facing materials.
 

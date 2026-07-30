@@ -17,6 +17,13 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Coasters** (two-sided) | `tools/build_coasters.py` → `print/coasters/` (night side: bars + the three steps; day side: shops; **both sides carry a QR**) · single-sided spot design: [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 | **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
+| **Sponsor one-sheet** | `tools/build_sponsor.py` → `print/sponsor/` (letter-size) | outreach leave-behind |
+
+Optionally, a **sponsor logo** rides in a small "printing donated by" slot on
+the card back (`build_cards.py --sponsor logo.svg`) and both coaster sides
+(`build_coasters.py --sponsor logo.svg`) — the program mark stays; the sponsor
+logo shares the piece, it never replaces it. (`--logo` on the coaster is the
+separate *center* slot that **does** replace the mark.)
 
 ## 2. The card books — what to ask a printer for
 
