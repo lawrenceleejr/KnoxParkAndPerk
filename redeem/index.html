@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Knox Pick-Me-Up — Card Scanner</title>
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
@@ -152,16 +152,16 @@
   <p class="shopline" id="shopline"></p>
 
   <div class="shoppick" id="shoppick" hidden>
-    <span class="label">Select your shop</span>
-    <select id="shopselect"><option value="">Choose your shop…</option></select>
+    <span class="label" id="shoplabel">Select your shop</span>
+    <select id="shopselect" aria-labelledby="shoplabel"><option value="">Choose your shop…</option></select>
   </div>
 
   <div class="shoppick" id="barpick" hidden>
-    <span class="label">Bar taking this pack</span>
-    <select id="barselect"><option value="">Choose the bar…</option></select>
+    <span class="label" id="barlabel">Bar taking this pack</span>
+    <select id="barselect" aria-labelledby="barlabel"><option value="">Choose the bar…</option></select>
     <p class="addbar"><a href="#" id="addbarlink">+ add a new bar</a></p>
     <div class="row" id="addbarrow" hidden>
-      <input id="newbar" placeholder="New bar name" autocomplete="off">
+      <input id="newbar" placeholder="New bar name" aria-label="New bar name" autocomplete="off">
       <button class="btn" id="addbargo" type="button">Add</button>
     </div>
   </div>
@@ -195,9 +195,9 @@
   <p id="queuenote"></p>
 
   <div class="manual">
-    <span class="label">Manual entry (if the code won&rsquo;t scan)</span>
+    <span class="label" id="manuallabel">Manual entry (if the code won&rsquo;t scan)</span>
     <div class="row">
-      <input id="serialbox" placeholder="KPMU-2026-00004217T" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <input id="serialbox" aria-labelledby="manuallabel" placeholder="KPMU-2026-00004217T" autocomplete="off" autocapitalize="characters" spellcheck="false">
       <button class="btn" id="manualgo" type="button">Log it</button>
     </div>
   </div>

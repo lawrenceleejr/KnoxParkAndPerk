@@ -72,8 +72,10 @@
     box-shadow: 2px 0 0 var(--grid);
   }
 
-  .inote { font-size: .72rem; color: #8a8172; font-style: italic; margin-top: .55rem; }
-  .matrix .inactive, td .inactive { color: #a39b8b; font-style: italic; }
+  .inote { font-size: .72rem; color: #6f5f4c; font-style: italic; margin-top: .55rem; }
+  .matrix .inactive, td .inactive { color: #6f5f4c; font-style: italic; }
+  .noscript-msg { margin: 1.5rem 0; padding: 1rem 1.15rem; border: 1px solid var(--rule);
+                  border-radius: 8px; background: var(--card); color: var(--ink); font-size: .95rem; }
   #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
   footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
   .linkbtn { font: inherit; background: none; border: 0; color: var(--accent-ink); text-decoration: underline; cursor: pointer; padding: 0; }
@@ -92,6 +94,11 @@
       <button class="btn" id="refresh" type="button">Refresh</button>
     </span>
   </header>
+
+  <noscript>
+    <p class="noscript-msg">This dashboard needs JavaScript to load and chart the program&rsquo;s live
+    metrics from its Google Sheet. Enable JavaScript, or ask the program lead for the numbers directly.</p>
+  </noscript>
 
   <div id="app" hidden>
     <div class="filters" role="group" aria-label="Time range">
@@ -346,6 +353,16 @@ function esc(v) {
 }
 const tip = $('tip');
 function hover(node, html) {
+  // Give the element a native accessible name + tooltip so the value is
+  // reachable without a mouse (screen readers, keyboard focus), on top of the
+  // positioned visual tip below. SVG shapes take a <title> child; the heatmap
+  // cells (HTML <td>) take a title attribute.
+  if (node.namespaceURI && node.namespaceURI.indexOf('svg') !== -1) {
+    const t = document.createElementNS(node.namespaceURI, 'title');
+    t.textContent = html; node.insertBefore(t, node.firstChild);
+  } else {
+    node.setAttribute('title', html);
+  }
   node.addEventListener('mousemove', e => {
     tip.style.display = 'block'; tip.textContent = html;
     tip.style.left = Math.min(e.clientX + 12, innerWidth - 180) + 'px';
@@ -400,14 +417,14 @@ function hbars(host, rows, opts) {
   const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Ranked totals' });
   rows.forEach((r, i) => {
     const y = i * rowH + 6;
-    const ink = r.inactive ? '#a39b8b' : '#241a10';
+    const ink = r.inactive ? '#6f5f4c' : '#241a10';
     const lbl = txt(el('text', { x: padL, y: y + 12, 'font-size': 12, fill: ink }, svg),
         r.label.length > 18 ? r.label.slice(0, 17) + '…' : r.label);
     if (r.inactive) lbl.setAttribute('font-style', 'italic');
     const bw = Math.max(2, (W - labelW - 46) * Math.min(r.value / max, 1));
     const bar = el('path', {
       d: `M${labelW} ${y} h${Math.max(0, bw - 4)} a4 4 0 0 1 4 4 v8 a4 4 0 0 1 -4 4 h${-Math.max(0, bw - 4)} Z`,
-      fill: r.inactive ? '#bdb4a3' : ACCENT }, svg);
+      fill: r.inactive ? '#8a8172' : ACCENT }, svg);
     hover(bar, `${r.label}: ${r.hint || fmt(r.value)}` + (r.inactive ? ' — deactivated (historical)' : ''));
     txt(el('text', { x: labelW + bw + 7, y: y + 12, 'font-size': 12, 'font-weight': 600, fill: ink }, svg), fmt(r.value));
   });
@@ -505,7 +522,7 @@ function render() {
         h += `<tr><td>${DOWL[d]}</td>` + row.map((v, hr) => {
           const step = v === 0 ? -1 : Math.min(4, Math.floor(v / hmax * 4.999));
           const bg = step < 0 ? 'transparent' : RAMP[step];
-          const fg = step >= 2 ? '#fffdf7' : '#241a10';
+          const fg = step >= 3 ? '#fffdf7' : '#241a10';
           return `<td class="cell" data-t="${DOWL[d]} ${hlab(hr)}–${hlab((hr + 1) % 24)}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
         }).join('') + '</tr>';
       });
@@ -705,7 +722,7 @@ function render() {
         const v = cellCount[b + '|' + s] || 0;
         const step = v === 0 ? -1 : Math.min(4, Math.floor(v / cmax * 4.999));
         const bg = step < 0 ? 'transparent' : RAMP[step];
-        const fg = step >= 2 ? '#fffdf7' : '#241a10';
+        const fg = step >= 3 ? '#fffdf7' : '#241a10';
         return `<td class="cell" data-t="${esc(b)} → ${esc(s)}: ${v}" style="background:${bg};color:${fg}">${v || ''}</td>`;
       }).join('') + '</tr>';
     }
