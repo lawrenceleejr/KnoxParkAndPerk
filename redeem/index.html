@@ -490,6 +490,17 @@ function stopCamera() {
   $('camstart').hidden = false;
 }
 $('camstop').addEventListener('click', stopCamera);
+// wired once — acts on whichever track is live now, so stop/start cycles
+// don't accumulate handlers that toggle each other off
+$('torch').addEventListener('click', async () => {
+  if (!track) return;
+  const t = $('torch');
+  const on = t.getAttribute('aria-pressed') !== 'true';
+  try {
+    await track.applyConstraints({ advanced: [{ torch: on }] });
+    t.setAttribute('aria-pressed', String(on));
+  } catch (e) { /* torch toggle unsupported mid-stream — leave state as-is */ }
+});
 
 async function startCamera() {
   try {
@@ -513,17 +524,11 @@ async function startCamera() {
     overlay.height = Math.round(r.height * devicePixelRatio);
     overlay.style.width = r.width + 'px'; overlay.style.height = r.height + 'px';
     octx = overlay.getContext('2d');
-    // torch button, where the hardware supports it
+    // torch button, where the hardware supports it (the click handler is
+    // wired once, below — it reads the current track, so restarts don't stack
+    // duplicate listeners that cancel each other out)
     try {
-      if (track.getCapabilities && track.getCapabilities().torch) {
-        const t = $('torch');
-        t.style.display = 'block';
-        t.addEventListener('click', async () => {
-          const on = t.getAttribute('aria-pressed') !== 'true';
-          await track.applyConstraints({ advanced: [{ torch: on }] });
-          t.setAttribute('aria-pressed', String(on));
-        });
-      }
+      if (track.getCapabilities && track.getCapabilities().torch) $('torch').style.display = 'block';
     } catch (e) { /* no torch — fine */ }
     if ('BarcodeDetector' in window) {
       try { detector = new BarcodeDetector({ formats: ['qr_code'] }); } catch (e) { detector = null; }
