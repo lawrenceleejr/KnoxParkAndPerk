@@ -49,6 +49,7 @@ jobs:
           python3 tools/build_signage.py
           python3 tools/build_staff.py
           python3 tools/build_sponsor.py
+          python3 tools/build_stamp.py
 
       - name: Every print SVG has its PDF twin
         run: |

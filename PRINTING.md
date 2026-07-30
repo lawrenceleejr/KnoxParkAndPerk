@@ -18,6 +18,7 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 | **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
 | **Sponsor one-sheet** | `tools/build_sponsor.py` → `print/sponsor/` (letter-size) | outreach leave-behind |
+| **Date-stamp die** | `tools/build_stamp.py` → `print/stamp/` (30mm round) | one dater per bar |
 
 Optionally, a **sponsor logo** rides in a small "printing donated by" slot on
 the card back (`build_cards.py --sponsor logo.svg`) and both coaster sides
@@ -48,7 +49,12 @@ printing*, VDP), which any digital-press shop can do.
 
 Why each line matters:
 - **Uncoated stock** is non-negotiable: the bartender's date stamp is the
-  validity control, and glossy stock rejects stamps.
+  validity control, and glossy stock rejects stamps. The stamp itself is a
+  **30 mm round self-inking dater** (e.g. Trodat Printy 46030); its custom
+  text plates — the mark + `KNOX PICK-ME-UP` above the date, `VALID ONE DAY`
+  below — are `tools/build_stamp.py` → `print/stamp/stamp-die.{svg,pdf}`
+  (true-size, one color, centre band left clear for the date wheel). Hand the
+  PDF to any stamp vendor; one dater goes in each bar's kit.
 - **Front variable / back static** is what keeps two-sided cheap — VDP is
   priced per variable *side*, and our back
   (`print/cards/card-back.svg`) is deliberately identical on every card.

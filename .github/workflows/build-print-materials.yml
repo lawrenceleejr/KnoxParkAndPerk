@@ -4,6 +4,7 @@
 #     letter-size community + bathroom posters
 #   - staff sheets: a barista quick-reference one-pager + a bar onboarding sheet
 #   - a sponsor one-sheet for funding outreach
+#   - the bartender date-stamp die (30 mm round dater)
 #
 # Output lands in print/ (gitignored), so this workflow packages it as a
 # downloadable artifact — grab the zip from the run's summary page, no
@@ -84,6 +85,7 @@ jobs:
             echo "**Signage** — \`table-tent\` (4×10in fold), \`window-sticker\` (5.6in round), \`sign-community\`, \`sign-bathroom\` (8.5×11in)"
             echo "**Staff sheets** — \`barista-one-pager\`, \`bar-onboarding\` (8.5×11in)"
             echo "**Sponsor** — \`sponsor-one-sheet\` (8.5×11in)"
+            echo "**Stamp** — \`stamp-die\` (30mm round dater die)"
             echo ""
             echo "Download the **print-materials** artifact below and hand the PDFs to any print shop."
           } >> "$GITHUB_STEP_SUMMARY"
@@ -93,6 +95,9 @@ jobs:
 
       - name: Build sponsor one-sheet
         run: python3 tools/build_sponsor.py
+
+      - name: Build bartender date-stamp die
+        run: python3 tools/build_stamp.py
 
       - name: Upload print materials
         uses: actions/upload-artifact@v4
