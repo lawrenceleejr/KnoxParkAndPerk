@@ -616,9 +616,11 @@ async function submitCheckout(p, bar) {
     done[p.pack] = bar; localStorage.setItem('kpmu-checked', JSON.stringify(done));
     return { status: 'ok', demo: true };
   }
+  // the server requires the derived check key (same k as the register QRs)
+  // so random requests can't write Packs/Venues rows
   const u = SCRIPT_URL + '?action=checkout&pack=' + encodeURIComponent(p.pack)
     + '&first=' + encodeURIComponent(p.first) + '&last=' + encodeURIComponent(p.last)
-    + '&bar=' + encodeURIComponent(bar);
+    + '&bar=' + encodeURIComponent(bar) + '&k=' + encodeURIComponent(ckHex || '');
   return (await fetch(u, { method: 'GET' })).json();
 }
 async function doCheckout() {
@@ -639,6 +641,9 @@ async function doCheckout() {
       setStatus('warn', 'Already checked out', pk + ' is already assigned' + (out.bar ? ' to ' + out.bar : '') + ' — left unchanged. Edit the Packs sheet to reassign.');
       addLog(pk, 'warn', 'already in DB' + (out.bar ? ' · ' + out.bar : ''));
       pendingPack = null; renderPack();
+    } else if (out.status === 'denied') {
+      setStatus('bad', 'Not authorized', 'This device isn’t armed for check-outs — open any shop’s register QR once on this phone (it carries the key), then try again.');
+      addLog(pk, 'bad', 'denied');
     } else {
       setStatus('bad', 'Check-out refused', pk + ': ' + (out.status || 'unknown error') + '.');
       addLog(pk, 'bad', out.status || 'error');
@@ -660,6 +665,11 @@ function initAdmin() {
   document.querySelector('header .tool').textContent = 'Pack check-out';
   $('adminlink').hidden = true;   // already here
   $('shopline').textContent = 'Admin — assign a printed pack to the bar taking it: pick the bar, then scan the pack’s QR (or paste it below).';
+  if (!demo && !ckHex) {
+    // live mode but this device has never seen the derived key — check-outs
+    // will be refused by the server, so say it up front
+    setStatus('warn', 'Device not armed', 'Check-outs need the program key this device doesn’t have yet — open any shop’s register QR once on this phone, then come back.');
+  }
   $('barpick').hidden = false; $('packbox').hidden = false;
   fillBars();
   $('barselect').addEventListener('change', renderPack);
