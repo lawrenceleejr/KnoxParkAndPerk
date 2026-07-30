@@ -43,10 +43,10 @@ def card_svg(serial):
     b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
     b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
     rows = [
-        [('One large coffee at participating downtown shops', inter4, INK2)],
+        [('One large coffee at a participating shop — while supplies last', inter4, INK2)],
         [('Hair of the KAT', inter6, ORANGE_INK),
          (' — your KAT bus fare while this card is valid', inter4, INK2)],
-        [('One per ride · Not for resale · No cash value', inter4, INK2)],
+        [('One per ride · Extras are on you · Not for resale · No cash value', inter4, INK2)],
     ]
     for i, segs in enumerate(rows):
         y = 202 + i * 19
@@ -84,7 +84,7 @@ def card_back_svg():
     # how it works — three numbered lines
     steps = [
         ('1', 'Booked a safe ride home? Show your bartender before you leave.'),
-        ('2', 'Sleep easy — downtown municipal garages are free overnight.'),
+        ('2', 'Sleep easy — most downtown garages & lots are free evenings & weekends.'),
         ('3', 'Ride KAT back free on this card — coffee’s on us.'),
     ]
     for i, (num, line) in enumerate(steps):
@@ -94,7 +94,7 @@ def card_back_svg():
     b.append(f'<line x1="26" y1="232" x2="499" y2="232" stroke="{NIGHT_RULE}" stroke-width="1"/>')
     # footer: partnership + sponsor slot
     b.append(text(inter6, 'A ROAD-SAFETY PARTNERSHIP · CITY OF KNOXVILLE · KPD · KAT', 7.5, 26, 254, GOLD, tracking=0.14)[0])
-    b.append(text(inter4, 'knoxpickmeup.org — participating shops, program details, and the fine print', 9.5, 26, 270, '#b9b3a4')[0])
+    b.append(text(inter4, 'knoxpickmeup.org · hello@knoxpickmeup.org — shops, details, and the fine print', 9.5, 26, 270, '#b9b3a4')[0])
     return svg(525, 300, ''.join(b),
                'Knox Pick-Me-Up card back — how it works, partnership line, and website')
 
