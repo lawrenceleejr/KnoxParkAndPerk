@@ -1,0 +1,81 @@
+# Smoke test — runs on every push and PR so generator or inline-JS breakage
+# is caught before it lands (a mark() signature change once silently broke
+# build_cards + build_coasters; this job exists so that can't recur).
+#
+# Checks:
+#   1. All four generators run end-to-end (tiny card count).
+#   2. Regenerating brand assets from source produces NO diff — catches both
+#      a broken generator and someone hand-editing generated assets/*.svg.
+#   3. Every emitted print SVG has its true-size PDF twin.
+#   4. The inline <script> blocks in the three pages parse as valid JS.
+name: Smoke test
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install generator dependencies
+        run: pip install fonttools==4.63.0 brotli==1.2.0 uharfbuzz==0.55.0 segno==1.6.6 cairosvg==2.9.0
+
+      - name: Brand assets regenerate byte-identical
+        run: |
+          python3 tools/build_collateral.py
+          git diff --exit-code -- assets/ \
+            || { echo '::error::assets/ differ after regeneration — generator changed output or generated files were hand-edited'; exit 1; }
+
+      - name: Print generators run end-to-end
+        run: |
+          python3 tools/build_cards.py --year 2026 --start 1 --count 2
+          python3 tools/build_coasters.py
+          python3 tools/build_signage.py
+
+      - name: Every print SVG has its PDF twin
+        run: |
+          python3 - <<'PY'
+          import glob, os, sys
+          svgs = glob.glob('print/**/*.svg', recursive=True)
+          missing = [s for s in svgs if not os.path.exists(s[:-4] + '.pdf')]
+          assert svgs, 'no print output found'
+          assert not missing, f'missing PDFs: {missing}'
+          print(f'{len(svgs)} SVG+PDF pairs OK')
+          PY
+
+      - name: Inline page scripts parse as valid JS
+        run: |
+          python3 - <<'PY'
+          import re, subprocess, sys
+          failed = False
+          for page in ['index.html', 'redeem/index.html', 'dashboard/index.html']:
+              html = open(page).read()
+              # inline blocks only (skip <script src=...>)
+              blocks = re.findall(r'<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>', html, re.S)
+              for i, js in enumerate(b for b in blocks if b.strip()):
+                  path = f'/tmp/{page.replace("/", "_")}.{i}.js'
+                  open(path, 'w').write(js)
+                  r = subprocess.run(['node', '--check', path], capture_output=True, text=True)
+                  if r.returncode:
+                      print(f'::error::{page} inline script #{i} failed to parse:\n{r.stderr}')
+                      failed = True
+                  else:
+                      print(f'{page} inline script #{i}: OK')
+          sys.exit(1 if failed else 0)
+          PY

@@ -127,8 +127,9 @@ def lockup(ink, accent, sub_ink, dark_bg=None):
     return svg(W, H, ''.join(body),
                'Knox Pick-Me-Up — Ride from last call to first cup. Downtown Knoxville, Tennessee')
 
-open(f'{REPO}/assets/logo.svg', 'w').write(lockup(INK, ORANGE_INK, INK2))
-open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', dark_bg=True))
+def build_lockups():
+    open(f'{REPO}/assets/logo.svg', 'w').write(lockup(INK, ORANGE_INK, INK2))
+    open(f'{REPO}/assets/logo-dark.svg', 'w').write(lockup(PAPER, GOLD, '#b9b3a4', dark_bg=True))
 
 # =====================================================================
 # 2. Morning Pick-Me-Up card (525 x 300)
@@ -151,96 +152,99 @@ def qr_svg(data, x, y, size, color=NIGHT, error='m'):
     return (f'<g transform="translate({x},{y}) scale({size / n:.5f})">'
             f'<path stroke="{color}" d="{d}"/></g>')
 
-b = []
-b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
-b.append(f'<path d="M15 1.75 H510 a13 13 0 0 1 13.25 13.25 V22 H1.75 V15 A13 13 0 0 1 15 1.75 Z" fill="{ORANGE}"/>')
-# header
-b.append(mark(26, 40, 40))
-b.append(text(fraunces, 'Knox Pick-Me-Up', 23, 82, 68, INK)[0])
-b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, tracking=0.18, anchor='end')[0])
-b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
-# offer
-b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
-b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
-bullet_rows = [
-    [('One large coffee at participating downtown shops', inter4, INK2)],
-    [('Hair of the KAT', inter6, ORANGE_INK),
-     (' — your KAT bus fare while this card is valid', inter4, INK2)],
-    [('One per ride · Not for resale · No cash value', inter4, INK2)],
-]
-for i, segs in enumerate(bullet_rows):
-    y = 202 + i*19
-    b.append(f'<rect x="26" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
-    x = 41
-    for seg, face, col in segs:
-        pth, w = text(face, seg, 11, x, y, col)
-        b.append(pth)
-        x += w
-# QR
-b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
-b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#partners', 407, 114, 82))
-b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
-b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
-# validity + serial
-b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
-# blank line is where the server writes today's date at hand-out — that
-# date is both the issue date and the start of the one-day validity window
-b.append(text(inter6, 'DATE ISSUED · VALID ONE DAY', 9.5, 26, 274, INK, tracking=0.14)[0])
-b.append(f'<line x1="211" y1="276" x2="345" y2="276" stroke="{INK2}" stroke-width="1"/>')
-b.append(text(inter4, f'Nº {SAMPLE_SERIAL}', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
-open(f'{REPO}/assets/card.svg', 'w').write(
-    svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
+def build_card_sample():
+    b = []
+    b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
+    b.append(f'<path d="M15 1.75 H510 a13 13 0 0 1 13.25 13.25 V22 H1.75 V15 A13 13 0 0 1 15 1.75 Z" fill="{ORANGE}"/>')
+    # header
+    b.append(mark(26, 40, 40))
+    b.append(text(fraunces, 'Knox Pick-Me-Up', 23, 82, 68, INK)[0])
+    b.append(text(inter6, 'MORNING PICK-ME-UP CARD', 9, 499, 64, ORANGE_INK, tracking=0.18, anchor='end')[0])
+    b.append(f'<line x1="26" y1="92" x2="499" y2="92" stroke="{RULE}" stroke-width="1"/>')
+    # offer
+    b.append(text(fraunces, 'Free large coffee', 36, 26, 148, INK)[0])
+    b.append(text(fraunces_it, 'You made the safe call. Your second brew’s on us.', 14.5, 26, 174, INK2)[0])
+    bullet_rows = [
+        [('One large coffee at participating downtown shops', inter4, INK2)],
+        [('Hair of the KAT', inter6, ORANGE_INK),
+         (' — your KAT bus fare while this card is valid', inter4, INK2)],
+        [('One per ride · Not for resale · No cash value', inter4, INK2)],
+    ]
+    for i, segs in enumerate(bullet_rows):
+        y = 202 + i*19
+        b.append(f'<rect x="26" y="{y-3.5}" width="7" height="1.5" fill="{ORANGE}"/>')
+        x = 41
+        for seg, face, col in segs:
+            pth, w = text(face, seg, 11, x, y, col)
+            b.append(pth)
+            x += w
+    # QR
+    b.append(f'<rect x="397" y="104" width="102" height="102" rx="4" fill="#ffffff" stroke="{RULE}" stroke-width="1"/>')
+    b.append(qr_svg(f'{SITE}?c={SAMPLE_SERIAL}#partners', 407, 114, 82))
+    b.append(text(inter6, 'SCAN FOR PARTICIPATING', 6.8, 499, 222, INK2, tracking=0.16, anchor='end')[0])
+    b.append(text(inter6, 'BUSINESSES', 6.8, 499, 233, INK2, tracking=0.16, anchor='end')[0])
+    # validity + serial
+    b.append(f'<line x1="26" y1="252" x2="499" y2="252" stroke="{RULE}" stroke-width="1"/>')
+    # blank line is where the server writes today's date at hand-out — that
+    # date is both the issue date and the start of the one-day validity window
+    b.append(text(inter6, 'DATE ISSUED · VALID ONE DAY', 9.5, 26, 274, INK, tracking=0.14)[0])
+    b.append(f'<line x1="211" y1="276" x2="345" y2="276" stroke="{INK2}" stroke-width="1"/>')
+    b.append(text(inter4, f'Nº {SAMPLE_SERIAL}', 9.5, 499, 274, INK2, tracking=0.04, anchor='end')[0])
+    open(f'{REPO}/assets/card.svg', 'w').write(
+        svg(525, 300, ''.join(b), 'Knox Pick-Me-Up — Morning Pick-Me-Up Card, good for a free large coffee and free KAT rides'))
 
 # =====================================================================
 # 3. Coaster (420 x 420)
 # =====================================================================
-c = []
-cx = cy = 210
-c.append(f'<circle cx="{cx}" cy="{cy}" r="204" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
-c.append(f'<circle cx="{cx}" cy="{cy}" r="192" fill="none" stroke="{INK}" stroke-width="2"/>')
-c.append(f'<circle cx="{cx}" cy="{cy}" r="158" fill="none" stroke="{RULE}" stroke-width="1"/>')
-c.append(arc_text(inter6, 'KNOX PICK-ME-UP', 15, cx, cy, 175, INK, tracking=0.32, mode='top'))
-c.append(arc_text(inter6, 'FREE LARGE COFFEE · HAIR OF THE KAT', 12, cx, cy, 172, ORANGE_INK, tracking=0.26, mode='bottom'))
-# side dots
-for sdeg in (90, 270):
-    px = cx + 175*math.sin(math.radians(sdeg))
-    py = cy - 175*math.cos(math.radians(sdeg))
-    c.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="2.6" fill="{ORANGE}"/>')
-# center
-c.append(mark(cx - mark_w(96)/2, 92, 96))
-c.append(text(fraunces, 'Booked your ride home?', 27, cx, 250, INK, anchor='middle')[0])
-c.append(text(fraunces, 'Show your bartender.', 27, cx, 284, INK, anchor='middle')[0])
-c.append(text(fraunces_it, 'Tomorrow’s coffee’s on us.', 18, cx, 318, ORANGE_INK, anchor='middle')[0])
-open(f'{REPO}/assets/coaster.svg', 'w').write(
-    svg(420, 420, ''.join(c), 'Knox Pick-Me-Up coaster — Booked your ride home? Show your bartender. Tomorrow’s coffee’s on us.'))
+def build_coaster_sample():
+    c = []
+    cx = cy = 210
+    c.append(f'<circle cx="{cx}" cy="{cy}" r="204" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
+    c.append(f'<circle cx="{cx}" cy="{cy}" r="192" fill="none" stroke="{INK}" stroke-width="2"/>')
+    c.append(f'<circle cx="{cx}" cy="{cy}" r="158" fill="none" stroke="{RULE}" stroke-width="1"/>')
+    c.append(arc_text(inter6, 'KNOX PICK-ME-UP', 15, cx, cy, 175, INK, tracking=0.32, mode='top'))
+    c.append(arc_text(inter6, 'FREE LARGE COFFEE · HAIR OF THE KAT', 12, cx, cy, 172, ORANGE_INK, tracking=0.26, mode='bottom'))
+    # side dots
+    for sdeg in (90, 270):
+        px = cx + 175*math.sin(math.radians(sdeg))
+        py = cy - 175*math.cos(math.radians(sdeg))
+        c.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="2.6" fill="{ORANGE}"/>')
+    # center
+    c.append(mark(cx - mark_w(96)/2, 92, 96))
+    c.append(text(fraunces, 'Booked your ride home?', 27, cx, 250, INK, anchor='middle')[0])
+    c.append(text(fraunces, 'Show your bartender.', 27, cx, 284, INK, anchor='middle')[0])
+    c.append(text(fraunces_it, 'Tomorrow’s coffee’s on us.', 18, cx, 318, ORANGE_INK, anchor='middle')[0])
+    open(f'{REPO}/assets/coaster.svg', 'w').write(
+        svg(420, 420, ''.join(c), 'Knox Pick-Me-Up coaster — Booked your ride home? Show your bartender. Tomorrow’s coffee’s on us.'))
 
 # =====================================================================
 # 4. Palette (900 x 360)
 # =====================================================================
-swatches = [
-    ('Paper',        PAPER,  INK,  True),
-    ('Paper Deep',   PAPER2, INK,  True),
-    ('Ink',          INK,    PAPER, False),
-    ('Umber',        INK2,   PAPER, False),
-    ('Night',        NIGHT,  PAPER, False),
-    ('Night Deep',   NIGHT2, PAPER, False),
-    ('Sunrise',      ORANGE, NIGHT2, False),
-    ('Sunrise Ink',  ORANGE_INK, PAPER, False),
-]
-p = [f'<rect width="900" height="360" fill="{PAPER}"/>']
-p.append(text(inter6, 'KNOX PICK-ME-UP · COLOR', 12, 40, 52, INK, tracking=0.22)[0])
-cw, ch, gx, gy = 195, 110, 12, 12
-x0, y0 = 40, 80
-for i, (name, hexv, on, border) in enumerate(swatches):
-    col, row = i % 4, i // 4
-    x, y = x0 + col*(cw+gx), y0 + row*(ch+gy)
-    stroke = f' stroke="{RULE}" stroke-width="1"' if border else ''
-    p.append(f'<rect x="{x}" y="{y}" width="{cw}" height="{ch}" rx="3" fill="{hexv}"{stroke}/>')
-    p.append(text(inter6, name.upper(), 10, x+14, y+ch-34, on, tracking=0.14)[0])
-    p.append(text(inter4, hexv.upper(), 10, x+14, y+ch-16, on)[0])
-p.append(text(inter4, 'Type: Fraunces 600 (display) · Inter 400/500/600 (text) · Cormorant 700 old-style figures (statistics)', 11, 40, 336, INK2)[0])
-open(f'{REPO}/assets/palette.svg', 'w').write(
-    svg(900, 360, ''.join(p), 'Knox Pick-Me-Up color palette and type'))
+def build_palette():
+    swatches = [
+        ('Paper',        PAPER,  INK,  True),
+        ('Paper Deep',   PAPER2, INK,  True),
+        ('Ink',          INK,    PAPER, False),
+        ('Umber',        INK2,   PAPER, False),
+        ('Night',        NIGHT,  PAPER, False),
+        ('Night Deep',   NIGHT2, PAPER, False),
+        ('Sunrise',      ORANGE, NIGHT2, False),
+        ('Sunrise Ink',  ORANGE_INK, PAPER, False),
+    ]
+    p = [f'<rect width="900" height="360" fill="{PAPER}"/>']
+    p.append(text(inter6, 'KNOX PICK-ME-UP · COLOR', 12, 40, 52, INK, tracking=0.22)[0])
+    cw, ch, gx, gy = 195, 110, 12, 12
+    x0, y0 = 40, 80
+    for i, (name, hexv, on, border) in enumerate(swatches):
+        col, row = i % 4, i // 4
+        x, y = x0 + col*(cw+gx), y0 + row*(ch+gy)
+        stroke = f' stroke="{RULE}" stroke-width="1"' if border else ''
+        p.append(f'<rect x="{x}" y="{y}" width="{cw}" height="{ch}" rx="3" fill="{hexv}"{stroke}/>')
+        p.append(text(inter6, name.upper(), 10, x+14, y+ch-34, on, tracking=0.14)[0])
+        p.append(text(inter4, hexv.upper(), 10, x+14, y+ch-16, on)[0])
+    p.append(text(inter4, 'Type: Fraunces 600 (display) · Inter 400/500/600 (text) · Cormorant 700 old-style figures (statistics)', 11, 40, 336, INK2)[0])
+    open(f'{REPO}/assets/palette.svg', 'w').write(
+        svg(900, 360, ''.join(p), 'Knox Pick-Me-Up color palette and type'))
 
 # =====================================================================
 # 5. Favicon (64 x 64) and emblem badge (240 x 240)
@@ -252,17 +256,30 @@ def badge_pin(side, h):
     y = (side - h) / 2
     return mark(x, y, h, shield=PAPER, cup=NIGHT)
 
-fav = ('<defs><linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">'
-       f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
-       f'<rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#fav-bg)" stroke="{GOLD}" stroke-width="2.5"/>'
-       + badge_pin(64, 46))
-open(f'{REPO}/assets/favicon.svg', 'w').write(svg(64, 64, fav, 'Knox Pick-Me-Up favicon'))
+def build_favicon():
+    fav = ('<defs><linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">'
+           f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
+           f'<rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#fav-bg)" stroke="{GOLD}" stroke-width="2.5"/>'
+           + badge_pin(64, 46))
+    open(f'{REPO}/assets/favicon.svg', 'w').write(svg(64, 64, fav, 'Knox Pick-Me-Up favicon'))
 
-emblem = ('<defs><linearGradient id="badge-m" x1="0" y1="0" x2="0" y2="1">'
-          f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
-          f'<circle cx="120" cy="120" r="112" fill="url(#badge-m)" stroke="{GOLD}" stroke-width="5"/>'
-          f'<circle cx="120" cy="120" r="96" fill="none" stroke="{GOLD}" stroke-width="1" opacity=".4"/>'
-          + badge_pin(240, 168))
-open(f'{REPO}/assets/logo-mark.svg', 'w').write(svg(240, 240, emblem, 'Knox Pick-Me-Up emblem'))
+def build_emblem():
+    emblem = ('<defs><linearGradient id="badge-m" x1="0" y1="0" x2="0" y2="1">'
+              f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
+              f'<circle cx="120" cy="120" r="112" fill="url(#badge-m)" stroke="{GOLD}" stroke-width="5"/>'
+              f'<circle cx="120" cy="120" r="96" fill="none" stroke="{GOLD}" stroke-width="1" opacity=".4"/>'
+              + badge_pin(240, 168))
+    open(f'{REPO}/assets/logo-mark.svg', 'w').write(svg(240, 240, emblem, 'Knox Pick-Me-Up emblem'))
 
-print('collateral built')
+def build_all():
+    build_lockups()
+    build_card_sample()
+    build_coaster_sample()
+    build_palette()
+    build_favicon()
+    build_emblem()
+    print('collateral built')
+
+
+if __name__ == '__main__':
+    build_all()
