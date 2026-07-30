@@ -60,12 +60,19 @@ navy/paper pair · place the light lockup on a dark background (use
 A rounded badge cradling a steaming coffee cup — the morning after the safe
 ride home, sealed in one glyph. "Good call, the morning's on us."
 
-[`assets/mark.svg`](assets/mark.svg) ships in its native colors — the badge
-in night navy `#101A30` with a paper cup — which is how it sits on any light
-(paper) background. On dark backgrounds the badge is recoloured to paper with a
-navy cup so it stays legible; the lockups, favicon, and emblem are regenerated
-from this one source by
-[`tools/build_collateral.py`](tools/build_collateral.py).
+[`assets/mark.svg`](assets/mark.svg) is the shape source. Its raw fills are
+the recolour tokens `#101A30` (badge) and `#FFFFFF` (cup);
+[`tools/build_collateral.py`](tools/build_collateral.py) swaps the cup to paper
+`#FAF5EB` for light backgrounds (navy badge + paper cup — how it sits on any
+paper background) and flips both to a paper badge + navy cup on dark
+backgrounds. The lockups, favicon, and emblem are all regenerated from this one
+source.
+
+**Inline copy:** `index.html` embeds a hand-maintained copy of the mark as an
+SVG `<symbol id="kpmu-mark">`, pre-coloured for on-light use (navy badge +
+paper `#FAF5EB` cup). The regenerate-brand-assets workflow does **not** touch
+it, so if the mark's shape ever changes, update that inline symbol by hand to
+match `assets/mark.svg`.
 
 Use it for: the lockup, the favicon / app icon, social avatars, a large
 hero graphic, and merch. Keep it to the two-color navy/paper pair (navy badge

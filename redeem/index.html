@@ -209,7 +209,7 @@
 
   <div class="setup" id="setupnote" hidden></div>
 
-  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="../">knoxpickmeup site</a> · <a href="./?admin=1" id="adminlink">pack check-out (admin)</a> · scanner build <span id="build">2026-07-19c</span><span id="resetsep" hidden> · </span><a href="#" id="resetmem" hidden>reset this device&rsquo;s scanner memory</a></footer>
+  <footer>Volunteer-run · Data goes to the program&rsquo;s Google Sheet · Questions: <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> · <a href="../">knoxpickmeup site</a><span id="adminlinkwrap"> · <a href="./?admin=1" id="adminlink">pack check-out (admin)</a></span> · scanner build <span id="build">2026-07-30</span><span id="resetsep" hidden> · </span><a href="#" id="resetmem" hidden>reset this device&rsquo;s scanner memory</a></footer>
 </div>
 
 <script>
@@ -285,6 +285,10 @@ const demo = !SCRIPT_URL;
 
 const $ = id => document.getElementById(id);
 const statusEl = $('status'), logList = $('loglist');
+// localStorage keys: the scan-dedup memory predates the KPMU rename and keeps
+// its `kpu-` prefix (kpu-seen, kpu-queue) so existing devices don't lose their
+// history on upgrade; everything added since uses `kpmu-` (kpmu-ck,
+// kpmu-checked, kpmu-bars). "Reset this device" (below) clears all of them.
 const seen = new Set(JSON.parse(localStorage.getItem('kpu-seen') || '[]'));
 let queue = JSON.parse(localStorage.getItem('kpu-queue') || '[]');
 
@@ -691,7 +695,7 @@ function fillBars() {
 }
 function initAdmin() {
   document.querySelector('header .tool').textContent = 'Pack check-out';
-  $('adminlink').hidden = true;   // already here
+  $('adminlinkwrap').hidden = true;   // already here — hide its leading separator too
   $('shopline').textContent = 'Admin — assign a printed pack to the bar taking it: pick the bar, then scan the pack’s QR (or paste it below).';
   if (!demo && !ckHex) {
     // live mode but this device has never seen the derived key — check-outs
@@ -779,7 +783,7 @@ if (demo) {
   $('resetsep').hidden = false;
   rm.addEventListener('click', e => {
     e.preventDefault();
-    ['kpu-seen', 'kpu-queue', 'kpmu-ck', 'kpmu-checked'].forEach(k => localStorage.removeItem(k));
+    ['kpu-seen', 'kpu-queue', 'kpmu-ck', 'kpmu-checked', 'kpmu-bars'].forEach(k => localStorage.removeItem(k));
     location.reload();
   });
 }
