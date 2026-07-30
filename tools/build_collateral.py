@@ -152,6 +152,15 @@ def qr_svg(data, x, y, size, color=NIGHT, error='m'):
     return (f'<g transform="translate({x},{y}) scale({size / n:.5f})">'
             f'<path stroke="{color}" d="{d}"/></g>')
 
+def qr_modules(data, error='m'):
+    """Modules per side for `data` — lets callers size the mandatory 4-module
+    quiet zone from the actual QR version rather than a guess."""
+    return segno.make(data, error=error, micro=False).symbol_size(border=0)[0]
+
+def quiet_pad(data, size, error='m', modules=4):
+    """User-unit width of a `modules`-wide quiet zone for a QR drawn at `size`."""
+    return modules * size / qr_modules(data, error)
+
 def build_card_sample():
     b = []
     b.append(f'<rect x="1" y="1" width="523" height="298" rx="14" fill="{PAPER}" stroke="{RULE}" stroke-width="1.5"/>')
