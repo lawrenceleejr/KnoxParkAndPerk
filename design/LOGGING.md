@@ -441,6 +441,19 @@ the GitHub Action, and GitHub emails the repo owner. No pager, no service.
 
 ### I. Businesses joining or leaving
 
+**Where the roster lives (keep these in step).** There is no single shared
+data file, so a venue change touches a fixed, short list of places:
+
+| Roster | File / location | Holds | Notes |
+|---|---|---|---|
+| Live data | Sheet → `Venues` tab | shops **and** bars | source of truth for the dashboard (display name, cap, deactivation) |
+| Public map | `index.html` → `SHOPS` / `BARS` arrays | shops + bars | name + lat/lon pins |
+| Map fallback | `index.html` → `.fallback` list | shops + bars | the no-JS / no-tiles list; must mirror the arrays above |
+| Scanner seed | `redeem/index.html` → `SHOPS` (shop register) and `BARS` (check-out dropdown seed) | shops + bars | seeds only — bars can also be typed inline in admin mode |
+
+(The roster in `dashboard/index.html` is illustrative **demo data** behind the
+"demo data" badge, not a roster to maintain.)
+
 The system is designed so the roster can churn without touching any data:
 
 **A coffee shop joins:** add one line to the `SHOPS` map in `redeem/index.html`

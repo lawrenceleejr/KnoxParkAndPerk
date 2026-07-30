@@ -269,6 +269,10 @@ function demoData() {
     packFill.set(open[1], (packFill.get(open[1]) || 0) + 1);
     return open[1];
   };
+  // Illustrative DEMO roster only (shown behind the "demo data" badge) — it is
+  // NOT a source of truth. The live roster is the Sheet's Venues tab; the two
+  // editable HTML rosters are in index.html and redeem/index.html. See
+  // design/LOGGING.md §I.
   const venues = [
     ['remedy', 'Remedy Coffee', 'shop', '', 80],
     ['wild-love', 'Wild Love Bakehouse', 'shop', '', 60],
