@@ -16,6 +16,7 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Register QRs** (one per coffee shop) | generate per shop, see §5 | 1–2 per shop, laminated |
 | **Coasters** (two-sided) | `tools/build_coasters.py` → `print/coasters/` (night side: bars + the three steps; day side: shops; **both sides carry a QR**) · single-sided spot design: [`assets/coaster.svg`](assets/coaster.svg) | thousands — bars burn through them; they're the advertising |
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
+| **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
 
 ## 2. The card books — what to ask a printer for
 
@@ -125,12 +126,26 @@ python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#findus
 #   sign-bathroom     8.5x11 poster (restroom / above the sink)
 ```
 
+**Staff sheets** are a fourth generator — the letter-size references that go
+behind the bar, not in front of patrons:
+
+```sh
+python3 tools/build_staff.py
+# writes .svg + .pdf into print/staff/:
+#   barista-one-pager   the six scan outcomes + what to do, manual entry, offline
+#   bar-onboarding      what a bar agrees to, handing out a card, packs, contact
+```
+
+Laminate `barista-one-pager` and keep it by the register; the wording of the
+scan outcomes is copied from the scanner, so reprint it if the scanner's
+banners change.
+
 These are **generic branding items** — one design for every venue, no
 per-shop customization. (The only per-shop artifact is the register QR in
 §5.) Every piece carries a QR and the website. **In the browser:** the
 *Build print materials* GitHub Action (Actions tab → Run workflow) runs the
-coaster and signage generators together and hands back a downloadable zip of
-PDFs — no terminal.
+coaster, signage, and staff-sheet generators together and hands back a
+downloadable zip of PDFs — no terminal.
 
 The PDFs are vector with **all type converted to outlines** (no font
 substitution at the shop) and at exact physical size.
