@@ -76,6 +76,7 @@
   .matrix .inactive, td .inactive { color: #a39b8b; font-style: italic; }
   #tip { position: fixed; pointer-events: none; background: var(--night); color: var(--paper); font-size: .75rem; padding: .35rem .6rem; border-radius: 4px; display: none; z-index: 10; max-width: 16rem; }
   footer { margin-top: 2rem; font-size: .72rem; color: var(--ink-2); }
+  .linkbtn { font: inherit; background: none; border: 0; color: var(--accent-ink); text-decoration: underline; cursor: pointer; padding: 0; }
 </style>
 </head>
 <body>
@@ -226,7 +227,7 @@ function demoData() {
   let s = 42; const rnd = () => (s = (s * 1103515245 + 12345) % 2147483648) / 2147483648;
   const shops = ['remedy', 'wild-love', 'k-brew', 'honeybee'];
   const bars = ['Preservation Pub', 'Barley’s', 'Suttree’s', 'Peter Kern Library'];
-  const packSerial = n => 'KPMU-2026-' + String(n).padStart(10, '0');
+  const packSerial = n => 'KPMU-2026-P' + String(n).padStart(4, '0');
   const cardSerial = n => 'KPMU-2026-' + String(n).padStart(8, '0');
   // pack check-outs sized to each bar's demand so the data stays consistent
   // (each pack arrives before the previous one runs out)
@@ -309,9 +310,17 @@ async function load() {
     DATA = demo ? demoData()
       : await (await fetch(SCRIPT_URL + '?action=stats')).json();
     render();
+    $('app').hidden = false;   // reveal only once there's data to show
     $('updated').textContent = 'updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   } catch (e) {
-    $('updated').textContent = 'could not reach the data — retry';
+    // keep the panels hidden rather than showing a page of blanks; offer a
+    // real retry control
+    $('app').hidden = true;
+    $('updated').innerHTML = 'could not reach the data — ';
+    const b = document.createElement('button');
+    b.className = 'linkbtn'; b.type = 'button'; b.textContent = 'retry';
+    b.addEventListener('click', load);
+    $('updated').appendChild(b);
   }
 }
 
@@ -437,15 +446,20 @@ function render() {
   const dups = count(reds, r => r[2] === 'dup');
   const voids = count(reds, r => r[2] === 'void');
   const bads = count(reds, r => r[2] === 'bad');
-  const issued = DATA.packs.reduce((n, p) => n + packCards(p), 0);
+  // exclude voided packs from "issued" so the public rate matches the admin
+  // "rate by bar" (which also excludes voided) — a voided pack's cards can't
+  // be redeemed, so counting them would deflate the rate two different ways
+  const livePacksAll = DATA.packs.filter(p => !String(p[3] || '').trim());
+  const voidedCount = DATA.packs.length - livePacksAll.length;
+  const issued = livePacksAll.reduce((n, p) => n + packCards(p), 0);
   const okAll = count(DATA.redemptions, r => r[2] === 'ok');
   const rate = issued ? Math.round(okAll / issued * 100) : null;
   const last7 = count(DATA.redemptions, r => r[2] === 'ok' && (Date.now() - new Date(r[0])) <= 7 * 86400000);
 
   $('tiles').innerHTML =
-    tile('Cards issued to bars', issued.toLocaleString(), DATA.packs.length + ' packs checked out, all time') +
+    tile('Cards issued to bars', issued.toLocaleString(), livePacksAll.length + ' active packs' + (voidedCount ? ' · ' + voidedCount + ' voided' : '') + ', all time') +
     tile('Coffees redeemed', ok.length.toLocaleString(), 'in range') +
-    tile('Redemption rate', rate === null ? '—' : rate + '%', 'redeemed ÷ issued, all time') +
+    tile('Redemption rate', rate === null ? '—' : rate + '%', 'redeemed ÷ issued (voided packs excluded)') +
     tile('Last 7 days', last7.toLocaleString(), 'coffees redeemed');
 
   $('admintiles').innerHTML =
@@ -732,14 +746,13 @@ document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () =
   document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', 'false'));
   c.setAttribute('aria-pressed', 'true');
   rangeDays = Number(c.dataset.days);
-  render();
+  if (DATA) render(); else load();   // no crash if clicked before/without data
 }));
 $('refresh').addEventListener('click', load);
 setInterval(load, 5 * 60 * 1000);
 
 if (demo) $('demobadge').hidden = false;
-$('app').hidden = false;
-load();
+load();   // reveals #app on success; keeps it hidden with a retry on failure
 </script>
 </body>
 </html>
