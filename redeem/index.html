@@ -229,11 +229,16 @@ const SHOPS = {
 };
 // Bars that hand out cards — the starting list for the admin pack check-out
 // (open redeem/?admin=1). New bars added in admin mode are also remembered on
-// the device, so this list is just a convenient seed.
+// the device, so this list is just a convenient seed. Keep it in step with the
+// map roster in index.html (and the no-JS fallback list beneath it); the
+// single source of truth and the "when a venue joins/leaves" checklist live in
+// design/LOGGING.md §I.
 const BARS = {
   'preservation-pub': 'Preservation Pub',
-  'barleys':          'Barley’s Taproom',
+  'peter-kern':       'Peter Kern Library',
   'suttrees':         'Suttree’s High Gravity Tavern',
+  'barleys':          'Barley’s Taproom',
+  'boyds':            'Boyd’s Jig & Reel',
 };
 /* ========================================== */
 
