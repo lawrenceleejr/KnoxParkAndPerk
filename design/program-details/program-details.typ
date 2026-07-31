@@ -345,6 +345,13 @@
   books a ride home.
 ]]
 
+#block(width: 6.05in)[
+  The math is simple: the same parked car that tempts a patron to drive is the
+  reason they'll be back tomorrow, so sending them home safe tonight doesn't cost
+  you the visit --- it guarantees it. And the coasters that carry the message are
+  stock you already put under every drink, now doing the marketing for you.
+]
+
 #giveget(
   "What we ask of you",
   ([A 10-second hand-off: glance at the ride, write the date, hand over one card.],
@@ -358,7 +365,7 @@
 )
 
 #collateral(
-  (("coaster-night.svg", 1.55in), ("table-tent.svg", 0.74in)),
+  (("coaster-night.svg", 1.5in), ("table-tent.svg", 0.72in)),
   [The free collateral you'll get --- the night coaster for the bar top and the
   folded table tent --- carries the program mark and message and does the
   talking for you. See the full identity in Appendix G (page #pageof("a_brand"))

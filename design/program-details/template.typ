@@ -128,8 +128,13 @@
 #let lead(body) = text(size: 11.6pt, fill: bodybrown)[#body]
 #let note(body) = text(size: 8.7pt, fill: umber)[#body]
 
-// two-column running text
-#let twocol(body) = columns(2, gutter: 24pt, body)
+// two-column running text — kept clearly separated (>= 2em) from the
+// single-column body above and below it
+#let twocol(body) = {
+  v(2em, weak: true)
+  columns(2, gutter: 24pt, body)
+  v(2em, weak: true)
+}
 
 // ---- night bands ------------------------------------------------------------
 #let band(body, deep: false, light: false) = block(
@@ -354,11 +359,7 @@
         text(font: serif, size: 13pt, fill: rgb("#C6CEDC"))[
           A downtown Knoxville road-safety partnership — rewarding the safe ride home with tomorrow's coffee.
         ]
-        v(26pt)
-        text(size: 9pt, fill: rgb("#9AA4B6"))[
-          Prepared for #box(width: 2.5in, line(length: 100%, stroke: 0.5pt + rgb("#C6CEDC").transparentize(55%)))
-        ]
-        v(22pt)
+        v(30pt)
         text(size: 8.2pt, fill: rgb("#8892A4"), tracking: 1pt)[
           #upper[Knoxville, Tennessee  ·  hello\@knoxpickmeup.org  ·  knoxpickmeup.org]
         ]
