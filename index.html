@@ -326,8 +326,16 @@
     letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); margin: 0 0 1rem; }
   .biz-grid { list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .9rem; }
-  .biz { display: flex; gap: .8rem; align-items: flex-start;
-    border: 1px solid var(--rule); border-radius: 8px; padding: .8rem .9rem; background: var(--paper); }
+  .biz { display: flex; gap: .8rem; align-items: flex-start; width: 100%; text-align: left;
+    font: inherit; color: inherit; cursor: pointer;
+    border: 1px solid var(--rule); border-radius: 8px; padding: .8rem .9rem; background: var(--paper);
+    transition: border-color .15s ease, background-color .15s ease; }
+  .biz:hover { border-color: var(--orange); background: var(--paper-2); }
+  .biz:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .biz-go { margin-left: auto; align-self: center; color: var(--ink-2); font-size: 1.1rem;
+    transition: transform .15s ease, color .15s ease; }
+  .biz:hover .biz-go { color: var(--orange-ink); transform: translateX(3px); }
+  .pop-link { display: inline-block; margin-top: .35rem; font-weight: 600; color: var(--orange-ink); }
   .biz-avatar { flex: 0 0 auto; width: 2.5rem; height: 2.5rem; border-radius: 7px;
     display: grid; place-items: center; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; }
   .biz-avatar img { width: 100%; height: 100%; object-fit: contain; }
@@ -762,20 +770,23 @@
         note: 'one short line'            — use SPARINGLY, only when a venue's
                                             offer differs from the standard free
                                             coffee (e.g. Yassin's below, free fries)
-     Most venues need neither — the list just shows the map glyph + name. */
+        url:  'https://…'                 — the venue's website; linked from its
+                                            map-pin popup (example links below,
+                                            confirm each at signup)
+     Most venues need only name/where — the list shows the map glyph + name. */
   const SHOPS = [
-    { name: 'Remedy Coffee',        where: 'Old City',         lat: 35.96966, lon: -83.92115 },
-    { name: 'K Brew Downtown',      where: 'South Gay Street', lat: 35.96339, lon: -83.91829 },
-    { name: 'Honeybee Coffee',      where: 'Downtown South',   lat: 35.96060, lon: -83.91760 },
+    { name: 'Remedy Coffee',        where: 'Old City',         lat: 35.96966, lon: -83.92115, url: 'https://www.remedycoffeeknox.com/' },
+    { name: 'K Brew Downtown',      where: 'South Gay Street', lat: 35.96339, lon: -83.91829, url: 'https://www.kbrewknox.com/' },
+    { name: 'Honeybee Coffee',      where: 'Downtown South',   lat: 35.96060, lon: -83.91760, url: 'https://www.honeybeecoffeeco.com/' },
     { name: 'Yassin’s Falafel House', where: 'Walnut Street',  lat: 35.96679, lon: -83.92046,
-      note: 'Free fries here instead of a coffee' },
+      note: 'Free fries here instead of a coffee', url: 'https://www.yassinsfalafelhouse.com/' },
   ];
   const BARS = [
-    { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985 },
-    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996 },
-    { name: 'Suttree’s High Gravity Tavern', where: 'South Gay Street',  lat: 35.96355, lon: -83.91856 },
-    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745 },
-    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800 },
+    { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985, url: 'https://www.preservationpub.com/' },
+    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996, url: 'https://www.thepeterkernlibrary.com/' },
+    { name: 'Suttree’s High Gravity Tavern', where: 'South Gay Street',  lat: 35.96355, lon: -83.91856, url: 'https://www.suttreestavern.com/' },
+    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745, url: 'https://knoxville.barleystaproom.com/' },
+    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800, url: 'https://www.jigandreel.com/' },
   ];
   /* Every publicly-run downtown facility that is free after 6 pm on weeknights
      and through the weekend — surface lots as much as garages. Names, hours and
@@ -823,6 +834,8 @@
 
   let ready = null;   // promise: Leaflet + map are up
   let map = null, you = null, line = null;
+  const markerByName = {};   // venue name -> its map marker, for click-to-pin
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const PAD = { paddingTopLeft: [34, 40], paddingBottomRight: [34, 34] };
   const fitAll = () => map.fitBounds(
     L.latLngBounds(SHOPS.concat(BARS, PARKING).map(v => [v.lat, v.lon])), PAD);
@@ -843,9 +856,12 @@
                        iconAnchor: p.anchor, popupAnchor: p.pop, title: title });
   }
   function pin(v, kind, blurb, into) {
+    const link = v.url
+      ? '<br><a class="pop-link" href="' + esc(v.url) + '" target="_blank" rel="noopener">Visit website ↗</a>'
+      : '';
     return L.marker([v.lat, v.lon], { icon: icon(kind, v.name), alt: v.name, riseOnHover: true })
       .addTo(into || map)
-      .bindPopup('<b>' + v.name + '</b>' + (v.where ? v.where + ' — ' : '') + blurb,
+      .bindPopup('<b>' + esc(v.name) + '</b>' + (v.where ? esc(v.where) + ' — ' : '') + blurb + link,
                  // pan a popup clear of the zoom control and the credit line
                  { closeButton: false, offset: [0, 2],
                    autoPanPaddingTopLeft: [48, 58], autoPanPaddingBottomRight: [24, 30] });
@@ -863,9 +879,24 @@
       ? `<img src="${esc(v.logo)}" alt="" loading="lazy">`
       : PINS[kind].html;
     const note = v.note ? `<span class="biz-note">${esc(v.note)}</span>` : '';
-    return `<li class="biz"><span class="biz-avatar" aria-hidden="true">${avatar}</span>`
+    // each card is a button that flies the map to this venue's pin
+    return `<li><button type="button" class="biz" data-venue="${esc(v.name)}" `
+         + `aria-label="${esc(v.name)} — show on the map">`
+         + `<span class="biz-avatar" aria-hidden="true">${avatar}</span>`
          + `<span class="biz-text"><span class="biz-name">${esc(v.name)}</span>`
-         + `<span class="biz-where">${esc(v.where)}</span>${note}</span></li>`;
+         + `<span class="biz-where">${esc(v.where)}</span>${note}</span>`
+         + `<span class="biz-go" aria-hidden="true">→</span></button></li>`;
+  }
+  // clicking a card scrolls to the map and opens that venue's pin popup
+  function focusVenue(v) {
+    const target = document.getElementById('kmap');
+    if (target) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    ensureMap().then(() => {
+      const m = markerByName[v.name];
+      if (!m) return;
+      map.setView([v.lat, v.lon], Math.max(map.getZoom(), 16), { animate: !reduce });
+      m.openPopup();
+    }).catch(() => {});
   }
   function group(title, list, kind) {
     return `<div class="biz-group"><h3>${title}</h3><ul class="biz-grid">`
@@ -899,8 +930,8 @@
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
                  + ' contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
     }).addTo(map);
-    SHOPS.forEach(v => pin(v, 'shop', 'free large coffee with your card'));
-    BARS.forEach(v => pin(v, 'bar', 'pick up your card here tonight'));
+    SHOPS.forEach(v => { markerByName[v.name] = pin(v, 'shop', 'free large coffee with your card'); });
+    BARS.forEach(v => { markerByName[v.name] = pin(v, 'bar', 'pick up your card here tonight'); });
     const parking = L.layerGroup();
     PARKING.forEach(v => pin({ name: v.name, lat: v.lat, lon: v.lon, where: v.kind },
                              'park', v.free || FREE_HOURS, parking));
@@ -934,6 +965,13 @@
   // the business list is cheap and static — render it up front, independent of
   // the map tiles loading
   renderBizList();
+  const bizEl = document.getElementById('bizlist');
+  if (bizEl) bizEl.addEventListener('click', e => {
+    const btn = e.target.closest('.biz');
+    if (!btn) return;
+    const v = SHOPS.concat(BARS).find(x => x.name === btn.dataset.venue);
+    if (v) focusVenue(v);
+  });
 
   // load when the section comes into reach (or right away on old browsers)
   if ('IntersectionObserver' in window) {
