@@ -1034,6 +1034,51 @@
   orange appears it means something.
 ]
 
+#pagebreak()
+#text(font: serif, weight: 600, size: 15pt)[The brand, applied]
+#v(3pt)
+#block(width: 6.05in)[#note[
+  Every patron-facing and back-of-house piece is generated to spec from one mark
+  source, so the identity stays consistent everywhere it lands. The full,
+  print-ready kit lives in Appendix D (page #pageof("a_print")).
+]]
+#v(12pt)
+
+#eyebrow[The card]
+#v(8pt)
+#grow((
+  ("card.svg", "Front — the redeemable coffee + KAT fare", 3.0in),
+  ("card-back.svg", "Back — how it works and the partnership line", 3.0in),
+))
+
+#v(20pt)
+#eyebrow[Coasters & window]
+#v(8pt)
+#grow((
+  ("coaster-night.svg", "Coaster, night side — at the bar", 2.0in),
+  ("coaster-day.svg", "Coaster, day side — at the shop", 2.0in),
+  ("window-sticker.svg", "Window decal — the storefront", 2.0in),
+))
+
+#pagebreak()
+#eyebrow[Table & wall]
+#v(8pt)
+#grow((
+  ("table-tent.svg", "Table tent — both faces fold up", 1.0in),
+  ("sign-bathroom.svg", "Restroom poster", 1.93in),
+  ("sign-community.svg", "Community poster", 1.93in),
+))
+
+#v(20pt)
+#eyebrow[Behind the counter]
+#v(8pt)
+#grow((
+  ("pack.svg", "Pack cover sheet", 1.5in),
+  ("barista-one-pager.svg", "Barista reference", 1.55in),
+  ("bar-onboarding.svg", "Bar onboarding", 1.55in),
+  ("sponsor-one-sheet.svg", "Sponsor one-sheet", 1.55in),
+))
+
 #appsect("H", "Forking this for your community",
   "Knox Pick-Me-Up is an open playbook --- here's how another city stands up its own.", "a_fork")
 

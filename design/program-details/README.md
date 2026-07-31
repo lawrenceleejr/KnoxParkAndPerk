@@ -63,6 +63,11 @@ typst compile --font-path fonts program-details.typ \
   static cuts instantiated from it — `fraunces-regular` (weight 400),
   `fraunces-semibold` (600), and `fraunces-italic` — plus Inter and Cormorant.
   If the brand fonts ever change, re-instantiate those cuts into `fonts/`.
+- The `.svg` art (the card, coasters, window decal, table tent, posters, pack
+  cover, staff sheets, sponsor one-sheet) are copies of the generated collateral
+  in [`../../print/`](../../print) and [`../../assets/`](../../assets), kept here
+  so the folder is self-contained for typst.app. If a piece is regenerated,
+  re-copy it in.
 - Keep the numbers honest: the local injury/fatality figures and the pilot
   budget come from [`../../PROGRAM.md`](../../PROGRAM.md) — update them here if
   they change there.

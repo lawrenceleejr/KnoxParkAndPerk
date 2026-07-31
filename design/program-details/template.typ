@@ -267,6 +267,24 @@
   note(caption)
 }
 
+// ---- collateral gallery (Appendix G) ----------------------------------------
+// one framed thumbnail with a caption beneath it
+#let plate(path, cap) = {
+  box(width: 100%, radius: 4pt, clip: true, stroke: 0.75pt + hairline)[
+    #image(path, width: 100%)
+  ]
+  v(3pt)
+  text(size: 7.3pt, fill: umber, tracking: 0.2pt)[#cap]
+}
+
+// a gallery row. items: ((path, caption, width), ...) — pick widths that give a
+// common image height so the pieces sit on one shelf and captions align.
+#let grow(items) = grid(
+  columns: items.map(i => i.at(2)),
+  column-gutter: 16pt, align: bottom,
+  ..items.map(i => plate(i.at(0), i.at(1))),
+)
+
 // ---- part divider (navy plate + its own mini contents) ----------------------
 // items: ((num, title), ...)
 #let partdivider(pnum, title, dek, items) = {
