@@ -310,6 +310,16 @@
      so a JS visitor never sees both. */
   #bizlist:empty { display: none; }
   #findus.js-roster .map-panel .fallback { display: none; }
+  /* Pre-launch warning banner on the Locations section — the roster is
+     placeholder/example data until the program goes live. */
+  .prelaunch { display: flex; gap: .9rem; align-items: flex-start;
+    margin-bottom: clamp(1.6rem, 4vw, 2.6rem); padding: 1.1rem 1.3rem;
+    border: 2px solid var(--orange); border-left-width: 6px; border-radius: 10px;
+    background: #fce6cd; }
+  .prelaunch > svg { flex: 0 0 auto; width: 1.6rem; height: 1.6rem; margin-top: .05rem; color: var(--orange-ink); }
+  .prelaunch b { font-family: var(--f-serif); font-weight: 600; font-size: 1.12rem;
+    display: block; margin-bottom: .2rem; color: var(--ink); }
+  .prelaunch p { margin: 0; font-size: .92rem; line-height: 1.5; color: var(--ink-2); }
   .bizlist { margin-top: clamp(2rem, 5vw, 3rem); }
   .biz-group + .biz-group { margin-top: 2rem; }
   .biz-group h3 { font-family: var(--f-sans); font-size: .72rem; font-weight: 600;
@@ -535,6 +545,15 @@
 </section>
 
 <section id="findus">
+  <div class="wrap">
+    <div class="prelaunch" role="note">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <b>Example listings — the program hasn&rsquo;t launched yet.</b>
+        <p>The businesses on this map and list (including Yassin&rsquo;s) are placeholder examples added for testing. None are confirmed participants, and no cards are being handed out yet.</p>
+      </div>
+    </div>
+  </div>
   <div class="wrap split">
     <div class="section-head">
       <span class="label">Locations</span>
@@ -562,6 +581,7 @@
             <li>Remedy Coffee &mdash; Old City</li>
             <li>K Brew Downtown &mdash; South Gay Street</li>
             <li>Honeybee Coffee &mdash; Downtown South</li>
+            <li>Yassin&rsquo;s Falafel House &mdash; Walnut Street (free fries instead of a coffee)</li>
           </ul>
           <strong>Card-issuing bars</strong>
           <ul>
@@ -739,24 +759,23 @@
   /* Each venue may carry two OPTIONAL fields for the participating-businesses
      list below the map:
         logo: 'assets/venues/<name>.svg'  — a logo shown in place of the glyph
-        note: 'one short line'            — e.g. what else they offer besides coffee
-     Both are optional; leave them off and the list shows the map glyph + name.
-     Confirm any note with the venue as it signs (placeholders below). */
+        note: 'one short line'            — use SPARINGLY, only when a venue's
+                                            offer differs from the standard free
+                                            coffee (e.g. Yassin's below, free fries)
+     Most venues need neither — the list just shows the map glyph + name. */
   const SHOPS = [
-    { name: 'Remedy Coffee',   where: 'Old City',          lat: 35.96966, lon: -83.92115 },
-    { name: 'K Brew Downtown', where: 'South Gay Street',  lat: 35.96339, lon: -83.91829 },
-    { name: 'Honeybee Coffee', where: 'Downtown South',    lat: 35.96060, lon: -83.91760,
-      note: 'Full breakfast + lunch menu' },
+    { name: 'Remedy Coffee',        where: 'Old City',         lat: 35.96966, lon: -83.92115 },
+    { name: 'K Brew Downtown',      where: 'South Gay Street', lat: 35.96339, lon: -83.91829 },
+    { name: 'Honeybee Coffee',      where: 'Downtown South',   lat: 35.96060, lon: -83.91760 },
+    { name: 'Yassin’s Falafel House', where: 'Walnut Street',  lat: 35.96679, lon: -83.92046,
+      note: 'Free fries here instead of a coffee' },
   ];
   const BARS = [
     { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985 },
-    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996,
-      note: 'Hidden craft-cocktail bar' },
+    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996 },
     { name: 'Suttree’s High Gravity Tavern', where: 'South Gay Street',  lat: 35.96355, lon: -83.91856 },
-    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745,
-      note: 'Pizza + live music upstairs' },
-    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800,
-      note: 'Whisky bar · live trad music' },
+    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745 },
+    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800 },
   ];
   /* Every publicly-run downtown facility that is free after 6 pm on weeknights
      and through the weekend — surface lots as much as garages. Names, hours and
