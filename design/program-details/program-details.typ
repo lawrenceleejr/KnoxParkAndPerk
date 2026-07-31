@@ -196,7 +196,7 @@
 ])
 
 #sect("3", "Part I · The Opportunity", "The idea, in one line",
-  "Last call → ride home → morning → coffee. One loop that closes itself.", "s_idea", brk: false)
+  "Last call → ride home → morning → coffee. One loop that closes itself.", "s_idea")
 
 #band[
   #loop((
@@ -550,7 +550,7 @@
 ]]
 
 #ktable(
-  (7em, 1fr),
+  (9.5em, 1fr),
   ("Stream", "How it works"),
   (
     ([*A · Merchant-funded* #linebreak() #note[the self-sustaining core]], [Shops provide the coffee as their own customer-acquisition cost. Zero external money; scales automatically with participation. The large coffee is a small pour against a higher morning ticket.]),
@@ -579,7 +579,7 @@
   "One footprint, one season, then evaluate honestly and scale.", "s_pilot")
 
 #ktable(
-  (7em, 5.5em, 1fr),
+  (8.4em, 6.2em, 1fr),
   ("Phase", "Window", "Milestones"),
   (
     ([*Design & city buy-in*], [Months 0--2], [City and KPD memorandum of understanding; free-parking co-promotion agreement with the Parking Authority.]),

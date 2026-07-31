@@ -51,8 +51,8 @@
     },
   )
   set text(font: sans, size: 10.3pt, fill: ink, hyphenate: false)
-  set par(leading: 0.72em, spacing: 0.72em, justify: false)
-  set block(spacing: 0.9em)
+  set par(leading: 0.72em, spacing: 0.82em, justify: false)
+  set block(spacing: 1.0em)
   show link: set text(fill: sunriseink)
   body
 }
