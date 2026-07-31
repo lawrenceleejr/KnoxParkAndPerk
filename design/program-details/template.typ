@@ -80,25 +80,28 @@
 #let refn(n) = super(text(size: 6.6pt, weight: 600, fill: sunriseink)[#n])
 
 // ---- section openers --------------------------------------------------------
-// a numbered section (num may be "" for unnumbered openers like the summary)
-#let sect(num, kicker, title, dek, lbl) = {
-  pagebreak()
+// a numbered section. num may be "" for an unnumbered opener; kicker/dek may be
+// "" to omit them. brk:false lets the section flow onto the current page (used
+// for the short Part I sections) instead of forcing a page break.
+#let sect(num, kicker, title, dek, lbl, brk: true) = {
+  if brk { pagebreak() } else { v(20pt) }
   anchor(lbl)
   grid(
     columns: (if num == "" { 0pt } else { 0.72in }, 1fr),
     column-gutter: if num == "" { 0pt } else { 20pt },
     if num == "" [] else { fig(58pt, num) },
     {
-      eyebrow(kicker)
-      v(9pt, weak: true)
+      if kicker != "" { eyebrow(kicker); v(10pt, weak: true) }
       text(font: serif, weight: 600, size: 29pt)[#fixd(title)]
-      v(5pt, weak: true)
-      text(font: serif, style: "italic", size: 13.5pt, fill: umber)[#fixd(dek)]
+      if dek != "" {
+        v(11pt, weak: true)
+        text(font: serif, style: "italic", size: 13.5pt, fill: umber)[#fixd(dek)]
+      }
     },
   )
-  v(11pt)
+  v(14pt)
   rule
-  v(9pt)
+  v(13pt)
 }
 
 // an appendix opener (letter in place of the number)
@@ -110,18 +113,18 @@
     fig(52pt, letter),
     {
       eyebrow[Appendix #letter]
-      v(9pt, weak: true)
+      v(10pt, weak: true)
       text(font: serif, weight: 600, size: 27pt)[#fixd(title)]
-      v(5pt, weak: true)
+      v(11pt, weak: true)
       text(font: serif, style: "italic", size: 13pt, fill: umber)[#fixd(dek)]
     },
   )
-  v(11pt)
+  v(14pt)
   rule
-  v(9pt)
+  v(13pt)
 }
 
-#let subhead(body) = { v(6pt); text(font: serif, weight: 600, size: 12pt)[#body]; v(2pt) }
+#let subhead(body) = { v(15pt); text(font: serif, weight: 600, size: 12.5pt)[#body]; v(5pt) }
 #let lead(body) = text(size: 11.6pt, fill: bodybrown)[#body]
 #let note(body) = text(size: 8.7pt, fill: umber)[#body]
 
@@ -151,26 +154,37 @@
   )
 ]
 
-// ---- the loop strip (horizontal, numbered, with arrows) ---------------------
+// ---- the loop strip: numbered nodes joined by a connecting line -------------
 // items: ((num, label), ...) ; dark:true when placed on a navy band
 #let loop(items, dark: false) = {
+  let n = items.len()
+  let ring = if dark { gold } else { sunrise }
+  let conn = if dark { silver.transparentize(55%) } else { hairline }
+  let lab = if dark { silver } else { bodybrown }
+
+  // a numbered node
+  let node(num) = box(
+    width: 30pt, height: 30pt, radius: 50%, stroke: 1pt + ring,
+    fill: if dark { none } else { paper },
+  )[#align(center + horizon)[#fig(17pt, num, fill: ring)]]
+
+  // build interleaved columns: node, connector, node, connector, ... node
   let cols = ()
-  let cells = ()
+  let nodes = ()
+  let labels = ()
   for (i, it) in items.enumerate() {
     cols.push(1fr)
-    cells.push(align(center + horizon)[
-      #fig(22pt, it.at(0))
-      #v(4pt, weak: true)
-      #text(size: 8pt, weight: 500, fill: if dark { silver } else { ink })[#it.at(1)]
+    nodes.push(align(center)[#node(it.at(0))])
+    labels.push(align(center + top)[
+      #text(size: 8pt, weight: 500, fill: lab)[#it.at(1)]
     ])
-    if i < items.len() - 1 {
-      cols.push(12pt)
-      cells.push(align(center + horizon)[
-        #text(size: 13pt, fill: if dark { silver.transparentize(50%) } else { hairline })[→]
-      ])
+    if i < n - 1 {
+      cols.push(20pt)
+      nodes.push(align(horizon)[#line(length: 100%, stroke: conn)])
+      labels.push([])
     }
   }
-  grid(columns: cols, align: center + horizon, ..cells)
+  grid(columns: cols, row-gutter: 9pt, ..nodes, ..labels)
 }
 
 // ---- vertical numbered steps ------------------------------------------------
@@ -193,71 +207,65 @@
 }
 
 // ---- give / get cards -------------------------------------------------------
-#let ggcol(title, items, filled: false) = block(
-  width: 100%, radius: 2pt, inset: 14pt, breakable: false,
-  fill: if filled { paperdeep } else { none },
-  stroke: if filled { none } else { 0.75pt + hairline },
-)[
-  #eyebrow(title)
-  #v(6pt)
-  #set text(size: 9.6pt)
-  #for it in items {
-    grid(columns: (10pt, 1fr), text(fill: sunriseink)[•], it)
-    v(5pt, weak: true)
+// The two columns are cells of one grid, so the row auto-sizes to the taller
+// side and BOTH cell fills/strokes span that full height — equal boxes for free.
+#let ggcell(title, items) = {
+  eyebrow(title)
+  v(9pt)
+  set text(size: 9.6pt)
+  for (i, it) in items.enumerate() {
+    if i > 0 { v(7pt, weak: true) }
+    grid(columns: (12pt, 1fr), text(fill: sunriseink)[•], it)
   }
-]
+}
 
 #let giveget(gt, gi, tt, ti) = {
-  v(6pt)
+  v(10pt)
   grid(
-    columns: (1fr, 1fr), column-gutter: 24pt,
-    ggcol(gt, gi, filled: false),
-    ggcol(tt, ti, filled: true),
+    columns: (1fr, 1fr), column-gutter: 20pt, inset: 15pt,
+    fill: (c, r) => if c == 1 { paperdeep } else { none },
+    stroke: (c, r) => if c == 0 { 0.75pt + hairline } else { none },
+    ggcell(gt, gi),
+    ggcell(tt, ti),
   )
-  v(6pt)
+  v(10pt)
 }
 
 // ---- callout & pull quote ---------------------------------------------------
 #let callout(q, body) = {
-  v(6pt)
+  v(12pt)
   block(
-    width: 100%, inset: (left: 16pt), breakable: false,
+    width: 100%, inset: (left: 18pt, y: 4pt), breakable: false,
     stroke: (left: 2pt + sunrise),
   )[
     #text(font: serif, style: "italic", size: 12.5pt)[#q]
-    #v(4pt)
+    #v(5pt)
     #note(body)
   ]
-  v(6pt)
+  v(12pt)
 }
 
-// ---- the card mock ----------------------------------------------------------
-#let mockcard() = block(width: 3.05in, radius: 6pt, clip: true, stroke: 0.75pt + hairline)[
-  #block(fill: navy, width: 100%, inset: (x: 15pt, top: 14pt, bottom: 13pt))[
-    #set text(fill: paper)
-    #text(size: 6.6pt, fill: gold, tracking: 1.1pt)[#upper[Knox Pick-Me-Up · Thank you for the safe ride home]]
-    #v(7pt)
-    #text(font: serif, weight: 600, size: 15pt)[One free \ large coffee #text(style: "italic", fill: gold)[— on us.]]
-  ]
-  #block(fill: paper, width: 100%, inset: (x: 15pt, top: 12pt, bottom: 13pt))[
-    #grid(
-      columns: (1fr, auto), align: (left + bottom, right + bottom),
-      text(size: 6.4pt, fill: umber, tracking: 0.9pt)[#upper[Date issued]],
-      fig(12pt, [—  /  —  /  ——], fill: ink),
-    )
-    #v(5pt); #rule; #v(5pt)
-    #text(size: 6.4pt, fill: umber, tracking: 0.9pt)[#upper[Valid one day · Hair of the KAT: free bus fare]]
-    #v(7pt)
-    #text(font: sans, size: 7pt, fill: umber, tracking: 0.4pt)[KPMU-2026-00004217T]
-  ]
-]
-
-// caption beside the card
+// ---- the real card artwork (front), with a caption beside it ----------------
+// `card.svg` is a copy of assets/card.svg (the actual generated card front)
 #let cardrow(caption) = grid(
-  columns: (3.05in, 1fr), column-gutter: 22pt, align: horizon,
-  mockcard(),
-  text(size: 9.6pt, fill: bodybrown)[#caption],
+  columns: (3.5in, 1fr), column-gutter: 22pt, align: horizon,
+  box(radius: 6pt, clip: true, stroke: 0.75pt + hairline)[#image("card.svg", width: 100%)],
+  text(size: 10pt, fill: bodybrown)[#caption],
 )
+
+// a row of collateral thumbnails with a shared caption below
+// pieces: ((path, width), ...)
+#let collateral(pieces, caption) = {
+  v(10pt)
+  grid(
+    columns: pieces.map(p => p.at(1)), column-gutter: 20pt, align: bottom,
+    ..pieces.map(p => box(radius: 4pt, clip: true, stroke: 0.75pt + hairline)[
+      #image(p.at(0), width: 100%)
+    ]),
+  )
+  v(7pt)
+  note(caption)
+}
 
 // ---- part divider (navy plate + its own mini contents) ----------------------
 // items: ((num, title), ...)
@@ -272,15 +280,14 @@
     #text(font: serif, style: "italic", size: 12.5pt, fill: silver)[#fixd(dek)]
     #v(18pt)
     #line(length: 100%, stroke: 0.5pt + silver.transparentize(70%))
-    #v(12pt)
-    #set text(size: 9pt, fill: rgb("#AEB6C6"))
-    #for it in items {
+    #v(14pt)
+    #for (i, it) in items.enumerate() {
+      if i > 0 { v(9pt, weak: true) }
       grid(
-        columns: (0.32in, auto), column-gutter: 4pt,
-        text(font: serif, weight: 600, fill: paper)[#it.at(0)],
-        text(font: serif, weight: 600, fill: paper)[#it.at(1)],
+        columns: (0.34in, auto), column-gutter: 6pt, align: (left + horizon, left + horizon),
+        fig(13pt, it.at(0), fill: gold),
+        text(font: serif, weight: 400, size: 11.5pt, fill: paper)[#it.at(1)],
       )
-      v(6pt, weak: true)
     }
   ]
 }
@@ -358,15 +365,21 @@
 ]
 
 // ---- table of contents helpers ----------------------------------------------
-#let tocgroup(t) = { v(14pt); eyebrow(t); v(6pt) }
-#let tocrow(labeltext, name) = {
-  grid(
-    columns: (auto, 1fr, auto), column-gutter: 6pt, align: (left + horizon, center + horizon, right + horizon),
-    text(size: 10.2pt)[#labeltext],
-    box(width: 100%, inset: (bottom: 2pt))[#text(fill: hairline)[#repeat(gap: 3pt)[.]]],
-    text(font: figify, weight: 700, size: 11pt, fill: umber, number-type: "old-style")[#pageof(name)],
-  )
-  v(3pt)
+#let tocgroup(t) = { v(15pt); eyebrow(t); v(8pt) }
+// num aligned in its own column so "1" and "10" line up; whole row links to
+// the section anchor and jumps there when clicked.
+#let tocrow(num, title, name) = {
+  link(label(name))[
+    #grid(
+      columns: (1.7em, auto, 1fr, auto), column-gutter: 8pt,
+      align: (right + horizon, left + horizon, center + horizon, right + horizon),
+      text(size: 10.2pt, fill: umber)[#num],
+      text(size: 10.2pt, fill: ink)[#title],
+      box(width: 100%, inset: (bottom: 2pt))[#text(fill: hairline)[#repeat(gap: 3pt)[.]]],
+      text(font: figify, weight: 700, size: 11pt, fill: umber, number-type: "old-style")[#pageof(name)],
+    )
+  ]
+  v(5pt)
 }
 
 // a simple branded table: uppercase header with a heavy underline, hairline

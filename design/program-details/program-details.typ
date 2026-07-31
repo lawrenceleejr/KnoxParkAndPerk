@@ -11,6 +11,8 @@
 //   • Each section starts with  #sect(...)  — change the title, subtitle, or
 //     body freely. The table of contents and all page numbers update by
 //     themselves; you never hand-number anything.
+//   • #sect(..., brk: false) lets a short section share a page with the one
+//     before it instead of starting a new page.
 //
 // How to preview / export a PDF:
 //   • Easiest, no install: upload this folder to https://typst.app — it edits
@@ -29,58 +31,53 @@
 #eyebrow[Contents]
 #v(4pt)
 #text(font: serif, weight: 600, size: 24pt)[Program Details]
-#v(9pt)
-#block(width: 6.05in)[#lead[
-  Written so you can open it flat on the table and turn to the one page a
-  partner needs --- every Part III partner page and the FAQ stands on its own.
-]]
-#v(10pt)
+#v(6pt)
 
 #tocgroup("The one-page idea")
-#tocrow("Executive summary", "execsummary")
+#tocrow("", "Executive summary", "execsummary")
 
 #tocgroup("Part I · The Opportunity")
-#tocrow("1  The problem", "s_problem")
-#tocrow("2  The insight", "s_insight")
-#tocrow("3  The idea, in one line", "s_idea")
+#tocrow("1", "The problem", "s_problem")
+#tocrow("2", "The insight", "s_insight")
+#tocrow("3", "The idea, in one line", "s_idea")
 
 #tocgroup("Part II · How It Works")
-#tocrow("4  The patron journey", "s_journey")
-#tocrow("5  The Morning Pick-Me-Up Card", "s_card")
-#tocrow("6  Trust by design", "s_trust")
-#tocrow("7  The car stays put", "s_parking")
+#tocrow("4", "The patron journey", "s_journey")
+#tocrow("5", "The Morning Pick-Me-Up Card", "s_card")
+#tocrow("6", "Trust by design", "s_trust")
+#tocrow("7", "The car stays put", "s_parking")
 
 #tocgroup("Part III · Why It Works for Everyone")
-#tocrow("8  Downtown bars", "s_bars")
-#tocrow("9  Coffee shops", "s_shops")
-#tocrow("10  City of Knoxville & KPD", "s_city")
-#tocrow("11  Knoxville Area Transit (KAT)", "s_kat")
-#tocrow("12  Downtown Parking Authority", "s_park")
-#tocrow("13  Sponsors", "s_sponsors")
+#tocrow("8", "Downtown bars", "s_bars")
+#tocrow("9", "Coffee shops", "s_shops")
+#tocrow("10", "City of Knoxville & KPD", "s_city")
+#tocrow("11", "Knoxville Area Transit (KAT)", "s_kat")
+#tocrow("12", "Downtown Parking Authority", "s_park")
+#tocrow("13", "Sponsors", "s_sponsors")
 
 #tocgroup("Part IV · Making It Real")
-#tocrow("14  What we ask of you", "s_ask")
-#tocrow("15  Built to sustain itself", "s_fund")
-#tocrow("16  The pilot", "s_pilot")
-#tocrow("17  How we'll know it's working", "s_metrics")
-#tocrow("18  Risks, and how we've handled them", "s_risks")
-#tocrow("19  Frequently asked questions", "s_faq")
+#tocrow("14", "What we ask of you", "s_ask")
+#tocrow("15", "Built to sustain itself", "s_fund")
+#tocrow("16", "The pilot", "s_pilot")
+#tocrow("17", "How we'll know it's working", "s_metrics")
+#tocrow("18", "Risks, and how we've handled them", "s_risks")
+#tocrow("19", "Frequently asked questions", "s_faq")
 
-#tocgroup("Closing")
-#tocrow("The invitation", "s_invite")
+#tocgroup("Summary")
+#tocrow("", "The invitation", "s_invite")
 
 #tocgroup("Appendices")
-#tocrow("A  Technical architecture", "a_tech")
-#tocrow("B  The card & anti-forgery serialization", "a_serial")
-#tocrow("C  Data, privacy & backups", "a_privacy")
-#tocrow("D  The print kit & production", "a_print")
-#tocrow("E  Financial detail", "a_finance")
-#tocrow("F  Evidence & references", "a_refs")
-#tocrow("G  Brand at a glance", "a_brand")
-#tocrow("H  Forking this for your community", "a_fork")
+#tocrow("A", "Technical architecture", "a_tech")
+#tocrow("B", "The card & anti-forgery serialization", "a_serial")
+#tocrow("C", "Data, privacy, & backups", "a_privacy")
+#tocrow("D", "The print kit & production", "a_print")
+#tocrow("E", "Financial detail", "a_finance")
+#tocrow("F", "Evidence & references", "a_refs")
+#tocrow("G", "Brand at a glance", "a_brand")
+#tocrow("H", "Forking this for your community", "a_fork")
 
 // ---- Executive summary ------------------------------------------------------
-#sect("", "The one-page idea", "Executive summary", "If someone reads only this page.", "execsummary")
+#sect("", "", "Executive summary", "", "execsummary")
 
 #block(width: 6.05in)[#lead[
   Impaired driving keeps hurting people on Knoxville's roads --- in the region,
@@ -102,11 +99,11 @@
 
 #band[
   #eyebrow("The loop, in one line", fill: gold)
-  #v(8pt)
+  #v(12pt)
   #loop((
     ([1], [Drive downtown, park]),
     ([2], [Take a safe ride home]),
-    ([3], [Show the ride → get the card]),
+    ([3], [Show the ride, get the card]),
     ([4], [Free KAT ride back]),
     ([5], [Free coffee, drive home sober]),
   ), dark: true)
@@ -128,8 +125,8 @@
   The coffee is carried by the shops as customer acquisition --- the way they'd
   fund any promotion --- and KAT rides are KAT's in-kind contribution, so the
   program's only real cash need is a modest set of pilot fixed costs (printing,
-  a part-time coordinator, launch) on the order of *\~\$18,000* for six months.
-  The marginal cost of one more safe ride home is essentially zero. One
+  a part-time coordinator, and launch) on the order of *\~\$18,000* for six
+  months. The marginal cost of one more safe ride home is essentially zero. One
   prevented crash pays for the entire pilot many times over.#refn[1]
 ]
 
@@ -156,14 +153,14 @@
   person actually weighs at 1 a.m. with a car half a block away.
 ]
 
-#v(6pt)
+#v(4pt)
 #statband("The toll, every year", (
   ([67], [people seriously injured in area crashes involving an impaired driver#refn[13]]),
   ([27], [people killed in those crashes, each year#refn[13]]),
   ([1#h(3pt)#text(size: 24pt)[in]#h(3pt)3], [Knox County crash deaths involves an impaired driver#refn[13]]),
 ))
 
-#v(4pt)
+#v(6pt)
 #block(width: 6.05in)[#note[
   Sources: Knoxville Regional Transportation Planning Organization (annual
   injuries and fatalities in area impaired-driving crashes); Knox County Health
@@ -188,9 +185,7 @@
   The framing carries the whole program. The card is a *thank-you*, not a coupon
   --- Knoxville recognizing the most valuable thing a patron did all night,
   which was getting home without driving. Warm and non-preachy, it makes a free
-  coffee feel like recognition rather than a payout, and it sets up
-  community-funded models where tonight's crowd can stand the coffee for
-  tomorrow's safe riders.
+  coffee feel like recognition rather than a payout.
 ]
 
 #callout([
@@ -201,7 +196,7 @@
 ])
 
 #sect("3", "Part I · The Opportunity", "The idea, in one line",
-  "Last call → ride home → morning → coffee. One loop that closes itself.", "s_idea")
+  "Last call → ride home → morning → coffee. One loop that closes itself.", "s_idea", brk: false)
 
 #band[
   #loop((
@@ -258,10 +253,10 @@
   "A wallet-sized thank-you: one free large coffee, and a free ride to come get it.", "s_card")
 
 #cardrow[
-  *The perks.* One free large coffee (no cash value; any add-ons are on the
-  customer). While valid, the card is also free KAT fare --- the free ride back
-  downtown to the car. A serial and unique QR make each card traceable and
-  one-time.
+  This is the card itself. It's good for one free large coffee, and --- while
+  it's valid --- free KAT fare for the ride back to the car. The bartender
+  writes the date by hand at hand-out, and a unique serial and QR make every
+  card traceable and one-time.
 ]
 
 #subhead[Card rules, in plain terms]
@@ -302,6 +297,7 @@
   seconds. Bartender discretion is a feature, not a loophole.
 ]
 
+#v(4pt)
 #block(width: 6.05in)[#note[
   The full logging architecture --- a static site plus a Google Sheet, \$0/month,
   no server to babysit --- is in Appendix A, and the serialization scheme in
@@ -344,9 +340,9 @@
   "The card starts in your hand. The ask is a 10-second date-and-hand at last call.", "s_bars")
 
 #block(width: 6.05in)[#lead[
-  "Free coasters and signage, a safer close to your night, and your name on a
+  Free coasters and signage, a safer close to your night, and your name on a
   city-backed road-safety program --- for handing a dated card to someone who
-  books a ride home."
+  books a ride home.
 ]]
 
 #giveget(
@@ -357,22 +353,24 @@
   "What you get",
   ([Free branded coasters that replace stock you already buy --- and do the marketing passively.],
    [A safer, calmer close to the night and reduced dram-shop-adjacent risk.],
-   [Early-partner billing: your logo on cards and in the press launch.],
+   [Early-partner billing: your name on cards and in the press launch.],
    [\$0 to join at pilot --- the program supplies every material and card book.]),
 )
 
-#block(width: 6.05in)[#note[
-  Where to start: 5--8 anchor venues in the Old City and Market Square whose
-  owners talk to each other. Early billing creates real FOMO for the second
-  wave. A small monthly staff perk --- coffee for the crew --- keeps buy-in high.
-]]
+#collateral(
+  (("coaster-night.svg", 1.55in), ("table-tent.svg", 0.74in)),
+  [The free collateral you'll get --- the night coaster for the bar top and the
+  folded table tent --- carries the program mark and message and does the
+  talking for you. See the full identity in Appendix G (page #pageof("a_brand"))
+  and the complete print kit in Appendix D (page #pageof("a_print")).],
+)
 
 #sect("9", "Part III · The redemption network", "Coffee shops",
-  "Morning traffic from a crowd you don't currently see --- and you control the exposure.", "s_shops")
+  "Morning traffic from a crowd you don't currently see --- and your name on Pick-Me-Up materials all over town.", "s_shops")
 
 #block(width: 6.05in)[#lead[
-  "The late-night crowd, in your shop the next morning --- plus your logo in
-  every bar downtown. Cap your exposure while we prove the ticket math together."
+  A late-night crowd, in your shop the next morning --- and free advertising for
+  your shop on cards, coasters, and signage across downtown.
 ]]
 
 #giveget(
@@ -382,8 +380,7 @@
    [Help co-design the funding model --- real co-ownership, not a terms sheet.]),
   "What you get",
   ([First-time morning visits from customers you rarely reach --- and the regulars a good first cup creates.],
-   [Your logo in every participating bar downtown.],
-   [A monthly redemption cap you control while the model proves out.],
+   [Your shop's name on the cards, coasters, and signage carried by every partner downtown --- free advertising you don't have to make.],
    [Monthly data back: redemptions and average-ticket uplift, so the value is visible.]),
 )
 
@@ -391,23 +388,24 @@
   Why the math works: the card brings in a crowd you don't see in the morning, a
   large coffee is a small pour against a morning ticket that usually runs
   higher, and a good first visit makes a regular. Recruit shops within a short
-  walk of the major garages first --- Gay Street, Market Square, the Old City.
+  walk of the major garages first --- Gay Street, Market Square, and the Old
+  City.
 ]]
 
 #sect("10", "Part III · Credibility & safer streets", "City of Knoxville & KPD",
-  "A positive-incentive complement to enforcement --- a carrot to pair with the stick.", "s_city")
+  "A positive-incentive complement to enforcement.", "s_city")
 
 #block(width: 6.05in)[#lead[
-  "One prevented impaired-driving crash costs the city far more than this
+  One prevented impaired-driving crash costs the city far more than this
   program's entire pilot.#refn[1] The asks are mostly promotion, not an
-  open-ended budget line."
+  open-ended budget line.
 ]]
 
 #giveget(
   "What we ask of you",
   ([*City:* co-promote the already-free evening and weekend municipal parking, and include the program in city communications.],
-   [*City:* optional one-time seed for launch costs --- treated strictly as seed, never as the operating model.],
-   [*KPD:* a public endorsement and a program mention at high-risk moments --- football Saturdays, New Year's, holiday weekends.],
+   [*City:* an optional one-time seed for launch costs --- treated strictly as seed.],
+   [*KPD:* a public endorsement and a program mention at high-risk moments --- football Saturdays, New Year's, and holiday weekends.],
    [*KPD:* no enforcement role inside bars; endorser, not operator.]),
   "What you get",
   ([A measurable, positive complement to enforcement and education --- part of the multi-component approach the evidence actually supports.#refn[3]],
@@ -426,9 +424,9 @@
   "\"Hair of the KAT\": an accepted ride, and a free-ride partner.", "s_kat")
 
 #block(width: 6.05in)[#lead[
-  "Riders already taking the bus home safely should qualify too --- and a valid
+  Riders already taking the bus home safely should qualify too --- and a valid
   card should let anyone ride KAT free while it lasts, including the morning trip
-  back to the car."
+  back to the car.
 ]]
 
 #giveget(
@@ -444,20 +442,20 @@
 )
 
 #block(width: 6.05in)[#note[
-  Structure: the free rides are KAT's in-kind contribution to a shared
-  road-safety goal --- new riders and goodwill in exchange, not a program payout.
-  Sponsorship can support KAT's marketing of the program if useful. There is no
-  longer a free downtown trolley, so this free-ride benefit is something the
-  program provides --- it doesn't lean on a pre-existing service.
+  The free rides are KAT's in-kind contribution to a shared road-safety goal ---
+  new riders and goodwill in exchange, not a program payout. And the audience is
+  receptive: majorities of millennials and Gen-Z say they want to support and
+  invest in public transit,#refn[14] so a free first ride is a natural on-ramp to
+  a lasting rider.
 ]]
 
 #sect("12", "Part III · A worry-free place for the car", "Downtown Parking Authority",
   "We carry your free-nights-and-weekends message to the people who most need to hear it.", "s_park")
 
 #block(width: 6.05in)[#lead[
-  "Downtown parking is already free on nights and weekends --- the problem is
-  that patrons don't know it at the moment they're deciding whether to drive. We
-  put that message on the coaster under their drink."
+  Downtown parking is already free on nights and weekends --- the problem is that
+  patrons don't know it at the moment they're deciding whether to drive. We put
+  that message on the coaster under their drink.
 ]]
 
 #giveget(
@@ -483,9 +481,9 @@
   "Your name on the safe ride home --- in every bar downtown.", "s_sponsors")
 
 #block(width: 6.05in)[#lead[
-  "Annual 'presented by' placement on coasters and cards already in every bar
+  Annual presented-by placement on coasters and cards already in every bar
   downtown --- unusually good placement per dollar --- funding a program whose
-  entire purpose aligns with your interests."
+  entire purpose aligns with your interests.
 ]]
 
 #giveget(
@@ -495,9 +493,9 @@
    [For patron-facing materials: no alcohol brands.]),
   "What you get",
   ([Your logo in a "printing donated by" slot on coasters and cards --- without touching the program mark.],
-   [Association with a positive, city- and KPD-backed road-safety story.],
-   [Natural fit for rideshare companies, auto insurers, trauma systems, parking operators, and downtown property owners.],
-   [A ready-made outreach one-sheet: what it funds, where the logo rides, the spec.]),
+   [Association with a positive, city-backed and KPD-backed road-safety story.],
+   [A natural fit for rideshare companies, auto insurers, trauma systems, parking operators, and downtown property owners.],
+   [A ready-made outreach one-sheet: what it funds, where the logo rides, and the spec.]),
 )
 
 #block(width: 6.05in)[#note[
@@ -523,7 +521,7 @@
   (
     ([*Downtown bars*], [A 10-second date-and-hand at last call; keep card books and a reference behind the bar.]),
     ([*Coffee shops*], [Honor the card for one large coffee and scan it; provide the coffee as customer acquisition; help pick the funding model.]),
-    ([*City of Knoxville*], [Co-promote free evening/weekend parking; include the program in city comms; optional one-time launch seed.]),
+    ([*City of Knoxville*], [Co-promote free evening and weekend parking; include the program in city comms; an optional one-time launch seed.]),
     ([*KPD*], [Public endorsement and a mention at high-risk moments; no enforcement role in bars.]),
     ([*KAT*], [Accept transit tickets as ride proof; accept a valid card as free fare; help communicate late-night service.]),
     ([*Parking Authority*], [Confirm free-parking hours; let the program amplify that message; coordinate on exceptions.]),
@@ -533,7 +531,7 @@
 
 #subhead[The order we recruit in]
 #enum(
-  [*City + KPD first* --- credibility unlocks everything else.],
+  [*City and KPD first* --- credibility unlocks everything else.],
   [*Three anchor coffee shops* --- redemption must exist before issuance; they co-design the funding model.],
   [*Five to eight anchor bars* for the pilot footprint.],
   [*KAT* to confirm ride proof, the free-ride benefit, and service messaging.],
@@ -557,20 +555,20 @@
   (
     ([*A · Merchant-funded* #linebreak() #note[the self-sustaining core]], [Shops provide the coffee as their own customer-acquisition cost. Zero external money; scales automatically with participation. The large coffee is a small pour against a higher morning ticket.]),
     ([*B · Community round-up* #linebreak() #note[parked for the pilot]], [An optional \$1 line on bar tabs --- tonight's crowd stands tomorrow's coffee. Kept as a switch-on-later option; deliberately absent from pilot materials.]),
-    ([*C · Sponsorship tiers* #linebreak() #note[the accelerant]], [Annual "presented by" packages cover fixed costs the per-coffee models don't. Logos ride on coasters and cards already in every bar.]),
+    ([*C · Sponsorship tiers* #linebreak() #note[the accelerant]], [Annual presented-by packages cover fixed costs the per-coffee models don't. Logos ride on coasters and cards already in every bar.]),
     ([*D · Bar partner dues* #linebreak() #note[optional, later]], [A modest membership once foot-traffic value is proven. Held in reserve --- free entry is what makes the network dense at pilot.]),
-    ([*E · Grants & city seed* #linebreak() #note[launch only]], [One-time money for the pilot's fixed costs. Seed, never the operating model.]),
+    ([*E · Grants & city seed* #linebreak() #note[launch only]], [One-time money for the pilot's fixed costs. Seed only.]),
   ),
 )
 
 #band(light: true)[
   #eyebrow("Recommended architecture")
-  #v(6pt)
+  #v(8pt)
   Model *A* as the base (the coffee costs the program nothing in cash), *C* to
-  cover fixed costs, *E* to launch, with *B* held as the community flywheel and
-  *D* in reserve. KAT rides are KAT's in-kind contribution. Under this structure,
-  the marginal cost of one more safe ride home is approximately zero --- which is
-  what makes it durable.
+  cover fixed costs, and *E* to launch, with *B* held as the community flywheel
+  and *D* in reserve. KAT rides are KAT's in-kind contribution. Under this
+  structure, the marginal cost of one more safe ride home is approximately zero
+  --- which is what makes it durable.
 ]
 
 #block(width: 6.05in)[#note[
@@ -584,7 +582,7 @@
   (7em, 5.5em, 1fr),
   ("Phase", "Window", "Milestones"),
   (
-    ([*Design & city buy-in*], [Months 0--2], [City / KPD memorandum of understanding; free-parking co-promotion agreement with the Parking Authority.]),
+    ([*Design & city buy-in*], [Months 0--2], [City and KPD memorandum of understanding; free-parking co-promotion agreement with the Parking Authority.]),
     ([*Partner recruitment*], [Months 2--3], [Three coffee shops, six bars, and KAT signed; funding architecture locked with partners; materials printed.]),
     ([*Pilot launch*], [Month 4], [Press event on a high-visibility weekend.]),
     ([*Pilot run*], [Months 4--9], [Monthly reconciliation; a mid-pilot tune-up.]),
@@ -623,12 +621,12 @@
 
 #band[
   #eyebrow("The privacy stance", fill: gold)
-  #v(6pt)
+  #v(8pt)
   The system stores *no patron data at all* --- a serial, a shop, and a
-  timestamp, nothing more. There are no accounts, no names, no tracking. Cards
-  are anonymous by design, which is exactly what lets KPD endorse the program
-  without it ever feeling like surveillance. That's worth saying out loud to the
-  City, and it's in the FAQ.
+  timestamp, nothing more. There are no accounts, no names, and no tracking.
+  Cards are anonymous by design, which is exactly what lets KPD endorse the
+  program without it ever feeling like surveillance. That's worth saying out loud
+  to the City, and it's in the FAQ.
 ]
 
 #sect("18", "Part IV · Making It Real", "Risks, and how we've handled them",
@@ -639,17 +637,17 @@
   ("Risk", "Mitigation"),
   (
     ([*Bartenders skip it on busy nights*], [A 10-second workflow, staff perks, and coasters that do the marketing passively.]),
-    ([*Patron fears a ticket or tow for leaving the car*], [Lead with free evening/weekend municipal parking; confirm hours with the City and Parking Authority; print them on signage; program contact on the card.]),
-    ([*Perception of promoting drinking*], [Framing is strictly the safe ride home and safer roads; City/KPD endorsement; no alcohol-brand sponsors on patron-facing materials. Full answer in the FAQ.]),
-    ([*Fraud (fake ride screens, duplicates)*], [One-free-coffee cap, one-per-ride rule, serials, expiry, bartender discretion; small leakage accepted as a marketing cost.]),
-    ([*Redemption concentrates on a few shops*], [Per-shop monthly caps at pilot; recruit shops near every major garage; publish the redemption spread.]),
-    ([*Shops lose faith in the coupon math*], [Share ticket-uplift data monthly; community/sponsor funds can backstop the coffee if Model A underperforms.]),
+    ([*Patron fears a ticket or tow for leaving the car*], [Lead with free evening and weekend municipal parking; confirm hours with the City and Parking Authority; print them on signage; program contact on the card.]),
+    ([*Perception of promoting drinking*], [Framing is strictly the safe ride home and safer roads; City and KPD endorsement; no alcohol-brand sponsors on patron-facing materials. Full answer in the FAQ.]),
+    ([*Fraud (fake ride screens, duplicates)*], [One-free-coffee cap, one-per-ride rule, serials, expiry, and bartender discretion; small leakage accepted as a marketing cost.]),
+    ([*Redemption concentrates on a few shops*], [Recruit shops near every major garage and publish the redemption spread so imbalances surface early.]),
+    ([*Shops lose faith in the coupon math*], [Share ticket-uplift data monthly; community and sponsor funds can backstop the coffee if Model A underperforms.]),
     ([*Program conflated with enforcement*], [KPD as endorser only; cards anonymous --- no data on individuals is ever collected.]),
   ),
 )
 
 // ---- FAQ --------------------------------------------------------------------
-#let faq(q, a) = { v(4pt); text(font: serif, weight: 600, size: 12.4pt)[#q]; v(3pt); block(width: 6.35in)[#text(size: 9.9pt, fill: bodybrown)[#a]]; v(8pt) }
+#let faq(q, a) = { v(11pt); text(font: serif, weight: 600, size: 12.4pt)[#q]; v(4pt); block(width: 6.35in)[#text(size: 9.9pt, fill: bodybrown)[#a]] }
 
 #sect("19", "Part IV · Making It Real", "Frequently asked questions",
   "Starting with the hard one.", "s_faq")
@@ -669,8 +667,8 @@
   venues#refn[5] --- attributes this program is deliberately built around. We're
   also honest that the direct evidence for reward programs is *mixed*: the
   responsible reading, which we adopt, is that a reward like this should be _one
-  component of a broader effort_ --- enforcement, education, transit, responsible
-  service --- and should be evaluated, not sold as a silver bullet.#refn[3]
+  component of a broader effort_ --- enforcement, education, transit, and
+  responsible service --- and should be evaluated, not sold as a silver bullet.#refn[3]
 ])
 
 #faq([Doesn't a free ride home just lead people to drink more?], [
@@ -687,11 +685,11 @@
   No. The coffee is carried by participating shops as their own
   customer-acquisition cost, backstopped by sponsors --- not a public payout ---
   and KAT rides are KAT's in-kind contribution. The program's only real cash need
-  is a modest set of fixed costs (printing, a part-time coordinator, launch). Any
-  public seed is one-time and optional. Against that, alcohol-impaired crashes
-  were estimated to cost *\$58 billion* in economic costs and *\$296 billion* in
-  comprehensive societal harm nationally in a single year#refn[1] --- so even a
-  modest local reduction dwarfs the cost of coffee and bus fare.
+  is a modest set of fixed costs (printing, a part-time coordinator, and launch).
+  Any public seed is one-time and optional. Against that, alcohol-impaired
+  crashes were estimated to cost *\$58 billion* in economic costs and *\$296
+  billion* in comprehensive societal harm nationally in a single year#refn[1] ---
+  so even a modest local reduction dwarfs the cost of coffee and bus fare.
 ])
 
 #faq([Why not just tell people not to drink and drive?], [
@@ -705,7 +703,7 @@
 
 #faq([Are you collecting data on people who've been drinking? Is this surveillance?], [
   No, and that's deliberate. The system stores no patron data at all --- only a
-  card serial, a shop, and a timestamp. There are no names, no accounts, no
+  card serial, a shop, and a timestamp. There are no names, no accounts, and no
   tracking. Cards are anonymous, and KPD is an endorser, not an operator: there
   is no enforcement role in bars and nothing that resembles a checkpoint. The
   anonymity is what makes the endorsement possible.
@@ -734,34 +732,34 @@
 ]]
 
 // =============================================================================
-// CLOSING
+// SUMMARY / CLOSING
 // =============================================================================
 #pagebreak()
 #anchor("s_invite")
 #band(deep: true)[
   #eyebrow("The invitation", fill: gold)
-  #v(10pt)
-  #text(font: serif, weight: 600, size: 26pt, fill: paper)[Let's make the safe \ choice the easy one.]
   #v(12pt)
+  #text(font: serif, weight: 600, size: 26pt, fill: paper)[Let's make the safe \ choice the easy one.]
+  #v(14pt)
   #block(width: 5.2in)[#text(size: 11.5pt, fill: silver)[
     Knox Pick-Me-Up asks each partner for something small and gives each one
     something real --- and together it keeps one more impaired driver off
     Knoxville's roads on the nights that matter most. The loop is designed, the
     toolkit is built, and the cost to start is a single sponsor conversation.
   ]]
-  #v(6pt)
+  #v(8pt)
   #block(width: 5.2in)[#text(size: 11.5pt, fill: silver)[
     If you're a bar, a coffee shop, the City, KPD, KAT, the Parking Authority, or
     a sponsor --- there's a page in this book with your name on it. We'd love to
     talk about it.
   ]]
-  #v(24pt)
+  #v(26pt)
   #line(length: 100%, stroke: 0.5pt + silver.transparentize(70%))
-  #v(14pt)
+  #v(16pt)
   #eyebrow("Get in touch", fill: gold)
-  #v(6pt)
+  #v(8pt)
   #text(font: serif, size: 12pt, fill: paper)[hello\@knoxpickmeup.org  ·  knoxpickmeup.org]
-  #v(3pt)
+  #v(4pt)
   #text(size: 9pt, fill: silver)[Knoxville, Tennessee]
 ]
 
@@ -777,7 +775,7 @@
   that keeps running if every volunteer goes on vacation.
 ]]
 
-#v(4pt)
+#v(6pt)
 #band[
   #loop((
     ([1], [Print run makes serialized cards]),
@@ -793,7 +791,7 @@
   Every card's QR encodes a plain link to the public site with the serial
   attached. A *patron* who scans it just lands on the shop map. The *shop's
   scanner page* doesn't follow the link --- it reads the serial off the camera
-  with a regex. Same printed code, two behaviors, zero extra infrastructure.
+  with a regex. Same printed code, two behaviors, and zero extra infrastructure.
 ]
 
 #subhead[The components]
@@ -802,7 +800,7 @@
   [*The redemption endpoint --- a \~30-line Apps Script web app* bound to the Sheet. It answers "was this card already used?" at the counter, in real time; Google hosts, runs, and patches it.],
   [*The scanner* (#raw("redeem/")) --- a self-contained static page opened from a per-shop QR. Tap-to-scan with the phone camera, a manual-entry fallback, and *offline tolerance*: no signal means the scan queues and auto-flushes when the connection returns.],
   [*Pack check-out --- the scanner's admin mode.* Scan a pack's cover QR, pick the bar --- that's the entire "which bar issued this" step, and it's insert-only so a double-scan can't reassign a pack.],
-  [*The dashboard* (#raw("dashboard/")) --- a live, brand-styled page fed from the Sheet: issued/redeemed KPIs, a day×hour heatmap, to-shop and from-bar charts, and integrity tiles. Shareable by link --- the City, KPD, or a reporter can watch the numbers live, because the payload is venue names, timestamps, and counts only.],
+  [*The dashboard* (#raw("dashboard/")) --- a live, brand-styled page fed from the Sheet: issued and redeemed KPIs, a day×hour heatmap, to-shop and from-bar charts, and integrity tiles. Shareable by link --- the City, KPD, or a reporter can watch the numbers live, because the payload is venue names, timestamps, and counts only.],
 )
 
 #block(width: 6.05in)[#note[
@@ -845,13 +843,13 @@
   to ten seconds.
 ])
 
-#appsect("C", "Data, privacy & backups",
+#appsect("C", "Data, privacy, & backups",
   "No patron data exists to lose --- and four independent backup layers for what does.", "a_privacy")
 
 #subhead[What's collected --- and what isn't]
 #block(width: 6.05in)[
   The system stores a card *serial*, a *shop*, and a *timestamp*. There are no
-  names, no accounts, no payment data, no location tracking --- there is no
+  names, no accounts, no payment data, and no location tracking --- there is no
   patron identity anywhere in the system to collect, leak, or subpoena. The only
   card serials that ever leave the Sheet are those of _refused_ scans (already
   redeemed, voided, or invalid), which grant nothing and power duplicate
@@ -866,7 +864,7 @@
     ([*1 · Sheet version history*], [A bad edit or deleted column --- built into Google Sheets, automatic.]),
     ([*2 · Nightly Drive snapshot*], [A mangled or deleted tab --- 30 dated copies kept by a daily trigger.]),
     ([*3 · Nightly off-Google backup*], [Google account loss --- a GitHub Action commits CSVs of every tab; git history is the archive.]),
-    ([*4 · Print artifacts*], [Everything digital at once --- pack sheets and cards carry hand-written date/bar lines.]),
+    ([*4 · Print artifacts*], [Everything digital at once --- pack sheets and cards carry hand-written date and bar lines.]),
   ),
 )
 
@@ -882,19 +880,19 @@
 
 #block(width: 6.05in)[
   The physical kit _is_ the program: the cards are the redeemable item, the packs
-  are the fraud control, the coasters are the advertising. Every generator writes
-  a true-size, print-ready PDF with all type converted to outlines --- hand the
-  files straight to a shop.
+  are the fraud control, and the coasters are the advertising. Every generator
+  writes a true-size, print-ready PDF with all type converted to outlines --- hand
+  the files straight to a shop.
 ]
 
 #ktable(
   (7em, 1fr),
   ("Piece", "Notes"),
   (
-    ([*Card books*], [50 cards per book, a unique QR + serial per card. In printer terms, a raffle-ticket book with variable data --- commoditized and cheap.]),
+    ([*Card books*], [50 cards per book, a unique QR and serial per card. In printer terms, a raffle-ticket book with variable data --- commoditized and cheap.]),
     ([*Pack cover sheets*], [One per book, carrying the pack serial and a check-out QR.]),
     ([*Coasters (two-sided)*], [The advertising medium --- they sit under the drink at the decision moment. Bars burn through them anyway, so the program replaces a cost with free branded stock.]),
-    ([*Signage*], [Table tents, a window decal, and restroom/community posters.]),
+    ([*Signage*], [Table tents, a window decal, and restroom and community posters.]),
     ([*Staff & register*], [A laminated barista one-pager and bar-onboarding sheet; one register QR per shop.]),
   ),
 )
@@ -916,9 +914,9 @@
   (1fr, 6em),
   ("Item", "Estimate"),
   (
-    ([Printing: coasters, cards, signage], [#align(right)[\$4,000]]),
+    ([Printing: coasters, cards, and signage], [#align(right)[\$4,000]]),
     ([Part-time coordinator (reconciliation, restock, partner care)], [#align(right)[\$9,000]]),
-    ([Launch marketing & press event], [#align(right)[\$3,000]]),
+    ([Launch marketing and press event], [#align(right)[\$3,000]]),
     ([Contingency], [#align(right)[\$2,000]]),
     ([*Total fixed*], [#align(right)[*\~\$18,000*]]),
   ),
@@ -936,9 +934,8 @@
 #block(width: 6.05in)[
   The card brings in a late-night crowd shops rarely see in the morning; a large
   coffee is a small pour against a morning ticket that usually runs higher; and a
-  good first visit creates a regular. Shops can cap monthly redemptions while the
-  model proves out, and the dashboard shows each shop its own average-ticket
-  uplift so the value is visible, not assumed.
+  good first visit creates a regular. The dashboard shows each shop its own
+  average-ticket uplift, so the value is visible, not assumed.
 ]
 
 #block(width: 6.05in)[#note[
@@ -955,7 +952,7 @@
   behavioral-design and harm-reduction foundations, alongside the local Knoxville
   figures.
 ]]
-#v(4pt)
+#v(6pt)
 
 #reflist((
   ("The Economic and Societal Impact of Motor Vehicle Crashes, 2019",
@@ -980,7 +977,7 @@
    [NHTSA. The standard U.S. reference rating what's proven vs. promising.],
    "nhtsa.gov/book/countermeasures-that-work"),
   ("Efficacy and cost-effectiveness of subsidized ridesharing as a drunk-driving intervention",
-   [Accident Analysis & Prevention (2020), Columbus, OH. Crash reductions, but modest/expensive savings and a self-reported increase in drinking --- the direct caution behind a small, safe-ride-tied perk.],
+   [Accident Analysis & Prevention (2020), Columbus, OH. Crash reductions, but modest and expensive savings and a self-reported increase in drinking --- the direct caution behind a small, safe-ride-tied perk.],
    "pubmed.ncbi.nlm.nih.gov/32866769/"),
   ("Harm Reduction as an Alcohol-Prevention Strategy",
    [Alcohol Research: Current Reviews (NIAAA), 2018.],
@@ -997,6 +994,9 @@
   ("Local data",
    [Knoxville Regional Transportation Planning Organization (annual injuries and fatalities in area impaired-driving crashes); Knox County Health Department (share of deadly crashes involving an impaired driver).],
    ""),
+  ("Millennials & Mobility / rider attitudes toward public transit",
+   [American Public Transportation Association (APTA), \"Millennials & Mobility\" and follow-on ridership research: younger adults report strong support for investing in and using public transit.],
+   "apta.com (research: millennials and mobility)"),
 ))
 
 #appsect("G", "Brand at a glance",
@@ -1006,9 +1006,9 @@
   columns: (1.3in, 1fr), column-gutter: 22pt, align: horizon,
   image("mark-paper.svg", width: 1.3in),
   text(size: 9.6pt, fill: bodybrown)[
-    *The mark.* A rounded badge cradling a steaming coffee cup --- the morning
-    after the safe ride home, sealed in one glyph. Kept to a two-color navy/paper
-    pair; never outlined, tilted, or effected.
+    *The mark.* A *wine-glass silhouette* cradling a steaming coffee cup --- the
+    night out and the morning after, sealed in one glyph. Kept to a two-color
+    navy and paper pair; never outlined, tilted, or effected.
   ],
 )
 
@@ -1018,7 +1018,7 @@
   ("Color", "Hex", "Role"),
   (
     ([*Paper*], [#raw("#FAF5EB")], [Primary light background; text on dark]),
-    ([*Ink*], [#raw("#241A10")], [Display type, body headings]),
+    ([*Ink*], [#raw("#241A10")], [Display type and body headings]),
     ([*Night*], [#raw("#101A30")], [Primary dark band]),
     ([*Sunrise*], [#raw("#FF8200")], [The accent --- used sparingly: figures, the mark, one rule]),
     ([*Gold*], [#raw("#EDA953")], [Accent text on dark backgrounds]),
@@ -1027,11 +1027,11 @@
 
 #subhead[Type & voice]
 #block(width: 6.05in)[
-  *Fraunces* (serif) for display, *Inter* (sans) for text, *Cormorant* with
+  *Fraunces* (serif) for display, *Inter* (sans) for text, and *Cormorant* with
   old-style figures for statistics --- all free and self-hosted. The voice is
-  warm, wry, and never preachy: never "don't drink and drive," always "good call
-  --- coffee's on us." One accent color, used rarely, so that when orange appears
-  it means something.
+  warm, wry, and never preachy: never "don't drink and drive," always a
+  thank-you for the safe ride home. One accent color, used rarely, so that when
+  orange appears it means something.
 ]
 
 #appsect("H", "Forking this for your community",

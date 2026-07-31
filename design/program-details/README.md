@@ -57,9 +57,12 @@ typst compile --font-path fonts program-details.typ \
 
 ## Notes
 
-- The fonts here are the same three faces as the rest of the brand
-  (`assets/fonts/`), converted from `woff2` to `ttf` because that's what Typst
-  reads. If the brand fonts ever change, re-convert them into `fonts/`.
+- The fonts here are the same faces as the rest of the brand
+  (`assets/fonts/`). The brand ships Fraunces as a *variable* font pinned to
+  weight 900, which Typst can't re-weight on its own, so `fonts/` holds three
+  static cuts instantiated from it — `fraunces-regular` (weight 400),
+  `fraunces-semibold` (600), and `fraunces-italic` — plus Inter and Cormorant.
+  If the brand fonts ever change, re-instantiate those cuts into `fonts/`.
 - Keep the numbers honest: the local injury/fatality figures and the pilot
   budget come from [`../../PROGRAM.md`](../../PROGRAM.md) — update them here if
   they change there.
