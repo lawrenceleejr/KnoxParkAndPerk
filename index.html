@@ -305,6 +305,27 @@
   #kmap .fallback strong { display: block; font-family: var(--f-sans); font-size: .72rem; font-weight: 600;
     letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); margin: 0 0 .5rem; }
   #kmap .fallback ul { margin: 0 0 1.1rem 1.1rem; }
+  /* Participating-businesses list (JS-rendered from SHOPS/BARS). When it's
+     populated the section gets .js-roster and the plain map fallback is hidden,
+     so a JS visitor never sees both. */
+  #bizlist:empty { display: none; }
+  #findus.js-roster .map-panel .fallback { display: none; }
+  .bizlist { margin-top: clamp(2rem, 5vw, 3rem); }
+  .biz-group + .biz-group { margin-top: 2rem; }
+  .biz-group h3 { font-family: var(--f-sans); font-size: .72rem; font-weight: 600;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--orange-ink); margin: 0 0 1rem; }
+  .biz-grid { list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .9rem; }
+  .biz { display: flex; gap: .8rem; align-items: flex-start;
+    border: 1px solid var(--rule); border-radius: 8px; padding: .8rem .9rem; background: var(--paper); }
+  .biz-avatar { flex: 0 0 auto; width: 2.5rem; height: 2.5rem; border-radius: 7px;
+    display: grid; place-items: center; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; }
+  .biz-avatar img { width: 100%; height: 100%; object-fit: contain; }
+  .biz-avatar svg { width: 1.5rem; height: 1.75rem; }
+  .biz-text { display: flex; flex-direction: column; gap: .1rem; min-width: 0; }
+  .biz-name { font-family: var(--f-serif); font-weight: 600; font-size: 1.02rem; line-height: 1.2; }
+  .biz-where { font-size: .8rem; color: var(--ink-2); }
+  .biz-note { font-size: .82rem; color: var(--orange-ink); font-style: italic; margin-top: .25rem; }
   /* The basemap is already near-neutral; this only warms it toward paper so
      it sits in the palette. Markers and controls are in other panes. */
   #kmap .leaflet-tile-pane { filter: sepia(.16) saturate(.9) brightness(1.02); }
@@ -416,8 +437,8 @@
     <ul>
       <li><a href="#how">How it works</a></li>
       <li><a href="#why">Why</a></li>
-      <li><a href="#card">The card</a></li>
-      <li><a href="#findus">The map</a></li>
+      <li><a href="#card">Perks</a></li>
+      <li><a href="#findus">Locations</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a class="nav-cta" href="#join">Partner with us</a></li>
     </ul>
@@ -516,7 +537,7 @@
 <section id="findus">
   <div class="wrap split">
     <div class="section-head">
-      <span class="label">The map</span>
+      <span class="label">Locations</span>
       <h2>Your coffee is a few blocks from your car.</h2>
       <p class="lede">Night-navy dots are the bars handing out cards at last call; sunrise pins are the coffee shops pouring your free cup the next morning &mdash; all a short walk from the downtown garages and lots where the car sits free after 6&nbsp;pm and all weekend.</p>
       <ul class="map-legend">
@@ -553,6 +574,13 @@
         </div>
       </div>
     </div>
+  </div>
+  <!-- Participating businesses: JS builds this from the SHOPS/BARS arrays
+       (single source with the map pins), with each venue's optional logo and
+       optional one-line note. No-JS users get the plain roster in the map
+       panel above. -->
+  <div class="wrap">
+    <div id="bizlist" class="bizlist" aria-label="Participating businesses"></div>
   </div>
 </section>
 
@@ -708,17 +736,27 @@
      the map's job is "your coffee is a few blocks from your car." A shop out
      in another neighborhood would drag the frame wide enough that downtown
      stops being legible — list those on the partners section instead. */
+  /* Each venue may carry two OPTIONAL fields for the participating-businesses
+     list below the map:
+        logo: 'assets/venues/<name>.svg'  — a logo shown in place of the glyph
+        note: 'one short line'            — e.g. what else they offer besides coffee
+     Both are optional; leave them off and the list shows the map glyph + name.
+     Confirm any note with the venue as it signs (placeholders below). */
   const SHOPS = [
     { name: 'Remedy Coffee',   where: 'Old City',          lat: 35.96966, lon: -83.92115 },
     { name: 'K Brew Downtown', where: 'South Gay Street',  lat: 35.96339, lon: -83.91829 },
-    { name: 'Honeybee Coffee', where: 'Downtown South',    lat: 35.96060, lon: -83.91760 },
+    { name: 'Honeybee Coffee', where: 'Downtown South',    lat: 35.96060, lon: -83.91760,
+      note: 'Full breakfast + lunch menu' },
   ];
   const BARS = [
     { name: 'Preservation Pub',              where: 'Market Square',     lat: 35.96556, lon: -83.91985 },
-    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996 },
+    { name: 'Peter Kern Library',            where: 'Union Avenue',      lat: 35.96477, lon: -83.91996,
+      note: 'Hidden craft-cocktail bar' },
     { name: 'Suttree’s High Gravity Tavern', where: 'South Gay Street',  lat: 35.96355, lon: -83.91856 },
-    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745 },
-    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800 },
+    { name: 'Barley’s Taproom',              where: 'Old City',          lat: 35.96905, lon: -83.91745,
+      note: 'Pizza + live music upstairs' },
+    { name: 'Boyd’s Jig & Reel',             where: 'Central Street',    lat: 35.96888, lon: -83.91800,
+      note: 'Whisky bar · live trad music' },
   ];
   /* Every publicly-run downtown facility that is free after 6 pm on weeknights
      and through the weekend — surface lots as much as garages. Names, hours and
@@ -794,13 +832,37 @@
                    autoPanPaddingTopLeft: [48, 58], autoPanPaddingBottomRight: [24, 30] });
   }
 
+  /* The participating-businesses list, built from the same SHOPS/BARS arrays as
+     the map pins so the two never drift. Each card shows the venue's logo if it
+     has one (else the map glyph), its name + neighborhood, and its optional note.
+     Runs independently of the map, so JS visitors get it even if tiles are
+     blocked; adding .js-roster hides the plain no-JS fallback in the map panel. */
+  function esc(s) { return String(s).replace(/[&<>"]/g, c =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+  function bizCard(v, kind) {
+    const avatar = v.logo
+      ? `<img src="${esc(v.logo)}" alt="" loading="lazy">`
+      : PINS[kind].html;
+    const note = v.note ? `<span class="biz-note">${esc(v.note)}</span>` : '';
+    return `<li class="biz"><span class="biz-avatar" aria-hidden="true">${avatar}</span>`
+         + `<span class="biz-text"><span class="biz-name">${esc(v.name)}</span>`
+         + `<span class="biz-where">${esc(v.where)}</span>${note}</span></li>`;
+  }
+  function group(title, list, kind) {
+    return `<div class="biz-group"><h3>${title}</h3><ul class="biz-grid">`
+         + list.map(v => bizCard(v, kind)).join('') + '</ul></div>';
+  }
+  function renderBizList() {
+    const el = document.getElementById('bizlist');
+    if (!el) return;
+    el.innerHTML = group('Free coffee in the morning', SHOPS, 'shop')
+                 + group('Card-issuing bars', BARS, 'bar');
+    const sec = document.getElementById('findus');
+    if (sec) sec.classList.add('js-roster');
+  }
+
   function build() {
-    // Keep the static roster for screen-reader and no-tiles users instead of
-    // deleting it: move it out of the map container (which Leaflet takes over)
-    // and hide it visually — the map already shows the same venues sighted.
-    const fb = host.querySelector('.fallback');
-    if (fb) { fb.classList.add('sr-only'); host.parentNode.insertBefore(fb, host); }
-    host.innerHTML = '';
+    host.innerHTML = '';   // the roster now lives in #bizlist; Leaflet takes over #kmap
     map = L.map(host, {
       scrollWheelZoom: false,          // the page scrolls past this; click to zoom
       zoomControl: true,
@@ -849,6 +911,10 @@
     }
     return ready;
   }
+
+  // the business list is cheap and static — render it up front, independent of
+  // the map tiles loading
+  renderBizList();
 
   // load when the section comes into reach (or right away on old browsers)
   if ('IntersectionObserver' in window) {
