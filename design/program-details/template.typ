@@ -355,6 +355,11 @@
         line(length: 1.1in, stroke: 0.75pt + gold.transparentize(60%))
         v(10pt)
         text(font: sans, weight: 600, size: 9pt, tracking: 2pt)[#upper[Program Details]]
+        v(6pt)
+        // auto-updates to the date the PDF is compiled
+        text(font: serif, style: "italic", size: 12pt, fill: gold)[
+          #datetime.today().display("[month repr:long] [day padding:none], [year]")
+        ]
         v(9pt)
         text(font: serif, size: 13pt, fill: rgb("#C6CEDC"))[
           A downtown Knoxville road-safety partnership — rewarding the safe ride home with tomorrow's coffee.
