@@ -427,7 +427,7 @@
 
 // ---- acknowledgement page (thanks + a blank space for the list) -------------
 // `credit` prints a small italic colophon line at the foot of the page
-#let ackpage(title, body, lbl, credit: none, names: ()) = {
+#let ackpage(title, body, lbl, credit: none, names: (), cta: none) = {
   pagebreak()
   anchor(lbl)
   v(0.5in)
@@ -447,6 +447,12 @@
       v(20pt)
       set text(font: serif, size: 14pt, fill: ink)
       par(leading: 1.0em, names.map(n => [#n]).join(linebreak()))
+    }
+    #if cta != none {
+      v(26pt)
+      block(width: 4.7in)[
+        #text(font: serif, style: "italic", size: 12.5pt, fill: umber)[#cta]
+      ]
     }
   ]
   // any remaining space is intentionally open for more names as partners and

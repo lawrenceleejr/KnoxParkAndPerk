@@ -1159,7 +1159,10 @@
   keep the books stocked, and spread the word --- the whole program runs on you.
   Thank you.],
   "s_ack_volunteers",
-  names: ("Tova Holmes",),
+  names: ("Tova Holmes", "Lawrence Lee"),
+  cta: [Want to help carry the safe ride home? We'd love to have you. Whether it's
+  handing out cards, spreading the word, or lending a skill, reach out at
+  hello\@knoxpickmeup.org and join the team.],
   credit: [Knox Pick-Me-Up was designed and implemented by Lawrence Lee of
   Downtown Knoxville, and inspired by #link("https://thebarfairies.org")[thebarfairies.org].],
 )
