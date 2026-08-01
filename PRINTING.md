@@ -18,7 +18,7 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 | **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
 | **Sponsor one-sheet** | `tools/build_sponsor.py` → `print/sponsor/` (letter-size) | outreach leave-behind |
-| **Stickers** (laptop / promo) | `tools/build_stickers.py` → `print/stickers/` (a big die-cut mark, and a wordmark plate with name + tagline + website) | giveaways — laptops, water bottles, notebooks |
+| **Stickers** (laptop / promo) | `tools/build_stickers.py` → `print/stickers/` (a big die-cut mark, and a bold wordmark lockup: name + tagline + website) | giveaways — laptops, water bottles, notebooks |
 
 Optionally, a **sponsor logo** rides in a small "printing donated by" slot on
 the card back (`build_cards.py --sponsor logo.svg`) and both coaster sides
@@ -153,7 +153,7 @@ banners change.
 python3 tools/build_stickers.py
 # writes .svg + .pdf into print/stickers/:
 #   sticker-mark       just the mark, ~4in tall (the pin tip stays visible)
-#   sticker-wordmark   name + tagline + website on a navy plate (~3.6 x 1.5in)
+#   sticker-wordmark   bold, left-aligned name + tagline + website (die-cut to type)
 ```
 
 Order them as **die-cut (or kiss-cut) vinyl** from any sticker house. The
