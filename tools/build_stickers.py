@@ -4,8 +4,9 @@ whole kit reads as one program.
 
 Builds, into print/stickers/ (gitignored), an SVG and a true-size print-ready
 PDF:
-  sticker-laptop   die-cut mark (the pin silhouette) with the website on a
-                   small chip below — cut to the outline. ~2.4 x 3.1 in.
+  sticker-laptop   the mark with the website fused onto the pin as one shape,
+                   on a transparent ground — ~2.4 x 2.9 in. No border: the
+                   printer adds the die-cut white border and bleed.
 
 All type is converted to outlines, so any sticker shop can run the file as-is.
 
@@ -22,32 +23,30 @@ from build_collateral import (  # noqa: E402
     PAPER, NIGHT, GOLD, SITE_LABEL, text, svg, mark, mark_w, write_pdf, inter6,
 )
 
-UPI = 150                       # sticker units per inch (360 wide ≈ 2.4 in)
+UPI = 120                       # sticker units per inch (~2.4 x 2.9 in overall)
 SITE_UP = SITE_LABEL.upper()    # KNOXPICKMEUP.ORG
 
 
 def laptop_sticker():
-    """The mark as a die-cut sticker (cut to the pin outline), with the website
-    on a small navy chip tucked under it. A white keyline around both shapes is
-    the cut path."""
-    W, H = 360, 470
+    """The mark with the website on a small navy pill fused to the pin's point,
+    so the whole thing is ONE cohesive die-cut silhouette. No keyline / border —
+    the printer adds the white die-cut border and bleed."""
+    h = 300                              # the pin
+    pin_top = 6
+    pin_w = mark_w(h)
+    _, url_w = text(inter6, SITE_UP, 15, 0, 0, GOLD, tracking=0.08)
+    pill_w = url_w + 42
+    pill_h = 46
+    W = round(max(pin_w, pill_w) + 16)   # crop tight to the artwork
     cx = W / 2
-    keyline = '#ffffff'
-    b = []
-    # the mark, with a white halo behind it (a slightly larger mark in white)
-    h = 300
-    b.append(mark(cx - mark_w(h + 15) / 2, 8, h + 15, shield=keyline, cup=keyline))
-    b.append(mark(cx - mark_w(h) / 2, 20, h, shield=NIGHT, cup=PAPER))
-    # website chip — sized to the text so it never clips
-    _, url_w = text(inter6, SITE_UP, 17, 0, 0, GOLD, tracking=0.10)
-    chip_h, chip_y = 58, 356
-    chip_w = url_w + 56
-    b.append(f'<rect x="{cx - chip_w/2 - 6}" y="{chip_y - 6}" width="{chip_w + 12}" '
-             f'height="{chip_h + 12}" rx="{chip_h/2 + 6}" fill="{keyline}"/>')
-    b.append(f'<rect x="{cx - chip_w/2}" y="{chip_y}" width="{chip_w}" height="{chip_h}" '
-             f'rx="{chip_h/2}" fill="{NIGHT}"/>')
-    b.append(text(inter6, SITE_UP, 17, cx, chip_y + chip_h / 2 + 6, GOLD,
-                  tracking=0.10, anchor='middle')[0])
+    point_y = pin_top + h                # tip of the pin
+    pill_y = point_y - 16                # fuse the pill onto the tip
+    H = round(pill_y + pill_h + 8)
+    b = [f'<rect x="{cx - pill_w/2}" y="{pill_y}" width="{pill_w}" height="{pill_h}" '
+         f'rx="{pill_h/2}" fill="{NIGHT}"/>',
+         mark(cx - pin_w / 2, pin_top, h, shield=NIGHT, cup=PAPER),
+         text(inter6, SITE_UP, 15, cx, pill_y + pill_h / 2 + 5, GOLD,
+              tracking=0.08, anchor='middle')[0]]
     return svg(W, H, ''.join(b),
                f'Knox Pick-Me-Up die-cut laptop sticker — {SITE_LABEL}')
 
@@ -65,8 +64,9 @@ def main():
     open(svg_f, 'w').write(body)
     write_pdf(body, svg_f[:-4] + '.pdf', UPI)   # true-size print-ready PDF
     print(f'{name:20s} -> {svg_f}  (+ .pdf)')
-    print('Print as a die-cut (or kiss-cut) vinyl sticker, ~2.4 x 3.1 in. The '
-          'PDF is true-size with type outlined, so no fonts are needed at the shop.')
+    print('Print as a die-cut (or kiss-cut) vinyl sticker, ~2.4 x 2.9 in, on a '
+          'transparent ground — the shop adds the white die-cut border and bleed. '
+          'Type is outlined, so no fonts are needed at the shop.')
 
 
 if __name__ == '__main__':

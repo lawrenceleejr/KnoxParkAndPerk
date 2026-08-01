@@ -152,11 +152,13 @@ banners change.
 ```sh
 python3 tools/build_stickers.py
 # writes .svg + .pdf into print/stickers/:
-#   sticker-laptop   die-cut mark with the website on a chip (~2.4 x 3.1 in)
+#   sticker-laptop   the mark with the website fused on as one shape (~2.4 x 2.9 in)
 ```
 
-Order it as **die-cut (or kiss-cut) vinyl** from any sticker house. It's the
-cheapest way to put the website in people's hands.
+Order it as **die-cut (or kiss-cut) vinyl** from any sticker house. The artwork
+sits on a transparent ground with **no border** — the shop cuts to the outline
+and adds the white die-cut border and bleed. It's the cheapest way to put the
+website in people's hands.
 
 These are **generic branding items** — one design for every venue, no
 per-shop customization. (The only per-shop artifact is the register QR in
