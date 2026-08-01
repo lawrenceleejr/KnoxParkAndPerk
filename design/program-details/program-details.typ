@@ -343,9 +343,9 @@
   "The card starts in your hand. The ask is a 10-second date-and-hand at last call.", "s_bars")
 
 #block(width: 6.05in)[#lead[
-  Free coasters and signage, a safer close to your night, and your name on a
-  city-backed road-safety program --- for handing a dated card to someone who
-  books a ride home.
+  A safer close to your night, your name on a city-backed road-safety program,
+  and branded coasters and signage that carry it --- all for handing a dated card
+  to someone who books a ride home.
 ]]
 
 #block(width: 6.05in)[
@@ -361,18 +361,20 @@
    [Keep a book of cards behind the bar and a laminated reference by the register.],
    [A quick pre-shift mention so staff know the drill.]),
   "What you get",
-  ([Free branded coasters that replace stock you already buy --- and do the marketing passively.],
+  ([Branded coasters and signage that replace the stock you already put out --- doing your marketing passively.],
    [A safer, calmer close to the night and reduced dram-shop-adjacent risk.],
-   [Early-partner billing: your name on cards and in the press launch.],
-   [\$0 to join at pilot --- the program supplies every material and card book.]),
+   [Early-partner billing: your name on the cards and in the press launch.],
+   [A visible role in a city- and KPD-backed safety effort your regulars will notice.]),
 )
 
 #collateral(
-  (("coaster-night.svg", 1.5in), ("table-tent.svg", 0.72in)),
-  [The free collateral you'll get --- the night coaster for the bar top and the
-  folded table tent --- carries the program mark and message and does the
-  talking for you. See the full identity in Appendix G (page #pageof("a_brand"))
-  and the complete print kit in Appendix D (page #pageof("a_print")).],
+  (("coaster-night.svg", 1.5in), ("window-sticker.svg", 1.5in),
+   ("sign-bathroom.svg", 1.28in), ("table-tent.svg", 0.68in)),
+  [The kit you'll run --- the night coaster on the bar, the window decal at the
+  door, the restroom poster, and the folded table tent --- carries the program
+  mark and message and does the talking for you. See the full identity in
+  Appendix G (page #pageof("a_brand")) and the complete print kit in Appendix D
+  (page #pageof("a_print")).],
 )
 
 #sect("9", "Part III · The redemption network", "Coffee shops",
