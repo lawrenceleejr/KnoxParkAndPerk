@@ -127,11 +127,12 @@
 #subhead[The ask, and the cost]
 #block(width: 6.05in)[
   The coffee is carried by the shops as customer acquisition --- the way they'd
-  fund any promotion --- and KAT rides are KAT's in-kind contribution, so the
-  program's only real cash need is a modest set of pilot fixed costs (printing,
-  a part-time coordinator, and launch) on the order of *\~\$18,000* for six
-  months. The marginal cost of one more safe ride home is essentially zero. One
-  prevented crash pays for the entire pilot many times over.#refn[1]
+  fund any promotion --- while the rides and the staff time are in kind, and
+  hosting and upkeep are donated. So the program's only real cash need is printing
+  and a web domain: *a few hundred to low four figures a year*, which a round-up,
+  a tip jar, a sponsor, or a grant can each cover on its own. The marginal cost of
+  one more safe ride home is essentially zero. One prevented crash pays for years
+  of it.#refn[1]
 ]
 
 // =============================================================================
@@ -417,7 +418,7 @@
 #giveget(
   "What we ask of you",
   ([*City:* co-promote the already-free evening and weekend municipal parking, and include the program in city communications.],
-   [*City:* an optional one-time seed for launch costs --- treated strictly as seed.],
+   [*City:* optional funding for the program's small material costs --- at launch or as ongoing support; it pays for printing and reporting, never the coffee.],
    [*KPD:* a public endorsement and a program mention at high-risk moments --- football Saturdays, New Year's, and holiday weekends.],
    [*KPD:* no enforcement role inside bars; endorser, not operator.]),
   "What you get",
@@ -501,7 +502,7 @@
 
 #giveget(
   "What we ask of you",
-  ([An annual sponsorship that covers fixed costs the per-coffee models don't --- printing and a coordinator.],
+  ([An annual sponsorship that covers the program's cash costs --- printing and reporting.],
    [A logo file to the spec in the outreach one-sheet.],
    [For patron-facing materials: no alcohol brands.]),
   "What you get",
@@ -534,7 +535,7 @@
   (
     ([*Downtown bars*], [A 10-second date-and-hand at last call; keep card books and a reference behind the bar.]),
     ([*Coffee shops*], [Honor the card for one large coffee and scan it; provide the coffee as customer acquisition; help pick the funding model.]),
-    ([*City of Knoxville*], [Co-promote free evening and weekend parking; include the program in city comms; an optional one-time launch seed.]),
+    ([*City of Knoxville*], [Co-promote free evening and weekend parking; include the program in city comms; optional funding for materials, at launch or ongoing.]),
     ([*KPD*], [Public endorsement and a mention at high-risk moments; no enforcement role in bars.]),
     ([*KAT*], [Accept transit tickets as ride proof; accept a valid card as free fare; help communicate late-night service.]),
     ([*Parking Authority*], [Confirm free-parking hours; let the program amplify that message; coordinate on exceptions.]),
@@ -554,12 +555,11 @@
 )
 
 #sect("15", "Part IV · Making It Real", "Built to sustain itself",
-  "The perk is always free to the patron who took the safe ride. Here's who carries it.", "s_fund")
+  "The perk is always free to the patron who took the safe ride --- and the program's own costs are small. Here's who carries them.", "s_fund")
 
 #block(width: 6.05in)[#lead[
-  The funding model is deliberately open --- it gets locked with partners as they
-  come on board --- but one constraint is fixed. Candidate streams, roughly in
-  order of long-run durability:
+  The funding model is deliberately open and gets locked with partners as they
+  come on board. The streams, roughly in order of long-run durability:
 ]]
 
 #ktable(
@@ -567,26 +567,25 @@
   ("Stream", "How it works"),
   (
     ([*A · Merchant-funded* #linebreak() #note[the self-sustaining core]], [Shops provide the coffee as their own customer-acquisition cost. Zero external money; scales automatically with participation. The large coffee is a small pour against a higher morning ticket.]),
-    ([*B · Community round-up* #linebreak() #note[parked for the pilot]], [An optional \$1 line on bar tabs --- tonight's crowd stands tomorrow's coffee. Kept as a switch-on-later option; deliberately absent from pilot materials.]),
-    ([*C · Sponsorship tiers* #linebreak() #note[the accelerant]], [Annual presented-by packages cover fixed costs the per-coffee models don't. Logos ride on coasters and cards already in every bar.]),
-    ([*D · Bar partner dues* #linebreak() #note[optional, later]], [A modest membership once foot-traffic value is proven. Held in reserve --- free entry is what makes the network dense at pilot.]),
-    ([*E · Grants & city seed* #linebreak() #note[launch only]], [One-time money for the pilot's fixed costs. Seed only.]),
+    ([*B · Round-up & tip jar* #linebreak() #note[the community flywheel]], [An optional \$1 round-up on bar tabs, plus a tip jar on the counter, lets tonight's crowd chip in for the program's small running costs.]),
+    ([*C · Sponsorship tiers* #linebreak() #note[the accelerant]], [Annual presented-by packages cover the printing costs. Logos ride on coasters and cards already in every bar.]),
+    ([*D · Grants & city support* #linebreak() #note[welcome, ongoing]], [Grants and City funding --- to launch and, if the City chooses, as ongoing support for printing and reporting. Public money funds materials, never the coffee.]),
   ),
 )
 
-#band(light: true)[
-  #eyebrow("Recommended architecture")
-  #v(8pt)
-  Model *A* as the base (the coffee costs the program nothing in cash), *C* to
-  cover fixed costs, and *E* to launch, with *B* held as the community flywheel
-  and *D* in reserve. KAT rides are KAT's in-kind contribution. Under this
-  structure, the marginal cost of one more safe ride home is approximately zero
-  --- which is what makes it durable.
-]
-
-#block(width: 6.05in)[#note[
-  Illustrative pilot fixed costs and coupon economics are in Appendix E.
-]]
+#subhead[What it costs to run]
+#giveget(
+  "Cash costs",
+  ([Web domain renewal --- about \$20 a year.],
+   [Printing bar and community materials (coasters, cards, signage, and table tents) --- scales with the program; roughly \$500--1,000 to outfit a pilot footprint.],
+   [Printing partner and agency reports --- about \$20 a year per partner, plus copies for the City, KPD, and KAT.]),
+  "Free & in-kind",
+  ([Website and system hosting --- \$0, on GitHub Pages.],
+   [Maintenance and development --- donated by Lawrence Lee.],
+   [The coffee --- carried by participating shops.],
+   [The KAT rides --- KAT's in-kind contribution.],
+   [Distribution and scanning labor --- venue staff, as part of the hand-off.]),
+)
 
 #sect("16", "Part IV · Making It Real", "The pilot",
   "One footprint, one season, then evaluate honestly and scale.", "s_pilot")
@@ -697,12 +696,14 @@
 #faq([Is this public money buying people coffee?], [
   No. The coffee is carried by participating shops as their own
   customer-acquisition cost, backstopped by sponsors --- not a public payout ---
-  and KAT rides are KAT's in-kind contribution. The program's only real cash need
-  is a modest set of fixed costs (printing, a part-time coordinator, and launch).
-  Any public seed is one-time and optional. Against that, alcohol-impaired
-  crashes were estimated to cost *\$58 billion* in economic costs and *\$296
-  billion* in comprehensive societal harm nationally in a single year#refn[1] ---
-  so even a modest local reduction dwarfs the cost of coffee and bus fare.
+  the rides and staff time are in kind, and hosting and upkeep are donated. The
+  program's only real cash need is printing and a web domain, on the order of a
+  few hundred to low four figures a year. City funding is welcome --- for launch
+  or as ongoing support --- but it pays for materials, never the coffee, and the
+  program does not depend on it. Against that, alcohol-impaired crashes were
+  estimated to cost *\$58 billion* in economic costs and *\$296 billion* in
+  comprehensive societal harm nationally in a single year#refn[1] --- so even a
+  modest local reduction dwarfs the cost of coffee and bus fare.
 ])
 
 #faq([Why not just tell people not to drink and drive?], [
@@ -920,27 +921,29 @@
 ]]
 
 #appsect("E", "Financial detail",
-  "The cash budget is fixed costs --- not a per-coffee payout.", "a_finance")
+  "The cash budget is printing and a domain --- not a per-coffee payout.", "a_finance")
 
-#subhead[Illustrative pilot fixed costs · 6 months]
+#subhead[Estimated annual cash costs]
 #ktable(
-  (1fr, 6em),
+  (1fr, 9.5em),
   ("Item", "Estimate"),
   (
-    ([Printing: coasters, cards, and signage], [#align(right)[\$4,000]]),
-    ([Part-time coordinator (reconciliation, restock, partner care)], [#align(right)[\$9,000]]),
-    ([Launch marketing and press event], [#align(right)[\$3,000]]),
-    ([Contingency], [#align(right)[\$2,000]]),
-    ([*Total fixed*], [#align(right)[*\~\$18,000*]]),
+    ([Web domain renewal], [#align(right)[\~\$20]]),
+    ([Printing --- bar & community materials (scales with the program)], [#align(right)[\~\$500--1,000]]),
+    ([Printing --- partner & agency reports (\~\$20/yr per partner + City, KPD, KAT)], [#align(right)[\~\$200--500]]),
+    ([Website & system hosting (GitHub Pages)], [#align(right)[\$0]]),
+    ([Maintenance & development (donated, Lawrence Lee)], [#align(right)[\$0]]),
+    ([*Total cash, pilot scale*], [#align(right)[*\~\$700--1,500*]]),
   ),
 )
 
 #block(width: 6.05in)[
-  The coffee itself is carried by participating shops (Model A) and backstopped by
-  sponsorship if a shop needs it; KAT rides are KAT's in-kind contribution. So the
-  program's cash budget is essentially the fixed costs above, not a per-perk
-  payout --- and the marginal cost of one more safe ride home is approximately
-  zero.
+  Everything else is carried in kind: the coffee by participating shops (Model A),
+  the rides by KAT, and the distribution and scanning labor by venue staff. So the
+  program's cash budget is essentially printing and a domain --- it scales with the
+  size of the program, not with the number of coffees --- and the marginal cost of
+  one more safe ride home is approximately zero. Grants, City support, sponsorship,
+  round-ups, and a counter tip jar can each cover the cash line on their own.
 ]
 
 #subhead[Coupon economics (Model A), and why shops say yes]
@@ -952,7 +955,7 @@
 ]
 
 #block(width: 6.05in)[#note[
-  Sponsorship tiers cover the fixed costs above; logos ride on coasters and cards
+  Sponsorship tiers cover the cash costs above; logos ride on coasters and cards
   already in every bar downtown --- unusually good placement per dollar.
 ]]
 
