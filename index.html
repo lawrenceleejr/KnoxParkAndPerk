@@ -425,6 +425,15 @@
   .cta p { margin-top: 1.4rem; color: var(--cream-2); max-width: 52ch; }
   .cta .actions { margin-top: 2.6rem; }
 
+  /* ---------- Program Details booklet ---------- */
+  .booklet { background: var(--paper-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .booklet .wrap { display: grid; grid-template-columns: minmax(0, 19rem) 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
+  .booklet-cover { display: block; border-radius: 5px; overflow: hidden; border: 1px solid var(--rule); box-shadow: 0 24px 50px -26px rgba(16, 26, 48, .5); transition: transform .18s ease, box-shadow .18s ease; }
+  .booklet-cover:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -26px rgba(16, 26, 48, .55); }
+  .booklet-cover img { display: block; width: 100%; height: auto; }
+  .booklet .actions { margin-top: 2rem; }
+  @media (max-width: 760px) { .booklet .wrap { grid-template-columns: 1fr; justify-items: start; } .booklet-cover { max-width: 15rem; } }
+
   /* ---------- Footer ---------- */
   footer { padding: 3rem 0 3.5rem; font-size: .85rem; color: var(--ink-2); }
   footer .wrap {
@@ -458,6 +467,7 @@
       <li><a href="#card">Perks</a></li>
       <li><a href="#findus">Locations</a></li>
       <li><a href="#faq">FAQ</a></li>
+      <li><a href="#booklet">Booklet</a></li>
       <li><a class="nav-cta" href="#join">Partner with us</a></li>
     </ul>
   </div>
@@ -682,6 +692,22 @@
       <details><summary>How can I support this?</summary><p>Tip a little extra at the bar and the coffee shop &mdash; easy to do when a ride you skipped just saved you the cost of one. Use the card as an excuse to try a partner business you haven&rsquo;t been to yet; the roster&rsquo;s <a href="#findus">on the map</a>. And once you&rsquo;ve found a favorite, keep coming back &mdash; repeat customers are exactly what makes the math work for the bars and shops carrying this.</p></details>
       <details><summary>Does the map track me?</summary><p>No. The map is <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> data (drawn by <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>), and it only loads if you scroll down to it. If you tap &ldquo;find the coffee near me,&rdquo; your browser asks your permission first, and your location is used right there on your phone to work out which shop is closest &mdash; it isn&rsquo;t sent to us or stored anywhere. Same as the cards themselves: this program collects nothing about you.</p></details>
       <details><summary>Is this a City of Knoxville program?</summary><p>Knox Pick-Me-Up is a proposed public-private partnership, currently in the pilot design phase, seeking partnership with the City of Knoxville, the Knoxville Police Department, and downtown businesses.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="booklet" id="booklet">
+  <div class="wrap">
+    <a class="booklet-cover" href="design/Knox-Pick-Me-Up-Program-Details.pdf" target="_blank" rel="noopener" aria-label="Open the Program Details booklet (PDF, opens in a new tab)">
+      <img src="assets/program-details-cover.png" width="1275" height="1650" alt="Cover of the Knox Pick-Me-Up Program Details booklet" loading="lazy">
+    </a>
+    <div class="section-head">
+      <span class="label">Go deeper</span>
+      <h2>Program Details Booklet</h2>
+      <p class="lede">The whole program in one place — how the loop works, why every partner comes out ahead, the pilot plan and budget, the evidence behind it, and the brand. Written so you can hand it to a bar, a coffee shop, the City, KPD, or KAT.</p>
+      <div class="actions">
+        <a class="btn btn-orange" href="design/Knox-Pick-Me-Up-Program-Details.pdf" target="_blank" rel="noopener">Read the booklet (PDF)</a>
+      </div>
     </div>
   </div>
 </section>
