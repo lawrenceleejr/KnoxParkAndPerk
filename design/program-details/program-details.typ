@@ -1159,6 +1159,7 @@
   keep the books stocked, and spread the word --- the whole program runs on you.
   Thank you.],
   "s_ack_volunteers",
+  names: ("Tova Holmes",),
   credit: [Knox Pick-Me-Up was designed and implemented by Lawrence Lee of
   Downtown Knoxville, and inspired by #link("https://thebarfairies.org")[thebarfairies.org].],
 )
