@@ -940,11 +940,12 @@
   (
     ([Card books --- \~52 books of 50], [#align(right)[\~\$300]]),
     ([Coasters, two-sided --- five bars], [#align(right)[\~\$400]]),
-    ([Signage --- window decals, table tents, posters], [#align(right)[\~\$200]]),
+    ([Table tents & posters], [#align(right)[\~\$150]]),
+    ([Window decals --- \~\$15/shop, replaced \~every 2 years], [#align(right)[\~\$45]]),
     ([Partner & agency reports (per partner + City, KPD, KAT)], [#align(right)[\~\$200]]),
     ([Web domain renewal], [#align(right)[\~\$20]]),
     ([Hosting, coordination, tech --- volunteer], [#align(right)[\$0]]),
-    ([*Total cash, year one*], [#align(right)[*\~\$1,100*]]),
+    ([*Total cash, year one*], [#align(right)[*\~\$1,120*]]),
   ),
 )
 

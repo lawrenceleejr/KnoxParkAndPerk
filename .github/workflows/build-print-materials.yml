@@ -85,7 +85,7 @@ jobs:
             echo "**Signage** — \`table-tent\` (4×10in fold), \`window-sticker\` (5.6in round), \`sign-community\`, \`sign-bathroom\` (8.5×11in)"
             echo "**Staff sheets** — \`barista-one-pager\`, \`bar-onboarding\` (8.5×11in)"
             echo "**Sponsor** — \`sponsor-one-sheet\` (8.5×11in)"
-            echo "**Stickers** — \`sticker-round-navy\`, \`sticker-round-paper\` (3in), \`sticker-die\`, \`sticker-bar\` (laptop / promo; each carries the website)"
+            echo "**Sticker** — \`sticker-laptop\` (die-cut mark; carries the website)"
             echo ""
             echo "Download the **print-materials** artifact below and hand the PDFs to any print shop."
           } >> "$GITHUB_STEP_SUMMARY"
