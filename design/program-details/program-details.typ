@@ -25,10 +25,11 @@
 #show: conf
 
 // -----------------------------------------------------------------------------
-#cover()
+#if withcover { cover() }
 
-// keep the inside-front-cover blank so the contents open on a right-hand page
-#pagebreak(to: "odd")
+// in the bound book, keep the inside-front-cover blank so the contents open on a
+// right-hand page (only when a cover precedes them)
+#if forprint and withcover { pagebreak(to: "odd") }
 
 // ---- Contents ---------------------------------------------------------------
 #eyebrow[Contents]
@@ -1126,6 +1127,14 @@
 ])
 
 // -----------------------------------------------------------------------------
-// keep an even page count with the back cover as the final leaf (for binding)
-#pagebreak(to: "even")
-#backcover()
+// keep an even page count for binding. With a cover, pad then place the back
+// cover as the final (even) leaf; for the cover-less interior, add at most one
+// trailing blank so the count is even.
+#if forprint and withcover { pagebreak(to: "even") }
+#if withcover { backcover() }
+#if forprint and not withcover {
+  context {
+    let pages = query(<pm>).map(m => m.location().page())
+    if pages.len() > 0 and calc.odd(calc.max(..pages)) { pagebreak() }
+  }
+}

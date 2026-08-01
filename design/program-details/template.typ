@@ -34,11 +34,27 @@
   font: figify, weight: 700, size: size, fill: fill, number-type: "old-style",
 )[#body]
 
+// ---- build target -----------------------------------------------------------
+// choose with `typst compile --input target=...`:
+//   screen   (default) — on-screen / web: no bleed, no blank filler pages, links
+//   print    — full book with cover: 0.125in bleed + right-hand starts + even
+//   interior — Lulu perfect-bound interior: like print but WITHOUT the covers
+//   covers   — the front and back cover art alone, full-bleed (for Lulu's cover)
+#let target = sys.inputs.at("target", default: "screen")
+#let forprint = target != "screen"           // needs bleed + book imposition
+#let withcover = target != "interior"         // include the cover pages inline
+#let bleed = if forprint { 0.125in } else { 0pt }
+#let trimw = 8.5in
+#let trimh = 11in
+
+// break that lands on a right-hand (odd) page in print, plain page on screen
+#let bookbreak(to) = if forprint { pagebreak(to: to) } else { pagebreak() }
+
 // ---- document setup (applied by `#show: conf` in the content file) ----------
 #let conf(body) = {
   set page(
-    paper: "us-letter",
-    margin: (top: 0.82in, bottom: 0.66in, x: 0.8in),
+    width: trimw + 2 * bleed, height: trimh + 2 * bleed,
+    margin: (top: 0.82in + bleed, bottom: 0.66in + bleed, x: 0.8in + bleed),
     footer: context {
       // blank filler pages (inserted to keep sections on the right) carry no
       // content marker — leave their footer empty so they read as truly blank.
@@ -310,7 +326,7 @@
 // ---- part divider (navy plate + its own mini contents) ----------------------
 // items: ((num, title), ...)
 #let partdivider(pnum, title, dek, items) = {
-  pagebreak(to: "odd")
+  bookbreak("odd")
   pmark
   block(width: 100%, fill: navy, radius: 2pt, inset: (x: 0.5in, top: 0.5in, bottom: 0.46in))[
     #set text(fill: paper)
@@ -346,7 +362,9 @@
       text(size: 9.2pt)[*#fixd(it.at(0)).* #it.at(1)]
       if it.at(2) != "" {
         linebreak()
-        text(size: 8pt, fill: umber)[#it.at(2)]
+        // linkify clean URLs (no spaces); leave descriptive strings as plain text
+        let u = it.at(2)
+        text(size: 8pt, fill: umber)[#if u.contains(" ") { u } else { link("https://" + u)[#u] }]
       }
     },
   )
@@ -356,10 +374,10 @@
 // ---- cover & back cover -----------------------------------------------------
 #let cover() = page(fill: navy, margin: 0pt, footer: none, header: none)[
   #set text(fill: paper)
-  // gold keyline
-  #place(top + left, dx: 0.42in, dy: 0.42in,
-    rect(width: 100% - 0.84in, height: 100% - 0.84in, stroke: 1.25pt + gold.transparentize(45%)))
-  #block(width: 100%, height: 100%, inset: (x: 1.14in, y: 1.12in))[
+  // gold keyline — measured from the trim edge, so add the bleed offset
+  #place(top + left, dx: 0.42in + bleed, dy: 0.42in + bleed,
+    rect(width: 100% - 2 * (0.42in + bleed), height: 100% - 2 * (0.42in + bleed), stroke: 1.25pt + gold.transparentize(45%)))
+  #block(width: 100%, height: 100%, inset: (x: 1.14in + bleed, y: 1.12in + bleed))[
     #grid(
       rows: (auto, 1fr, auto),
       {

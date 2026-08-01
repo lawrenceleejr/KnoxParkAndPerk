@@ -18,7 +18,12 @@
   preview, export a PDF) or with the `typst` CLI. See
   [`program-details/README.md`](program-details/README.md) for the how-to.
 - **[Knox-Pick-Me-Up-Program-Details.pdf](Knox-Pick-Me-Up-Program-Details.pdf)**
-  — the rendered 40-page book.
+  — the on-screen / web version (clickable contents and citations, no bleed).
+- **[Knox-Pick-Me-Up-Program-Details-lulu-interior.pdf](Knox-Pick-Me-Up-Program-Details-lulu-interior.pdf)**
+  and **[…-lulu-cover.pdf](Knox-Pick-Me-Up-Program-Details-lulu-cover.pdf)** —
+  print-ready files for [Lulu](https://lulu.com): the perfect-bound interior
+  (0.125" bleed, right-hand starts, even page count) and the front/back cover
+  art. See [`program-details/README.md`](program-details/README.md#build-targets-screen-vs-print).
 
 The current visual identity lives in **[../BRAND.md](../BRAND.md)**, and all
 brand artwork is generated from **[../tools/build_collateral.py](../tools/build_collateral.py)**

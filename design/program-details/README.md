@@ -55,16 +55,46 @@ typst compile --font-path fonts program-details.typ \
       ../Knox-Pick-Me-Up-Program-Details.pdf          # write the final PDF
 ```
 
-## Book / print layout
+## Build targets (screen vs. print)
 
-The PDF is imposed for binding: page 1 is the cover, and the contents and every
-Part open on a right-hand (recto) page. Blank filler pages are inserted
-automatically where needed (`pagebreak(to: "odd")` in `sect`/`partdivider`, and
-before the contents), and the page count is padded to an even number with the
-back cover as the final leaf. Those blank pages carry no running footer — the
-footer is hidden on any page without the invisible `<pm>` content marker. Hand
-the PDF straight to a printer; if a specific binding needs a page count that is a
-multiple of four, add or remove a trailing blank.
+The same source builds a screen PDF and print-ready files, selected with
+`--input target=…`:
+
+```sh
+# on-screen / web (default): 8.5x11, no bleed, no blank pages, clickable links
+typst compile --font-path fonts program-details.typ \
+      ../Knox-Pick-Me-Up-Program-Details.pdf
+
+# Lulu perfect-bound INTERIOR: 8.75x11.25 (0.125" bleed), right-hand starts,
+# even page count, NO cover pages (Lulu prints the cover separately)
+typst compile --font-path fonts --input target=interior program-details.typ \
+      ../Knox-Pick-Me-Up-Program-Details-lulu-interior.pdf
+
+# Front + back cover art alone, full-bleed, for Lulu's cover creator
+typst compile --font-path fonts --input target=covers covers.typ \
+      ../Knox-Pick-Me-Up-Program-Details-lulu-cover.pdf
+
+# full book with cover inline + bleed (e.g. for coil binding as one file)
+typst compile --font-path fonts --input target=print program-details.typ out.pdf
+```
+
+What the targets change:
+
+- **screen** — the reading/web version. No bleed, and none of the blank filler
+  pages (they'd just be blanks to scroll past); the contents and citation URLs
+  are live links.
+- **print / interior / covers** — add 0.125" bleed and the book imposition:
+  the cover, contents, and every Part open on a right-hand (recto) page, blank
+  filler pages are inserted where needed, and the count is padded even. Those
+  blanks carry no running footer (it's hidden on any page lacking the invisible
+  `<pm>` content marker). `interior` drops the cover pages for Lulu's
+  perfect-bound flow; `covers` renders just the front and back cover art.
+
+For Lulu: create the project with the **interior** PDF, choose your paper, and
+either use Lulu's cover creator with the **cover** art or ask for a wraparound
+cover built to Lulu's exact spine width (it depends on the final page count and
+paper, so it's built last). If a binding needs a multiple-of-four page count,
+add or remove a trailing blank.
 
 ## Notes
 
