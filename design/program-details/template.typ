@@ -426,7 +426,8 @@
 ]
 
 // ---- acknowledgement page (thanks + a blank space for the list) -------------
-#let ackpage(title, body, lbl) = {
+// `credit` prints a small italic colophon line at the foot of the page
+#let ackpage(title, body, lbl, credit: none) = {
   pagebreak()
   anchor(lbl)
   v(0.5in)
@@ -445,6 +446,13 @@
   ]
   // the rest of the page is intentionally open for names, added as partners
   // and volunteers come on board.
+  if credit != none {
+    place(bottom + center, dy: -0.22in)[
+      #block(width: 5.2in)[
+        #align(center)[#text(font: serif, style: "italic", size: 9pt, fill: umber)[#credit]]
+      ]
+    ]
+  }
 }
 
 // ---- table of contents helpers ----------------------------------------------
