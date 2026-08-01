@@ -18,6 +18,7 @@ redeemable item, the packs are the fraud control, the coasters are the ad.
 | **Signage** (table tents, window sticker, posters) | `tools/build_signage.py` → `print/signage/` | per venue / community boards |
 | **Staff sheets** (barista one-pager, bar onboarding) | `tools/build_staff.py` → `print/staff/` (letter-size) | one laminated behind each bar |
 | **Sponsor one-sheet** | `tools/build_sponsor.py` → `print/sponsor/` (letter-size) | outreach leave-behind |
+| **Stickers** (laptop / promo) | `tools/build_stickers.py` → `print/stickers/` (round 3in navy & paper, a die-cut mark, and a 3.5in lid bar; **each carries the website**) | giveaways — laptops, water bottles, notebooks |
 
 Optionally, a **sponsor logo** rides in a small "printing donated by" slot on
 the card back (`build_cards.py --sponsor logo.svg`) and both coaster sides
@@ -147,6 +148,18 @@ python3 tools/build_staff.py
 Laminate `barista-one-pager` and keep it by the register; the wording of the
 scan outcomes is copied from the scanner, so reprint it if the scanner's
 banners change.
+
+```sh
+python3 tools/build_stickers.py
+# writes .svg + .pdf into print/stickers/:
+#   sticker-round-navy / -paper   3in round badges (dark & light)
+#   sticker-die                   die-cut mark with the website on a chip
+#   sticker-bar                   3.5x1.25in lid bar
+```
+
+Order stickers as **die-cut or kiss-cut vinyl** from any sticker house; the
+round pair prints at 3in, the bar at 3.5in wide. They're the cheapest way to
+put the website in people's hands.
 
 These are **generic branding items** — one design for every venue, no
 per-shop customization. (The only per-shop artifact is the register QR in
