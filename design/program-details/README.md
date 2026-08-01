@@ -96,6 +96,13 @@ cover built to Lulu's exact spine width (it depends on the final page count and
 paper, so it's built last). If a binding needs a multiple-of-four page count,
 add or remove a trailing blank.
 
+## Acknowledgements
+
+The two back-matter pages ("Our sponsors" / "Our volunteers") are `#ackpage(...)`
+calls near the end of `program-details.typ`; the lists under the rule are left
+blank for now. Add names below each thank-you line (a centered list works well)
+as partners and volunteers come on board.
+
 ## Notes
 
 - The fonts here are the same faces as the rest of the brand

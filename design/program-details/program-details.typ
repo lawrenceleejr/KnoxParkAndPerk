@@ -80,6 +80,10 @@
 #tocrow("G", "Brand at a glance", "a_brand")
 #tocrow("H", "Forking this for your community", "a_fork")
 
+#tocgroup("Acknowledgements")
+#tocrow("", "Our sponsors", "s_ack_sponsors")
+#tocrow("", "Our volunteers", "s_ack_volunteers")
+
 // ---- Executive summary ------------------------------------------------------
 #sect("", "", "Executive summary", "", "execsummary")
 
@@ -582,7 +586,7 @@
    [Printing partner and agency reports --- about \$20 a year per partner, plus copies for the City, KPD, and KAT.]),
   "Free & in-kind",
   ([Website and system hosting --- \$0, on GitHub Pages.],
-   [Coordination, development, and upkeep --- all volunteer (Lawrence Lee); no paid staff.],
+   [Coordination, development, and upkeep --- all volunteer; no paid staff.],
    [The coffee --- carried by participating shops.],
    [The KAT rides --- KAT's in-kind contribution.],
    [Distribution and scanning labor --- venue staff, as part of the hand-off.]),
@@ -933,7 +937,7 @@
     ([Printing --- bar & community materials (scales with the program)], [#align(right)[\~\$500--1,000]]),
     ([Printing --- partner & agency reports (\~\$20/yr per partner + City, KPD, KAT)], [#align(right)[\~\$200--500]]),
     ([Website & system hosting (GitHub Pages)], [#align(right)[\$0]]),
-    ([Maintenance & development (donated, Lawrence Lee)], [#align(right)[\$0]]),
+    ([Coordination, maintenance & development (all volunteer)], [#align(right)[\$0]]),
     ([*Total cash, pilot scale*], [#align(right)[*\~\$700--1,500*]]),
   ),
 )
@@ -1130,6 +1134,25 @@
   next morning at the car, and it's capped small. Keep those three, and the
   harm-reduction logic --- and the fraud math --- still hold.
 ])
+
+// =============================================================================
+// ACKNOWLEDGEMENTS  (lists left blank for now)
+// =============================================================================
+#ackpage(
+  "Our sponsors",
+  [Knox Pick-Me-Up is carried by the businesses and organizations who put their
+  name on the safe ride home. With deep gratitude to the sponsors who make it
+  possible.],
+  "s_ack_sponsors",
+)
+
+#ackpage(
+  "Our volunteers",
+  [And to the people who date the cards at last call, scan them over the counter,
+  keep the books stocked, and spread the word --- the whole program runs on you.
+  Thank you.],
+  "s_ack_volunteers",
+)
 
 // -----------------------------------------------------------------------------
 // keep an even page count for binding. With a cover, pad then place the back

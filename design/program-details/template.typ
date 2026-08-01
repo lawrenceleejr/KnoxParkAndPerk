@@ -425,6 +425,28 @@
   ]
 ]
 
+// ---- acknowledgement page (thanks + a blank space for the list) -------------
+#let ackpage(title, body, lbl) = {
+  pagebreak()
+  anchor(lbl)
+  v(0.5in)
+  align(center)[
+    #image("mark-paper.svg", width: 0.82in)
+    #v(16pt)
+    #eyebrow("With thanks")
+    #v(10pt)
+    #text(font: serif, weight: 600, size: 30pt)[#title]
+    #v(14pt)
+    #block(width: 4.7in)[
+      #text(font: serif, style: "italic", size: 12.5pt, fill: umber)[#body]
+    ]
+    #v(30pt)
+    #line(length: 2.2in, stroke: 0.5pt + hairline)
+  ]
+  // the rest of the page is intentionally open for names, added as partners
+  // and volunteers come on board.
+}
+
 // ---- table of contents helpers ----------------------------------------------
 #let tocgroup(t) = { v(15pt); eyebrow(t); v(8pt) }
 // num aligned in its own column so "1" and "10" line up; whole row links to
