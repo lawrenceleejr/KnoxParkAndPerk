@@ -40,6 +40,11 @@
     paper: "us-letter",
     margin: (top: 0.82in, bottom: 0.66in, x: 0.8in),
     footer: context {
+      // blank filler pages (inserted to keep sections on the right) carry no
+      // content marker — leave their footer empty so they read as truly blank.
+      let cp = here().page()
+      let content-pages = query(<pm>).map(m => m.location().page())
+      if not content-pages.contains(cp) { return }
       set text(font: sans, size: 6.6pt, fill: rgb("#B3A990"), tracking: 0.9pt)
       grid(
         columns: (1fr, auto), align: (left + horizon, right + horizon),
@@ -62,8 +67,12 @@
 #let fixd(s) = s.replace("---", "—").replace("--", "–")
 
 // ---- anchors & the table of contents ---------------------------------------
+// an invisible "this page has content" marker; the running footer is hidden on
+// pages that lack it (the blank filler pages inserted for right-hand starts)
+#let pmark = [#metadata(none)#label("pm")]
+
 // place an invisible, queryable marker so the TOC can find a section's page
-#let anchor(name) = [#metadata(none)#label(name)]
+#let anchor(name) = [#metadata(none)#label(name)#pmark]
 
 #let pageof(name) = context {
   let e = query(label(name))
@@ -124,9 +133,9 @@
   v(13pt)
 }
 
-#let subhead(body) = { v(15pt); text(font: serif, weight: 600, size: 12.5pt)[#body]; v(5pt) }
-#let lead(body) = text(size: 11.6pt, fill: bodybrown)[#body]
-#let note(body) = text(size: 8.7pt, fill: umber)[#body]
+#let subhead(body) = { pmark; v(15pt); text(font: serif, weight: 600, size: 12.5pt)[#body]; v(5pt) }
+#let lead(body) = { pmark; text(size: 11.6pt, fill: bodybrown)[#body] }
+#let note(body) = { pmark; text(size: 8.7pt, fill: umber)[#body] }
 
 // two-column running text — kept clearly separated (>= 2em) from the
 // single-column body above and below it
@@ -137,13 +146,16 @@
 }
 
 // ---- night bands ------------------------------------------------------------
-#let band(body, deep: false, light: false) = block(
-  width: 100%, radius: 2pt, inset: (x: 0.4in, y: 0.34in), breakable: false,
-  fill: if deep { navydeep } else if light { paperdeep } else { navy },
-)[
-  #set text(fill: if light { ink } else { paper })
-  #body
-]
+#let band(body, deep: false, light: false) = {
+  pmark
+  block(
+    width: 100%, radius: 2pt, inset: (x: 0.4in, y: 0.34in), breakable: false,
+    fill: if deep { navydeep } else if light { paperdeep } else { navy },
+  )[
+    #set text(fill: if light { ink } else { paper })
+    #body
+  ]
+}
 
 // stat trio inside a night band. items: ((number-content, label), ...)
 #let statband(title, items) = band[
@@ -195,6 +207,7 @@
 // ---- vertical numbered steps ------------------------------------------------
 // items: ((title, body), ...) — numbered 1..n automatically
 #let steps(items) = {
+  pmark
   for (i, it) in items.enumerate() {
     if i > 0 { rule }
     v(4pt)
@@ -238,6 +251,7 @@
 
 // ---- callout & pull quote ---------------------------------------------------
 #let callout(q, body) = {
+  pmark
   v(12pt)
   block(
     width: 100%, inset: (left: 18pt, y: 4pt), breakable: false,
@@ -284,16 +298,20 @@
 
 // a gallery row. items: ((path, caption, width), ...) — pick widths that give a
 // common image height so the pieces sit on one shelf and captions align.
-#let grow(items) = grid(
-  columns: items.map(i => i.at(2)),
-  column-gutter: 16pt, align: bottom,
-  ..items.map(i => plate(i.at(0), i.at(1))),
-)
+#let grow(items) = {
+  pmark
+  grid(
+    columns: items.map(i => i.at(2)),
+    column-gutter: 16pt, align: bottom,
+    ..items.map(i => plate(i.at(0), i.at(1))),
+  )
+}
 
 // ---- part divider (navy plate + its own mini contents) ----------------------
 // items: ((num, title), ...)
 #let partdivider(pnum, title, dek, items) = {
-  pagebreak()
+  pagebreak(to: "odd")
+  pmark
   block(width: 100%, fill: navy, radius: 2pt, inset: (x: 0.5in, top: 0.5in, bottom: 0.46in))[
     #set text(fill: paper)
     #fig(15pt, pnum, fill: gold)
@@ -318,6 +336,7 @@
 // ---- references list --------------------------------------------------------
 // items: ((title, body, url), ...)
 #let reflist(items) = for (i, it) in items.enumerate() {
+  pmark
   if i > 0 { rule }
   v(5pt)
   grid(
@@ -393,6 +412,7 @@
 // num aligned in its own column so "1" and "10" line up; whole row links to
 // the section anchor and jumps there when clicked.
 #let tocrow(num, title, name) = {
+  pmark
   link(label(name))[
     #grid(
       columns: (1.7em, auto, 1fr, auto), column-gutter: 8pt,
@@ -409,6 +429,7 @@
 // a simple branded table: uppercase header with a heavy underline, hairline
 // between rows. header: (col, ...) ; rows: ((cell, ...), ...) ; cols: sizes
 #let ktable(cols, header, rows) = {
+  pmark
   set text(size: 9.5pt)
   table(
     columns: cols,

@@ -27,6 +27,9 @@
 // -----------------------------------------------------------------------------
 #cover()
 
+// keep the inside-front-cover blank so the contents open on a right-hand page
+#pagebreak(to: "odd")
+
 // ---- Contents ---------------------------------------------------------------
 #eyebrow[Contents]
 #v(4pt)
@@ -654,7 +657,7 @@
 )
 
 // ---- FAQ --------------------------------------------------------------------
-#let faq(q, a) = { v(11pt); text(font: serif, weight: 600, size: 12.4pt)[#q]; v(4pt); block(width: 6.35in)[#text(size: 9.9pt, fill: bodybrown)[#a]] }
+#let faq(q, a) = { pmark; v(11pt); text(font: serif, weight: 600, size: 12.4pt)[#q]; v(4pt); block(width: 6.35in)[#text(size: 9.9pt, fill: bodybrown)[#a]] }
 
 #sect("19", "Part IV · Making It Real", "Frequently asked questions",
   "Starting with the hard one.", "s_faq")
@@ -1121,4 +1124,6 @@
 ])
 
 // -----------------------------------------------------------------------------
+// keep an even page count with the back cover as the final leaf (for binding)
+#pagebreak(to: "even")
 #backcover()
