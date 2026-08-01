@@ -586,7 +586,7 @@
    [Printing partner and agency reports --- about \$20 a year per partner, plus copies for the City, KPD, and KAT.]),
   "Free & in-kind",
   ([Website and system hosting --- \$0, on GitHub Pages.],
-   [Coordination, development, and upkeep --- all volunteer; no paid staff.],
+   [Coordination, tech, and day-to-day running --- a volunteer team, no paid staff.],
    [The coffee --- carried by participating shops.],
    [The KAT rides --- KAT's in-kind contribution.],
    [Distribution and scanning labor --- venue staff, as part of the hand-off.]),
@@ -928,28 +928,34 @@
 #appsect("E", "Financial detail",
   "The cash budget is printing and a domain --- not a per-coffee payout.", "a_finance")
 
-#subhead[Estimated annual cash costs]
+#subhead[Estimated cost --- a one-year pilot]
+#block(width: 6.05in)[
+  Assume five participating bars, each handing out about ten cards a week ---
+  roughly *2,600 cards* over the year --- with three coffee shops redeeming them
+  at about a 50% rate.
+]
 #ktable(
   (1fr, 9.5em),
   ("Item", "Estimate"),
   (
+    ([Card books --- \~52 books of 50], [#align(right)[\~\$300]]),
+    ([Coasters, two-sided --- five bars], [#align(right)[\~\$400]]),
+    ([Signage --- window decals, table tents, posters], [#align(right)[\~\$200]]),
+    ([Partner & agency reports (per partner + City, KPD, KAT)], [#align(right)[\~\$200]]),
     ([Web domain renewal], [#align(right)[\~\$20]]),
-    ([Printing --- bar & community materials (scales with the program)], [#align(right)[\~\$500--1,000]]),
-    ([Printing --- partner & agency reports (\~\$20/yr per partner + City, KPD, KAT)], [#align(right)[\~\$200--500]]),
-    ([Website & system hosting (GitHub Pages)], [#align(right)[\$0]]),
-    ([Coordination, maintenance & development (all volunteer)], [#align(right)[\$0]]),
-    ([*Total cash, pilot scale*], [#align(right)[*\~\$700--1,500*]]),
+    ([Hosting, coordination, tech --- volunteer], [#align(right)[\$0]]),
+    ([*Total cash, year one*], [#align(right)[*\~\$1,100*]]),
   ),
 )
 
 #block(width: 6.05in)[
-  Everything else is carried in kind: the coffee by participating shops (Model A),
-  the rides by KAT, and the distribution and scanning labor by venue staff. So the
-  program's cash budget is essentially printing and a domain --- it scales with the
-  size of the program, not with the number of coffees --- and the marginal cost of
-  one more safe ride home is approximately zero. The program is volunteer-run, with
-  no paid staff. Grants, City support, sponsorship, round-ups, and a counter tip
-  jar can each cover the cash line on their own.
+  Call it *\$1,000--1,500* depending on print runs; it scales with the size of the
+  program, not the number of coffees. Everything else is in kind: the \~1,300
+  redeemed coffees are carried by participating shops (Model A), the rides by KAT,
+  and coordination, tech, and distribution and scanning labor by the volunteer
+  team and venue staff. So the marginal cost of one more safe ride home is
+  approximately zero --- and grants, City support, sponsorship, round-ups, or a
+  counter tip jar can each cover the cash line on their own.
 ]
 
 #subhead[Coupon economics (Model A), and why shops say yes]
