@@ -127,12 +127,13 @@
 #subhead[The ask, and the cost]
 #block(width: 6.05in)[
   The coffee is carried by the shops as customer acquisition --- the way they'd
-  fund any promotion --- while the rides and the staff time are in kind, and
-  hosting and upkeep are donated. So the program's only real cash need is printing
-  and a web domain: *a few hundred to low four figures a year*, which a round-up,
-  a tip jar, a sponsor, or a grant can each cover on its own. The marginal cost of
-  one more safe ride home is essentially zero. One prevented crash pays for years
-  of it.#refn[1]
+  fund any promotion --- and the program itself is *volunteer-run*: the rides,
+  the staff time, hosting, and coordination are all in kind or donated, with no
+  paid staff. So its only real cash need is supplies --- printing and a web domain:
+  *a few hundred to low four figures a year*, which a round-up, a tip jar, a
+  sponsor, or a grant can each cover on its own. The marginal cost of one more
+  safe ride home is essentially zero. One prevented crash pays for years of
+  it.#refn[1]
 ]
 
 // =============================================================================
@@ -555,7 +556,7 @@
 )
 
 #sect("15", "Part IV · Making It Real", "Built to sustain itself",
-  "The perk is always free to the patron who took the safe ride --- and the program's own costs are small. Here's who carries them.", "s_fund")
+  "The perk stays free to the patron who took the safe ride, and the program is volunteer-run --- its only real costs are supplies.", "s_fund")
 
 #block(width: 6.05in)[#lead[
   The funding model is deliberately open and gets locked with partners as they
@@ -581,7 +582,7 @@
    [Printing partner and agency reports --- about \$20 a year per partner, plus copies for the City, KPD, and KAT.]),
   "Free & in-kind",
   ([Website and system hosting --- \$0, on GitHub Pages.],
-   [Maintenance and development --- donated by Lawrence Lee.],
+   [Coordination, development, and upkeep --- all volunteer (Lawrence Lee); no paid staff.],
    [The coffee --- carried by participating shops.],
    [The KAT rides --- KAT's in-kind contribution.],
    [Distribution and scanning labor --- venue staff, as part of the hand-off.]),
@@ -696,9 +697,9 @@
 #faq([Is this public money buying people coffee?], [
   No. The coffee is carried by participating shops as their own
   customer-acquisition cost, backstopped by sponsors --- not a public payout ---
-  the rides and staff time are in kind, and hosting and upkeep are donated. The
-  program's only real cash need is printing and a web domain, on the order of a
-  few hundred to low four figures a year. City funding is welcome --- for launch
+  the rides and staff time are in kind, and the program is volunteer-run with no
+  paid staff. Its only real cash need is supplies: printing and a web domain, on
+  the order of a few hundred to low four figures a year. City funding is welcome --- for launch
   or as ongoing support --- but it pays for materials, never the coffee, and the
   program does not depend on it. Against that, alcohol-impaired crashes were
   estimated to cost *\$58 billion* in economic costs and *\$296 billion* in
@@ -942,8 +943,9 @@
   the rides by KAT, and the distribution and scanning labor by venue staff. So the
   program's cash budget is essentially printing and a domain --- it scales with the
   size of the program, not with the number of coffees --- and the marginal cost of
-  one more safe ride home is approximately zero. Grants, City support, sponsorship,
-  round-ups, and a counter tip jar can each cover the cash line on their own.
+  one more safe ride home is approximately zero. The program is volunteer-run, with
+  no paid staff. Grants, City support, sponsorship, round-ups, and a counter tip
+  jar can each cover the cash line on their own.
 ]
 
 #subhead[Coupon economics (Model A), and why shops say yes]
