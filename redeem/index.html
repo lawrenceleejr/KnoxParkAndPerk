@@ -790,5 +790,10 @@ if (demo) {
 updateQueueNote();
 flushQueue();
 </script>
+<!-- Cloudflare Web Analytics — cookieless, aggregate page views only (no cookies,
+     no fingerprinting, no per-person or cross-site tracking). Replace CF_BEACON_TOKEN
+     with the token from your Cloudflare dashboard: Web Analytics -> Add a site. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "CF_BEACON_TOKEN"}'></script>
 </body>
 </html>
