@@ -33,8 +33,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, NIGHT_RULE, SITE, SITE_LABEL,
                               text, arc_text, svg, mark, mark_w, qr_svg, embed_svg,
-                              place, sponsor_row, write_pdf, quiet_pad, fraunces,
-                              fraunces_it, inter6, inter4)
+                              place, sponsor_row, write_pdf, quiet_pad, tag_url,
+                              fraunces, fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -202,6 +202,9 @@ def main():
     ap.add_argument('--qr-url', default=f'{SITE}#findus',
                     help='URL both QRs encode (both sides carry a QR and the '
                          'website)')
+    ap.add_argument('--src', default='coaster',
+                    help='channel tag added to the QR URL as ?src=… for Cloudflare '
+                         'attribution (empty to disable). See design/ANALYTICS.md')
     ap.add_argument('--out', default=os.path.join(REPO, 'print', 'coasters'),
                     help='output directory')
     args = ap.parse_args()
@@ -209,7 +212,7 @@ def main():
         if val and not os.path.isfile(val):
             ap.error(f'{flag} file not found: {val}')
 
-    qr = args.qr_url or f'{SITE}#findus'   # both sides always carry a QR
+    qr = tag_url(args.qr_url or f'{SITE}#findus', args.src)   # both sides carry the QR
     os.makedirs(args.out, exist_ok=True)
     # 420 units = 4 in round  ->  105 user-units per inch
     for name, svg_str in (('coaster-night', night_side(split_list(args.bars), args.logo, qr, args.sponsor)),

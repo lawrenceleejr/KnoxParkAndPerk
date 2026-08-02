@@ -33,6 +33,23 @@ SITE = 'https://knoxpickmeup.org/'
 SITE_LABEL = 'knoxpickmeup.org'
 FINDUS = SITE + '#findus'
 
+
+def tag_url(url, src):
+    """Append ?src=<src> for channel attribution, placed BEFORE any #fragment.
+
+    A query string written after the fragment (…/#findus?src=x) is part of the
+    fragment, not a real query parameter, so analytics never see it. This splits
+    the fragment off, adds src= with the right ?/& separator, then re-attaches it.
+    Returns the URL unchanged when src is empty. See design/ANALYTICS.md.
+    """
+    if not src:
+        return url
+    from urllib.parse import quote
+    base, frag = (url.split('#', 1) + [''])[:2]
+    sep = '&' if '?' in base else '?'
+    tail = f'#{frag}' if '#' in url else ''
+    return f'{base}{sep}src={quote(src, safe="")}{tail}'
+
 # ---- mark extraction (from assets/mark.svg) ----
 # The mark is a badge: a navy (#101a30) shield with a white (#ffffff) coffee
 # cup drawn on top. Two tokens carry the whole thing — recolor the shield and
