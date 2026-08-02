@@ -120,7 +120,10 @@ python3 tools/build_coasters.py \
 
 Rerun it when the roster changes — the rim names auto-shrink to fit, and the
 night/day pair is regenerated in one shot. **Both sides** carry a QR to the
-program site and the website, so the coaster works face-up either way.
+program site and the website, so the coaster works face-up either way. The QR is
+tagged `?src=coaster` by default so Cloudflare Web Analytics can tell coaster
+scans from other channels (`--src` overrides it, `--src ''` disables) — see
+[`design/ANALYTICS.md`](design/ANALYTICS.md).
 
 **Venue & community signage** is a third generator — table tents for bar and
 cafe tables, a window/door sticker for participating locations, and
@@ -134,6 +137,10 @@ python3 tools/build_signage.py --qr-url https://knoxpickmeup.org/#findus
 #   sign-community    8.5x11 poster (bulletin boards)
 #   sign-bathroom     8.5x11 poster (restroom / above the sink)
 ```
+
+Like the coaster, the signage QR is tagged `?src=sign` for channel attribution
+(`--src` overrides, `--src ''` disables) — see
+[`design/ANALYTICS.md`](design/ANALYTICS.md).
 
 **Staff sheets** are a fourth generator — the letter-size references that go
 behind the bar, not in front of patrons:

@@ -26,8 +26,8 @@ import argparse, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_collateral import (PAPER, PAPER2, INK, INK2, NIGHT, NIGHT2, ORANGE,
                               ORANGE_INK, GOLD, RULE, SITE, SITE_LABEL, text, svg,
-                              mark, mark_w, qr_svg, quiet_pad, write_pdf, fraunces,
-                              fraunces_it, inter6, inter4)
+                              mark, mark_w, qr_svg, quiet_pad, write_pdf, tag_url,
+                              fraunces, fraunces_it, inter6, inter4)
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPI = 100        # signage user units per inch (posters 850x1100 = 8.5x11 in)
@@ -175,12 +175,15 @@ def main():
     ap = argparse.ArgumentParser(description='Build Knox Pick-Me-Up signage (tents, stickers, posters).')
     ap.add_argument('--qr-url', default=f'{SITE}#findus',
                     help='URL every QR on the signage encodes')
+    ap.add_argument('--src', default='sign',
+                    help='channel tag added to the QR URL as ?src=… for Cloudflare '
+                         'attribution (empty to disable). See design/ANALYTICS.md')
     ap.add_argument('--out', default=os.path.join(REPO, 'print', 'signage'),
                     help='output directory')
     args = ap.parse_args()
 
     global QR_URL
-    QR_URL = args.qr_url or f'{SITE}#findus'
+    QR_URL = tag_url(args.qr_url or f'{SITE}#findus', args.src)
     os.makedirs(args.out, exist_ok=True)
 
     pieces = {
