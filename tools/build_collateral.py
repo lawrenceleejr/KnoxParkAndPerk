@@ -297,19 +297,23 @@ def build_palette():
 # =====================================================================
 # 5. Favicon (64 x 64) and emblem badge (240 x 240)
 # =====================================================================
-# Both seal the mark in a night badge, so the navy shield is recolored to
-# paper (with a navy cup) — the badge carries the identity at any tab size.
+# The favicon is just the mark — the bare pin (navy shield, paper cup), no
+# badge. The emblem still seals the mark in a night badge (navy shield recolored
+# to paper, with a navy cup) — the badge carries the identity at larger sizes.
 def badge_pin(side, h):
     x = (side - mark_w(h)) / 2
     y = (side - h) / 2
     return mark(x, y, h, shield=PAPER, cup=NIGHT)
 
 def build_favicon():
-    fav = ('<defs><linearGradient id="fav-bg" x1="0" y1="0" x2="0" y2="1">'
-           f'<stop offset="0%" stop-color="{NIGHT}"/><stop offset="100%" stop-color="{NIGHT2}"/></linearGradient></defs>'
-           f'<rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#fav-bg)" stroke="{GOLD}" stroke-width="2.5"/>'
-           + badge_pin(64, 46))
-    open(f'{REPO}/assets/favicon.svg', 'w').write(svg(64, 64, fav, 'Knox Pick-Me-Up favicon'))
+    # Just the mark — the bare pin (navy shield, paper cup), no badge — centered
+    # on a transparent ground. Fixed canonical colors so it renders identically
+    # in every browser; the cup and steam keep it recognizable even where a dark
+    # tab mutes the navy shield.
+    side, h = 64, 58
+    body = mark((side - mark_w(h)) / 2, (side - h) / 2, h, shield=NIGHT, cup=PAPER)
+    open(f'{REPO}/assets/favicon.svg', 'w').write(
+        svg(side, side, body, 'Knox Pick-Me-Up favicon'))
 
 def build_emblem():
     emblem = ('<defs><linearGradient id="badge-m" x1="0" y1="0" x2="0" y2="1">'

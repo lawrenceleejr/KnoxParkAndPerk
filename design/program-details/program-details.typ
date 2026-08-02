@@ -109,11 +109,10 @@
   #eyebrow("The loop, in one line", fill: gold)
   #v(12pt)
   #loop((
-    ([1], [Drive downtown, park]),
-    ([2], [Take a safe ride home]),
-    ([3], [Show the ride, get the card]),
-    ([4], [Free KAT ride back]),
-    ([5], [Free coffee, drive home sober]),
+    ([1], [Park downtown]),
+    ([2], [Catch a safe ride home]),
+    ([3], [Show it & grab your card]),
+    ([4], [Coffee & car --- drive home sober]),
   ), dark: true)
 ]
 
@@ -210,11 +209,10 @@
 
 #band[
   #loop((
-    ([1], [Drove downtown, parked the car]),
-    ([2], [Took a safe ride home instead]),
-    ([3], [Showed the ride, got a dated card]),
-    ([4], [Free KAT ride back downtown]),
-    ([5], [Free coffee, then drove home sober]),
+    ([1], [Parked the car downtown]),
+    ([2], [Caught a safe ride home]),
+    ([3], [Showed it & got the card]),
+    ([4], [Coffee & car --- drove home sober]),
   ), dark: true)
 ]
 
@@ -236,19 +234,17 @@
 // PART II
 // =============================================================================
 #partdivider("Part II", "How It Works",
-  "The patron's six steps, the card itself, the trust that keeps it honest, and the parked car that makes it all possible.",
+  "The patron's four steps, the card itself, the trust that keeps it honest, and the parked car that makes it all possible.",
   (([4], [The patron journey]), ([5], [The Morning Pick-Me-Up Card]), ([6], [Trust by design]), ([7], [The car stays put])))
 
 #sect("4", "Part II · How It Works", "The patron journey",
-  "Six steps, most of which the patron was going to take anyway.", "s_journey")
+  "Four steps, most of which the patron was going to take anyway.", "s_journey")
 
 #steps((
-  ([Out for the night], [Patron drives downtown, parks, and goes out.]),
-  ([Chooses a safe ride home], [At the end of the night, they take a booked rideshare or taxi, or a KAT bus --- instead of driving.]),
-  ([Shows proof of the ride], [They show a bartender a confirmed rideshare screen or an activated transit ticket --- a 10-second glance.]),
-  ([Gets a Morning Pick-Me-Up Card], [The bartender writes today's date on the card and hands it over --- one card per ride.]),
-  ([Rides KAT free back to the car], [While valid, the card doubles as a free KAT pass --- "Hair of the KAT" --- including the morning trip back downtown.]),
-  ([Claims the coffee, drives home sober], [At a participating shop the next morning, they redeem a free large coffee, retrieve the car, and drive home clear-headed.]),
+  ([Park], [The patron drives downtown and parks in a municipal garage or lot --- free on evenings and weekends --- and goes out for the night.]),
+  ([Catch a ride], [At the end of the night, they book a rideshare or taxi, or hop a KAT bus home --- instead of driving. The car stays put.]),
+  ([Show it & grab your card], [They show a bartender the confirmed rideshare screen or an activated transit ticket --- a 10-second glance --- and the bartender dates a Morning Pick-Me-Up Card and hands it over, one per ride.]),
+  ([Coffee & car], [The next morning, they ride KAT back downtown free on the card --- "Hair of the KAT" --- claim a free large coffee within the day, retrieve the car, and drive home clear-headed.]),
 ))
 
 #callout([
