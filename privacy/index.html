@@ -81,7 +81,7 @@
     <h2>What&rsquo;s collected — and what isn&rsquo;t</h2>
     <ul>
       <li><strong>Collected:</strong> a card serial, the redeeming shop, and a timestamp; and, when a pack of cards is handed to a bar, which bar got which serials.</li>
-      <li><strong>Not collected:</strong> anything that identifies a patron. The card has no name field, the scanner asks for nothing about you, and there is no login or tracking pixel anywhere on this site.</li>
+      <li><strong>Not collected:</strong> anything that identifies a patron. The card has no name field, the scanner asks for nothing about you, and there is no login, no cookies, and no per-person or cross-site tracking anywhere on this site.</li>
     </ul>
 
     <h2>Where it lives, and who sees what</h2>
@@ -94,6 +94,14 @@
     <p>The QR on each card encodes only this public website plus the card&rsquo;s own serial.
     Scanning it with a normal phone just opens the <a href="../#findus">shop map</a> &mdash; it
     doesn&rsquo;t phone home, install anything, or read anything off your device.</p>
+
+    <h2>Website analytics</h2>
+    <p>To know roughly how many people visit this site, we use
+    <a href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</a> &mdash; a
+    privacy-first, cookieless tool. It counts page views in aggregate (which pages, the
+    general region, and the kind of device) and sets no cookies, builds no visitor profile,
+    fingerprints no one, and never follows you across other sites. There is no way to tie a
+    visit back to a person, and none of it touches the redemption records above.</p>
 
     <h2>Retention and backups</h2>
     <p>The redemption records are kept so the program can report how many safe rides it
@@ -119,5 +127,9 @@
     <a href="../">knoxpickmeup.org</a> &middot; <a href="mailto:hello@knoxpickmeup.org">hello@knoxpickmeup.org</a> &middot; Knoxville, TN
   </div>
 </footer>
+<!-- Cloudflare Web Analytics — cookieless, aggregate page views only (no cookies,
+     no fingerprinting, no per-person or cross-site tracking). -->
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon='{"token": "7abf399dc7a140e195d512cd1d368c07"}'></script>
 </body>
 </html>
