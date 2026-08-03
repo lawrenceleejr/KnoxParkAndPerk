@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Knox Pick-Me-Up — Materials</title>
+<meta name="theme-color" content="#101a30">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<style>
+  :root {
+    --paper: #faf5eb; --paper-2: #f2e9d8; --ink: #241a10; --ink-2: #6f5f4c;
+    --night: #101a30; --night-2: #0a101f; --cream: #faf5eb; --cream-2: #b9b3a4;
+    --orange: #ff8200; --orange-ink: #b04e00; --gold: #eda953; --rule: #ddcfb4;
+    --f-serif: 'Fraunces', Georgia, serif;
+    --f-sans: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: var(--f-sans); background: var(--paper); color: var(--ink);
+    line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.15rem; }
+
+  /* ---- header ---- */
+  header { background: linear-gradient(180deg, var(--night), var(--night-2)); color: var(--cream); padding: 2.4rem 0 2.1rem; }
+  header .mark { width: 54px; height: 54px; display: block; margin-bottom: 1.1rem; }
+  .eyebrow { font-family: var(--f-serif); font-size: .78rem; letter-spacing: .26em; text-transform: uppercase; color: var(--gold); margin-bottom: .7rem; }
+  header h1 { font-family: var(--f-serif); font-weight: 600; font-size: clamp(2.1rem, 8vw, 3.1rem); line-height: 1.04; color: var(--paper); }
+  header p { color: var(--cream-2); font-size: 1.02rem; max-width: 46ch; margin-top: .8rem; }
+  .unlisted { margin-top: 1.15rem; display: inline-flex; align-items: center; gap: .5rem; font-size: .82rem; color: var(--cream-2); border: 1px solid rgba(250,245,235,.22); border-radius: 999px; padding: .38rem .8rem; }
+  .unlisted b { color: var(--gold); font-weight: 600; }
+
+  /* ---- sections ---- */
+  section { padding: 2.3rem 0 .5rem; }
+  .sec-head { display: flex; align-items: baseline; gap: .6rem; border-bottom: 1px solid var(--rule); padding-bottom: .55rem; margin-bottom: 1.4rem; }
+  .sec-head h2 { font-family: var(--f-serif); font-weight: 600; font-size: 1.5rem; color: var(--ink); }
+  .sec-head span { font-size: .8rem; color: var(--ink-2); }
+
+  .grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem; }
+  @media (min-width: 540px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 860px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .item { background: #fff; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .thumb { height: 178px; background: var(--paper-2); display: flex; align-items: center; justify-content: center; padding: 14px; border-bottom: 1px solid var(--rule); }
+  .thumb.dark { background: var(--night); }
+  .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+  .meta { padding: .85rem .95rem 1rem; display: flex; flex-direction: column; flex: 1; }
+  .meta h3 { font-family: var(--f-serif); font-weight: 600; font-size: 1.06rem; line-height: 1.2; }
+  .meta p { font-size: .87rem; color: var(--ink-2); margin: .3rem 0 .8rem; flex: 1; }
+  .dl { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .dl a { font-size: .78rem; font-weight: 600; letter-spacing: .02em; text-decoration: none; padding: .4rem .7rem; border-radius: 999px; border: 1.4px solid var(--rule); color: var(--ink); background: var(--paper); }
+  .dl a.pdf { background: var(--orange); border-color: var(--orange); color: var(--night); }
+  .dl a:active { transform: translateY(1px); }
+
+  footer { padding: 2.6rem 0 3rem; color: var(--ink-2); font-size: .84rem; }
+  footer code { background: var(--paper-2); padding: .1rem .4rem; border-radius: 5px; font-size: .82rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <img class="mark" src="../assets/mark.svg" alt="Knox Pick-Me-Up">
+    <p class="eyebrow">Asset library</p>
+    <h1>Materials</h1>
+    <p>Every visual and print asset in one place — tap a preview to open it, or grab the print-ready file. Built for pulling things up fast on a phone.</p>
+    <span class="unlisted">🔒&nbsp; <b>Unlisted</b> — this page isn't linked anywhere; only people with the URL can reach it.</span>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- BRAND -->
+  <section>
+    <div class="sec-head"><h2>Brand &amp; identity</h2><span>the mark, logo lockups, colors</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="../assets/mark.svg" alt="The mark"></div>
+        <div class="meta"><h3>The mark</h3><p>The pin — a navy shield with the coffee cup. The core of the whole identity.</p>
+          <div class="dl"><a href="../assets/mark.svg" target="_blank">Open</a><a href="../assets/mark.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="../assets/logo-mark.svg" alt="Emblem badge"></div>
+        <div class="meta"><h3>Emblem badge</h3><p>The mark sealed in a night badge with a gold ring — for avatars and seals.</p>
+          <div class="dl"><a href="../assets/logo-mark.svg" target="_blank">Open</a><a href="../assets/logo-mark.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="../assets/logo.svg" alt="Logo lockup, light"></div>
+        <div class="meta"><h3>Logo lockup</h3><p>The full horizontal lockup — mark, name, and tagline — for light backgrounds.</p>
+          <div class="dl"><a href="../assets/logo.svg" target="_blank">Open</a><a href="../assets/logo.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb dark"><img loading="lazy" src="../assets/logo-dark.svg" alt="Logo lockup, dark"></div>
+        <div class="meta"><h3>Logo lockup — dark</h3><p>The same lockup tuned for dark backgrounds.</p>
+          <div class="dl"><a href="../assets/logo-dark.svg" target="_blank">Open</a><a href="../assets/logo-dark.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="../assets/favicon.svg" alt="Favicon"></div>
+        <div class="meta"><h3>Favicon</h3><p>Just the mark — the browser-tab icon.</p>
+          <div class="dl"><a href="../assets/favicon.svg" target="_blank">Open</a><a href="../assets/favicon.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="../assets/palette.svg" alt="Colors and type"></div>
+        <div class="meta"><h3>Colors &amp; type</h3><p>The palette and the type system at a glance.</p>
+          <div class="dl"><a href="../assets/palette.svg" target="_blank">Open</a><a href="../assets/palette.svg" download>SVG</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb dark"><img loading="lazy" src="../assets/og-image.svg" alt="Social share card"></div>
+        <div class="meta"><h3>Social share card</h3><p>The link-preview image that shows in texts, Slack, and social.</p>
+          <div class="dl"><a href="../assets/og-image.png" target="_blank">Open</a><a href="../assets/og-image.png" download>PNG</a><a href="../assets/og-image.svg" download>SVG</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKLET -->
+  <section>
+    <div class="sec-head"><h2>The booklet</h2><span>Program Details, 43 pages</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/booklet-cover.png" alt="Program Details cover"></div>
+        <div class="meta"><h3>Program Details</h3><p>The full program briefing — read it on screen or share the PDF.</p>
+          <div class="dl"><a class="pdf" href="../design/Knox-Pick-Me-Up-Program-Details.pdf" target="_blank">Read PDF</a><a href="../design/Knox-Pick-Me-Up-Program-Details.pdf" download>Download</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/booklet-cover.png" alt="Program Details print files"></div>
+        <div class="meta"><h3>Booklet — print files</h3><p>Bleed-and-imposed editions for a print shop (Lulu): the interior and the cover.</p>
+          <div class="dl"><a class="pdf" href="../design/Knox-Pick-Me-Up-Program-Details-lulu-interior.pdf" download>Interior PDF</a><a class="pdf" href="../design/Knox-Pick-Me-Up-Program-Details-lulu-cover.pdf" download>Cover PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARD & KIT -->
+  <section>
+    <div class="sec-head"><h2>The card &amp; kit</h2><span>the redeemable item</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/card-front.svg" alt="Card front"></div>
+        <div class="meta"><h3>Card — front</h3><p>The Morning Pick-Me-Up card. Each carries a unique QR and serial; the bartender writes the date.</p>
+          <div class="dl"><a href="assets/card-front.svg" target="_blank">Open</a><a href="assets/card-front.svg" download>SVG</a><a class="pdf" href="assets/card-front.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/card-back.svg" alt="Card back"></div>
+        <div class="meta"><h3>Card — back</h3><p>How it works and the partnership line. Static — the same on every card.</p>
+          <div class="dl"><a href="assets/card-back.svg" target="_blank">Open</a><a href="assets/card-back.svg" download>SVG</a><a class="pdf" href="assets/card-back.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/pack-cover.svg" alt="Pack cover sheet"></div>
+        <div class="meta"><h3>Pack cover sheet</h3><p>Wraps a book of 50; its QR checks the pack out to a bar.</p>
+          <div class="dl"><a href="assets/pack-cover.svg" target="_blank">Open</a><a href="assets/pack-cover.svg" download>SVG</a><a class="pdf" href="assets/pack-cover.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COASTERS -->
+  <section>
+    <div class="sec-head"><h2>Coasters</h2><span>two-sided, the advertising</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb dark"><img loading="lazy" src="assets/coaster-night.svg" alt="Coaster night side"></div>
+        <div class="meta"><h3>Coaster — night side</h3><p>For the bar: the three steps and participating bars, with a QR to the site.</p>
+          <div class="dl"><a href="assets/coaster-night.svg" target="_blank">Open</a><a href="assets/coaster-night.svg" download>SVG</a><a class="pdf" href="assets/coaster-night.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/coaster-day.svg" alt="Coaster day side"></div>
+        <div class="meta"><h3>Coaster — day side</h3><p>For the morning: participating coffee shops, with a QR to the site.</p>
+          <div class="dl"><a href="assets/coaster-day.svg" target="_blank">Open</a><a href="assets/coaster-day.svg" download>SVG</a><a class="pdf" href="assets/coaster-day.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNAGE -->
+  <section>
+    <div class="sec-head"><h2>Signage</h2><span>tents, decals, posters</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/table-tent.svg" alt="Table tent"></div>
+        <div class="meta"><h3>Table tent</h3><p>Foldable A-frame for bar and cafe tables.</p>
+          <div class="dl"><a href="assets/table-tent.svg" target="_blank">Open</a><a href="assets/table-tent.svg" download>SVG</a><a class="pdf" href="assets/table-tent.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/window-decal.svg" alt="Window decal"></div>
+        <div class="meta"><h3>Window decal</h3><p>Round participating-location sticker for doors and windows.</p>
+          <div class="dl"><a href="assets/window-decal.svg" target="_blank">Open</a><a href="assets/window-decal.svg" download>SVG</a><a class="pdf" href="assets/window-decal.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/poster-community.svg" alt="Community poster"></div>
+        <div class="meta"><h3>Poster — community</h3><p>8.5×11 for bulletin boards and community spaces.</p>
+          <div class="dl"><a href="assets/poster-community.svg" target="_blank">Open</a><a href="assets/poster-community.svg" download>SVG</a><a class="pdf" href="assets/poster-community.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/poster-restroom.svg" alt="Restroom poster"></div>
+        <div class="meta"><h3>Poster — restroom</h3><p>8.5×11 for above the sink, where the decision gets made.</p>
+          <div class="dl"><a href="assets/poster-restroom.svg" target="_blank">Open</a><a href="assets/poster-restroom.svg" download>SVG</a><a class="pdf" href="assets/poster-restroom.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKERS -->
+  <section>
+    <div class="sec-head"><h2>Stickers</h2><span>laptop &amp; giveaway, die-cut</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/sticker-mark.svg" alt="Mark sticker"></div>
+        <div class="meta"><h3>Sticker — the mark</h3><p>Just the mark, big (~4 in). Die-cut to the pin.</p>
+          <div class="dl"><a href="assets/sticker-mark.svg" target="_blank">Open</a><a href="assets/sticker-mark.svg" download>SVG</a><a class="pdf" href="assets/sticker-mark.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/sticker-wordmark.svg" alt="Wordmark sticker"></div>
+        <div class="meta"><h3>Sticker — wordmark</h3><p>Bold, left-aligned lockup — name, tagline, website. Die-cut to the type.</p>
+          <div class="dl"><a href="assets/sticker-wordmark.svg" target="_blank">Open</a><a href="assets/sticker-wordmark.svg" download>SVG</a><a class="pdf" href="assets/sticker-wordmark.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAFF -->
+  <section>
+    <div class="sec-head"><h2>Behind the bar</h2><span>staff references</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/staff-barista.svg" alt="Barista one-pager"></div>
+        <div class="meta"><h3>Barista one-pager</h3><p>The scan outcomes and what to do — laminate by the register.</p>
+          <div class="dl"><a href="assets/staff-barista.svg" target="_blank">Open</a><a href="assets/staff-barista.svg" download>SVG</a><a class="pdf" href="assets/staff-barista.pdf" download>PDF</a></div></div>
+      </div>
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/staff-onboarding.svg" alt="Bar onboarding"></div>
+        <div class="meta"><h3>Bar onboarding</h3><p>What a bar agrees to, how to hand out a card, packs, and contact.</p>
+          <div class="dl"><a href="assets/staff-onboarding.svg" target="_blank">Open</a><a href="assets/staff-onboarding.svg" download>SVG</a><a class="pdf" href="assets/staff-onboarding.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPONSOR -->
+  <section>
+    <div class="sec-head"><h2>Sponsor</h2><span>outreach leave-behind</span></div>
+    <div class="grid">
+      <div class="item">
+        <div class="thumb"><img loading="lazy" src="assets/sponsor-one-sheet.svg" alt="Sponsor one-sheet"></div>
+        <div class="meta"><h3>Sponsor one-sheet</h3><p>The ask, the reach, and where a sponsor's name goes.</p>
+          <div class="dl"><a href="assets/sponsor-one-sheet.svg" target="_blank">Open</a><a href="assets/sponsor-one-sheet.svg" download>SVG</a><a class="pdf" href="assets/sponsor-one-sheet.pdf" download>PDF</a></div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <p>Print specs and generators live in the repo (<code>PRINTING.md</code>). Regenerate this library with <code>python3 tools/build_materials.py</code>. Unlisted page — knoxpickmeup.org/materials.</p>
+</footer>
+
+</body>
+</html>

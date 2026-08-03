@@ -7,3 +7,6 @@ Disallow: /redeem/
 Disallow: /redeem.html
 Disallow: /dashboard/
 Disallow: /dashboard.html
+
+# Unlisted internal asset library — reachable only by direct URL
+Disallow: /materials/
